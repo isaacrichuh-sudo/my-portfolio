@@ -1,0 +1,637 @@
+<style>
+    /* Chat Agent Styles */
+    .chat-agent {
+        position: fixed;
+        bottom: 110px;
+        right: 30px;
+        z-index: 1001;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* Chat Toggle Button */
+    .chat-agent-toggle {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, #818cf8, #6366f1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        transition: all 0.3s;
+        cursor: pointer;
+        animation: agentPulse 2s infinite;
+        position: relative;
+        overflow: hidden;
+        border: 3px solid white;
+    }
+
+    .chat-agent-toggle:hover {
+        transform: scale(1.1);
+    }
+
+    .agent-avatar {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    @keyframes agentPulse {
+        0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+        70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+    }
+
+    .agent-status {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        width: 16px;
+        height: 16px;
+        background: #10b981;
+        border-radius: 50%;
+        border: 2px solid white;
+        z-index: 2;
+    }
+
+    /* Chat Window */
+    .chat-agent-window {
+        position: absolute;
+        bottom: 85px;
+        right: 0;
+        width: 400px;
+        height: 600px;
+        background: var(--bg-card, white);
+        border-radius: 24px;
+        box-shadow: var(--shadow-lg, 0 20px 50px rgba(0,0,0,0.15));
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px) scale(0.95);
+        transition: all 0.3s ease;
+        border: 1px solid var(--border, #e2e8f0);
+    }
+
+    .chat-agent-window.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0) scale(1);
+    }
+
+    /* Chat Header */
+    .chat-header {
+        background: linear-gradient(135deg, #818cf8, #6366f1);
+        padding: 16px 20px;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .chat-header-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid white;
+        background: white;
+    }
+
+    .chat-header-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .chat-header-info h4 {
+        font-size: 16px;
+        margin-bottom: 2px;
+        font-weight: 600;
+    }
+
+    .chat-header-info p {
+        font-size: 11px;
+        opacity: 0.9;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .online-dot {
+        width: 8px;
+        height: 8px;
+        background: #10b981;
+        border-radius: 50%;
+        display: inline-block;
+        animation: onlinePulse 1.5s infinite;
+    }
+
+    @keyframes onlinePulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    /* Chat Messages Area */
+    .chat-messages {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background: var(--bg-primary, #f8fafc);
+    }
+
+    /* Message Bubbles */
+    .message {
+        display: flex;
+        gap: 10px;
+        max-width: 85%;
+    }
+
+    .message.bot {
+        align-self: flex-start;
+    }
+
+    .message.user {
+        align-self: flex-end;
+        flex-direction: row-reverse;
+    }
+
+    .message-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        overflow: hidden;
+        flex-shrink: 0;
+        background: linear-gradient(135deg, #818cf8, #6366f1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .message-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .message-avatar span {
+        font-size: 18px;
+    }
+
+    .message.user .message-avatar {
+        background: var(--accent-gold, #fbbf24);
+    }
+
+    .message-content {
+        background: var(--bg-card, white);
+        padding: 12px 16px;
+        border-radius: 18px;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--text-primary, #0f172a);
+        box-shadow: var(--shadow, 0 1px 2px rgba(0,0,0,0.05));
+    }
+
+    .message.bot .message-content {
+        border-bottom-left-radius: 4px;
+    }
+
+    .message.user .message-content {
+        background: var(--accent, #818cf8);
+        color: white;
+        border-bottom-right-radius: 4px;
+    }
+
+    /* Typing Indicator */
+    .typing-indicator {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 12px 18px;
+        background: var(--bg-card, white);
+        border-radius: 20px;
+        width: fit-content;
+        box-shadow: var(--shadow, 0 1px 2px rgba(0,0,0,0.05));
+    }
+
+    .typing-dots {
+        display: flex;
+        gap: 4px;
+    }
+
+    .typing-dots span {
+        width: 8px;
+        height: 8px;
+        background: var(--accent, #818cf8);
+        border-radius: 50%;
+        animation: typingBounce 1.4s infinite ease-in-out;
+    }
+
+    .typing-dots span:nth-child(1) { animation-delay: 0s; }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typingBounce {
+        0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+        30% { transform: translateY(-8px); opacity: 1; }
+    }
+
+    .typing-text {
+        font-size: 12px;
+        color: var(--text-secondary, #94a3b8);
+        margin-left: 8px;
+    }
+
+    /* Quick Reply Buttons */
+    .quick-replies {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 8px;
+    }
+
+    .quick-reply-btn {
+        background: var(--bg-alt, #f1f5f9);
+        border: 1px solid var(--border, #e2e8f0);
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: var(--text-primary, #0f172a);
+    }
+
+    .quick-reply-btn:hover {
+        background: var(--accent, #818cf8);
+        color: white;
+        border-color: var(--accent, #818cf8);
+    }
+
+    /* Chat Input Area */
+    .chat-input-area {
+        padding: 15px;
+        border-top: 1px solid var(--border, #e2e8f0);
+        display: flex;
+        gap: 10px;
+        background: var(--bg-card, white);
+    }
+
+    .chat-input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 1px solid var(--border, #e2e8f0);
+        border-radius: 30px;
+        font-family: inherit;
+        font-size: 14px;
+        background: var(--bg-primary, #f8fafc);
+        color: var(--text-primary, #0f172a);
+    }
+
+    .chat-input:focus {
+        outline: none;
+        border-color: var(--accent, #818cf8);
+    }
+
+    .chat-send-btn {
+        width: 44px;
+        height: 44px;
+        background: var(--accent, #818cf8);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+
+    .chat-send-btn:hover {
+        background: var(--accent-hover, #6366f1);
+        transform: scale(1.05);
+    }
+
+    .chat-send-icon {
+        font-size: 18px;
+        color: white;
+    }
+
+    /* WhatsApp Button */
+    .whatsapp-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s;
+        margin-top: 10px;
+        background: #25D366;
+        color: white;
+    }
+
+    .whatsapp-btn:hover {
+        background: #128C7E;
+        transform: scale(1.02);
+    }
+
+    /* Responsive */
+    @media (max-width: 500px) {
+        .chat-agent-window {
+            width: calc(100vw - 40px);
+            right: -10px;
+            height: 500px;
+        }
+        .chat-agent-toggle {
+            width: 55px;
+            height: 55px;
+        }
+    }
+</style>
+
+<div class="chat-agent">
+    <div class="chat-agent-toggle" id="chatAgentToggle">
+        <img src="https://ui-avatars.com/api/?background=818cf8&color=fff&rounded=true&size=70&name=SA" alt="Assistant" class="agent-avatar" id="agentAvatarImage">
+        <span class="agent-status"></span>
+    </div>
+    
+    <div class="chat-agent-window" id="chatAgentWindow">
+        <div class="chat-header">
+            <div class="chat-header-avatar">
+                <!-- ===== CHANGE THIS IMAGE URL TO YOUR PHOTO ===== -->
+                <img src="https://ui-avatars.com/api/?background=818cf8&color=fff&rounded=true&size=48&name=SA" alt="Assistant" id="headerAvatarImage">
+            </div>
+            <div class="chat-header-info">
+                <h4>Sarah</h4>
+                <p><span class="online-dot"></span> Online · Usually replies in minutes</p>
+            </div>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages"></div>
+        
+        <div class="chat-input-area">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Type your question..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <button class="chat-send-btn" onclick="sendMessage()">
+                <span class="chat-send-icon">➤</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ========== CONFIGURATION - EDIT THESE ==========
+    const AGENT_NAME = "Sarah";
+    const AGENT_AVATAR_URL = "chat bot sarah.png";
+    
+    const typingConfig = {
+        simpleResponseDelay: 2000,
+        complexResponseDelay: 3500,
+        greetingDelay: 1500,
+        fallbackDelay: 2000
+    };
+    
+    // Update avatar images
+    document.getElementById('agentAvatarImage').src = AGENT_AVATAR_URL;
+    document.getElementById('headerAvatarImage').src = AGENT_AVATAR_URL;
+    
+    // ========== KNOWLEDGE BASE ==========
+    const knowledgeBase = [
+        {
+            patterns: ["services", "offer", "do you do", "what can you do", "help with", "what services"],
+            response: "I offer a range of copywriting services including: 📝 Website Copywriting, Designing and Development, 📝 Email Marketing Campaigns, 📝 Search Engine Optimized Blog Content, 📝 Landing Pages design, and 📝 Search Engine Optimization Content Strategy. Any specific service you're interested in?"
+        },
+        {
+            patterns: ["price", "cost", "pricing", "rates", "how much", "fee", "charge", "budget", "quote", "estimate"],
+            response: "Most projects range from $200 - $3000 depending on scope. A landing page typically starts at $200, while full website copy and web development can range from $800-$3000. However, my greatest priority is to see your project grow and will offer great discounts for a start. Would you like a custom quote?"
+        },
+        {
+            patterns: ["how long", "timeline", "turnaround", "delivery", "fast", "speed", "deadline", "days"],
+            response: "Typical turnaround times: Landing pages: 3-5 days, Email sequences: 5-7 days, Full website copy: 7-14 days. I always provide clear timelines before starting. What project do you have in mind?"
+        },
+        {
+            patterns: ["experience", "background", "how long", "years", "portfolio", "clients", "qualifications"],
+            response: "I specialize in B2B SaaS copywriting with over 4 years of experience. I've worked with 50+ clients across fintech, logistics, healthcare tech, and e-commerce. Check out my Work page to see real results! "
+        },
+        {
+            patterns: ["build website", "create website", "make website", "website development", "web design", "can you build", "web developer"],
+            response: "Yes we do! We build fully custom, SEO-optimized websites from scratch. I work with a team of expert developers who handle the technical build, while I focus on coywriting and design, content strategy and search engine optimization to ensure your site not only looks great but also ranks on Google ad converts visitors into customers. Would you like to discuss your website needs? 💚"
+        },
+        {
+            patterns: ["contact", "reach", "email", "whatsapp", "chat", "get in touch", "message you"],
+            response: "I'd love to interct with you. You can reach me via the buttons indicated 'WhatsApp', 'E-mail' or 'Facebook' on this page. You can also use the contact form on the Contact page. I respond within 24 hours! 💚"
+        },
+        {
+            patterns: ["hello", "hi", "hey", "greetings", "good morning", "good afternoon"],
+            response: "Hey! Hope you're well. How can I assist you today?"
+        },
+        {
+            patterns: ["thanks", "thank you", "appreciate", "grateful"],
+            response: "You're very welcome! I hope I have been of help to you. Anything else I can help you with?"
+        },
+        {
+            patterns: ["bye", "goodbye", "see you", "later", "exit"],
+            response: "Take care! Feel free to come back anytime. Have a wonderful day!"
+        }
+    ];
+    
+    function findBestMatch(userMessage) {
+        const lowerMessage = userMessage.toLowerCase();
+        let bestMatch = null;
+        let highestScore = 0;
+        
+        for(const item of knowledgeBase) {
+            let score = 0;
+            for(const pattern of item.patterns) {
+                if(lowerMessage.includes(pattern.toLowerCase())) {
+                    score += 10;
+                }
+            }
+            if(score > highestScore) {
+                highestScore = score;
+                bestMatch = item;
+            }
+        }
+        return highestScore > 2 ? bestMatch : null;
+    }
+    
+    function saveUnrecognizedQuestion(question) {
+        const unrecognized = JSON.parse(localStorage.getItem('unrecognizedQuestions') || '[]');
+        unrecognized.push({
+            id: Date.now(),
+            question: question,
+            timestamp: new Date().toISOString()
+        });
+        localStorage.setItem('unrecognizedQuestions', JSON.stringify(unrecognized));
+    }
+    
+    function getFallbackResponse(userMessage) {
+        saveUnrecognizedQuestion(userMessage);
+        return "Great! To give you the most accurate answer for your specific project, let's jump on a quick text chat. Click below to ping me directly on WhatsApp! 💚";
+    }
+    
+    // ========== CHAT UI FUNCTIONS ==========
+    let chatMessages = [];
+    
+    function addBotMessage(text) {
+        chatMessages.push({ id: Date.now(), type: 'bot', text: text });
+        renderMessages();
+    }
+    
+    function addUserMessage(text) {
+        chatMessages.push({ id: Date.now(), type: 'user', text: text });
+        renderMessages();
+    }
+    
+    function renderMessages() {
+        const container = document.getElementById('chatMessages');
+        if(!container) return;
+        container.innerHTML = chatMessages.map(msg => `
+            <div class="message ${msg.type}">
+                <div class="message-avatar">${msg.type === 'bot' ? `<img src="${AGENT_AVATAR_URL}" alt="${AGENT_NAME}">` : `<span>👤</span>`}</div>
+                <div class="message-content">${msg.text.replace(/\n/g, '<br>')}</div>
+            </div>
+        `).join('');
+        container.scrollTop = container.scrollHeight;
+    }
+    
+    function showTypingIndicator() {
+        const container = document.getElementById('chatMessages');
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'message bot';
+        typingDiv.id = 'typingIndicator';
+        typingDiv.innerHTML = `
+            <div class="message-avatar"><img src="${AGENT_AVATAR_URL}" alt="${AGENT_NAME}"></div>
+            <div class="typing-indicator">
+                <div class="typing-dots"><span></span><span></span><span></span></div>
+                <span class="typing-text">${AGENT_NAME} is typing...</span>
+            </div>
+        `;
+        container.appendChild(typingDiv);
+        container.scrollTop = container.scrollHeight;
+    }
+    
+    function hideTypingIndicator() {
+        const indicator = document.getElementById('typingIndicator');
+        if(indicator) indicator.remove();
+    }
+    
+    function addWhatsAppButton() {
+        const chatSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
+        let phoneNumber = chatSettings.whatsappNumber || chatSettings.phoneNumber || '254700000000';
+        let cleanNumber = phoneNumber.replace(/\D/g, '');
+        if (cleanNumber.startsWith('0')) cleanNumber = '254' + cleanNumber.substring(1);
+        const whatsappLink = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(`Hi! I was chatting with ${AGENT_NAME} on your website and would love to discuss my project.`)}`;
+        
+        const container = document.getElementById('chatMessages');
+        const buttonDiv = document.createElement('div');
+        buttonDiv.className = 'message bot';
+        buttonDiv.innerHTML = `
+            <div class="message-avatar"><img src="${AGENT_AVATAR_URL}" alt="${AGENT_NAME}"></div>
+            <div><a href="${whatsappLink}" target="_blank" class="whatsapp-btn">💚 Click to WhatsApp</a></div>
+        `;
+        container.appendChild(buttonDiv);
+        container.scrollTop = container.scrollHeight;
+    }
+    
+    function addQuickReplies() {
+        const container = document.getElementById('chatMessages');
+        const quickRepliesDiv = document.createElement('div');
+        quickRepliesDiv.className = 'message bot quick-replies-container';
+        quickRepliesDiv.innerHTML = `
+            <div class="message-avatar"><img src="${AGENT_AVATAR_URL}" alt="${AGENT_NAME}"></div>
+            <div class="quick-replies">
+                <button class="quick-reply-btn" data-topic="Services">📋 Check My Services</button>
+                <button class="quick-reply-btn" data-topic="Pricing">💰 Product Pricing</button>
+                <button class="quick-reply-btn" data-topic="Timeline">⏱️ Project Timelines</button>
+                <button class="quick-reply-btn" data-topic="Experience">⭐ My Experience</button>
+                <button class="quick-reply-btn" data-topic="Website">🌐 Website Help</button>
+                <button class="quick-reply-btn" data-topic="Contact">📱 My Contacts</button>
+            </div>
+        `;
+        
+        // Add event listeners to buttons to prevent event bubbling
+        const buttons = quickRepliesDiv.querySelectorAll('.quick-reply-btn');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const topic = btn.getAttribute('data-topic');
+                processUserMessage(topic);
+            });
+        });
+        
+        container.appendChild(quickRepliesDiv);
+        container.scrollTop = container.scrollHeight;
+    }
+    
+    // ========== MAIN PROCESSING ==========
+    async function processUserMessage(userMessage) {
+        addUserMessage(userMessage);
+        
+        const match = findBestMatch(userMessage);
+        
+        showTypingIndicator();
+        await new Promise(resolve => setTimeout(resolve, typingConfig.simpleResponseDelay));
+        hideTypingIndicator();
+        
+        if(match) {
+            addBotMessage(match.response);
+            setTimeout(() => addQuickReplies(), 800);
+        } else {
+            const fallbackResponse = getFallbackResponse(userMessage);
+            addBotMessage(fallbackResponse);
+            setTimeout(() => {
+                addWhatsAppButton();
+            }, 1000);
+        }
+    }
+    
+    function addDelayedGreeting() {
+        showTypingIndicator();
+        setTimeout(() => {
+            hideTypingIndicator();
+            addBotMessage(`Hi! How are you doing today. I'm ${AGENT_NAME}, your assistant. How can I help you ?`);
+            setTimeout(() => addQuickReplies(), 800);
+        }, typingConfig.greetingDelay);
+    }
+    
+    // ========== GLOBAL FUNCTIONS ==========
+    window.sendMessage = function() {
+        const input = document.getElementById('chatInput');
+        const message = input.value.trim();
+        if(!message) return;
+        input.value = '';
+        processUserMessage(message);
+    };
+    
+    // Initialize chatbot
+    function initChatAgent() {
+        const toggle = document.getElementById('chatAgentToggle');
+        const chatWindow = document.getElementById('chatAgentWindow');
+        
+        if(toggle) {
+            toggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                chatWindow.classList.toggle('active');
+                if(chatMessages.length === 0) addDelayedGreeting();
+            });
+        }
+        
+        // FIXED: Close when clicking outside, but NOT when clicking inside the chat window
+        document.addEventListener('click', (e) => {
+            // Check if click is inside the chat agent container
+            const isClickInside = e.target.closest('.chat-agent');
+            
+            // If click is outside AND chat window is open, close it
+            if(!isClickInside && chatWindow.classList.contains('active')) {
+                chatWindow.classList.remove('active');
+            }
+        });
+    }
+    
+    initChatAgent();
+</script>

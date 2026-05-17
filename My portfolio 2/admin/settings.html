@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | Portfolio CMS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #f1f5f9;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: #1e293b;
+            padding: 30px 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 { font-size: 20px; margin-bottom: 30px; color: #818cf8; }
+        .sidebar nav a {
+            display: block;
+            padding: 12px 16px;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .sidebar nav a:hover { background: #334155; color: white; }
+        .sidebar nav a.active { background: #6366f1; color: white; }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+        }
+
+        .settings-card {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: white;
+            font-family: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #4f46e5;
+            transform: translateY(-1px);
+        }
+
+        .delete-btn {
+            background: #ef4444;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
+        }
+
+        .success-msg {
+            background: #10b981;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .leads-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .leads-table th, .leads-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+
+        .leads-table th {
+            color: #818cf8;
+        }
+
+        .export-btn {
+            background: #10b981;
+            margin-top: 15px;
+            margin-right: 10px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .testimonial-item {
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .testimonial-info {
+            flex: 1;
+        }
+
+        .testimonial-name {
+            font-weight: 600;
+            color: #818cf8;
+        }
+
+        .testimonial-text {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+
+        hr {
+            border-color: #334155;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>🎛️ Portfolio CMS</h2>
+        <nav>
+            <a href="dashboard.html">📊 Dashboard</a>
+            <a href="design.html">🎨 Design Editor</a>
+            <a href="media.html">🖼️ Media Manager</a>
+            <a href="projects.html">📂 Projects</a>
+            <a href="settings.html" class="active">⚙️ Settings</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <h1 style="margin-bottom: 30px;">⚙️ Settings</h1>
+
+        <div class="success-msg" id="successMsg">✓ Settings saved successfully!</div>
+
+        <!-- ========== PERSONAL INFO CARD ========== -->
+        <div class="settings-card">
+            <h3 style="margin-bottom: 20px;">👤 Personal Information</h3>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Your Full Name</label>
+                    <input type="text" id="personalName" placeholder="Your Name">
+                </div>
+                <div class="form-group">
+                    <label>Professional Title</label>
+                    <input type="text" id="personalTitle" placeholder="SaaS Copywriter">
+                </div>
+                <div class="form-group">
+                    <label>Bio / About Text</label>
+                    <textarea id="personalBio" rows="3" placeholder="Tell visitors about yourself and your expertise..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="personalEmail" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Hero Phrases (comma separated)</label>
+                    <input type="text" id="heroPhrases" placeholder="SaaS Copywriter, Conversion Expert, B2B Marketing Writer">
+                    <small style="color: #94a3b8;">These will type one after another in the hero section</small>
+                </div>
+            </div>
+            <button onclick="savePersonalInfo()">💾 Save Personal Info</button>
+        </div>
+
+        <!-- ========== STATISTICS CARD ========== -->
+        <div class="settings-card">
+            <h3 style="margin-bottom: 20px;">📊 Statistics Numbers</h3>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Years Experience</label>
+                    <input type="number" id="statYears" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Projects Completed</label>
+                    <input type="number" id="statProjects" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Happy Clients</label>
+                    <input type="number" id="statClients" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Avg. Growth (%)</label>
+                    <input type="number" id="statGrowth" min="0">
+                </div>
+            </div>
+            <button onclick="saveStats()">💾 Save Statistics</button>
+        </div>
+
+        <!-- ========== TESTIMONIALS MANAGER CARD ========== -->
+        <div class="settings-card">
+            <h3 style="margin-bottom: 20px;">⭐ Testimonials Management</h3>
+            
+            <div style="background: #0f172a; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                <h4 style="margin-bottom: 15px;">➕ Add New Testimonial</h4>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Client Name</label>
+                        <input type="text" id="testName" placeholder="e.g., John Mwangi">
+                    </div>
+                    <div class="form-group">
+                        <label>Company Name</label>
+                        <input type="text" id="testCompany" placeholder="e.g., Pinnacle Systems">
+                    </div>
+                    <div class="form-group">
+                        <label>Role / Title</label>
+                        <input type="text" id="testRole" placeholder="e.g., Marketing Director">
+                    </div>
+                    <div class="form-group">
+                        <label>Rating</label>
+                        <select id="testRating">
+                            <option value="5">★★★★★ (5 stars)</option>
+                            <option value="4">★★★★☆ (4 stars)</option>
+                            <option value="3">★★★☆☆ (3 stars)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Testimonial Text</label>
+                        <textarea id="testText" rows="3" placeholder="What did the client say about your work?"></textarea>
+                    </div>
+                </div>
+                <button onclick="addTestimonial()">➕ Add Testimonial</button>
+            </div>
+            
+            <h4>📋 Existing Testimonials</h4>
+            <div id="testimonialsList">
+                <p style="color: #94a3b8; text-align: center; padding: 20px;">Loading testimonials...</p>
+            </div>
+        </div>
+
+        <!-- ========== CONTACT LEADS CARD ========== -->
+        <div class="settings-card">
+            <h3 style="margin-bottom: 20px;">📋 Contact Form Leads</h3>
+            <p style="margin-bottom: 15px; color: #94a3b8;">People who have contacted you through the website:</p>
+            <div id="leadsContainer">
+                <table class="leads-table" id="leadsTable">
+                    <thead>
+                        <tr><th>Name</th><th>Email</th><th>Company</th><th>Message</th><th>Date</th></tr>
+                    </thead>
+                    <tbody id="leadsBody">
+                        <tr><td colspan="5" style="text-align: center;">No leads yet</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="export-btn" onclick="exportLeads()">📥 Export Leads to CSV</button>
+            <button onclick="clearLeads()" style="background: #ef4444;">🗑️ Clear All Leads</button>
+        </div>
+
+        <!-- ========== MULTI-CHAT SETTINGS ========== -->
+        <div class="settings-card">
+            <h3 style="margin-bottom: 20px;">💬 Multi-Chat Button Settings</h3>
+            <p style="margin-bottom: 15px; color: #94a3b8;">Configure all chat options in one place</p>
+            
+            <div class="grid-2">
+                <div style="background: #0f172a; padding: 15px; border-radius: 10px;">
+                    <div class="form-group">
+                        <label>💚 WhatsApp Number</label>
+                        <input type="tel" id="whatsappNumber" placeholder="e.g., 254712345678">
+                        <small style="color: #94a3b8;">Format: 254 followed by 9 digits</small>
+                    </div>
+                </div>
+                
+                <div style="background: #0f172a; padding: 15px; border-radius: 10px;">
+                    <div class="form-group">
+                        <label>✉️ Email Address</label>
+                        <input type="email" id="chatEmail" placeholder="your@email.com">
+                    </div>
+                </div>
+                
+                <div style="background: #0f172a; padding: 15px; border-radius: 10px;">
+                    <div class="form-group">
+                        <label>💙 Facebook Page URL</label>
+                        <input type="url" id="facebookPage" placeholder="https://facebook.com/yourpage">
+                        <small style="color: #94a3b8;">Your Facebook page or profile link</small>
+                    </div>
+                </div>
+                
+                <div style="background: #0f172a; padding: 15px; border-radius: 10px;">
+                    <div class="form-group">
+                        <label>📝 Default Message Template</label>
+                        <textarea id="chatMessageTemplate" rows="2" placeholder="Hi, I saw your portfolio website and would like to discuss..."></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>📧 Email Subject Line</label>
+                    <input type="text" id="emailSubject" value="Inquiry from Portfolio Website">
+                </div>
+                <div class="form-group">
+                    <label>👤 Your Name for Chat</label>
+                    <input type="text" id="chatName" placeholder="Your Name">
+                </div>
+            </div>
+            
+            <button onclick="saveMultiChatSettings()">💾 Save All Chat Settings</button>
+        </div>
+<!-- ========== FAQ MANAGEMENT SECTION ========== -->
+<div class="settings-card">
+    <h3 style="margin-bottom: 20px;">❓ FAQ Management</h3>
+    <p style="margin-bottom: 15px; color: #94a3b8;">Add, edit, or remove frequently asked questions</p>
+    
+    <!-- Add New FAQ Form -->
+    <div style="background: #0f172a; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+        <h4 style="margin-bottom: 15px;">➕ Add New FAQ</h4>
+        <div class="grid-2">
+            <div class="form-group" style="grid-column: span 2;">
+                <label>Question</label>
+                <input type="text" id="faqQuestion" placeholder="e.g., How quickly can you start?">
+            </div>
+            <div class="form-group" style="grid-column: span 2;">
+                <label>Answer</label>
+                <textarea id="faqAnswer" rows="3" placeholder="Write a helpful answer..."></textarea>
+            </div>
+        </div>
+        <button onclick="addFAQ()">➕ Add FAQ</button>
+    </div>
+    
+    <!-- Existing FAQs List -->
+    <h4>📋 Existing FAQs</h4>
+    <div id="faqsList"></div>
+</div>
+
+<script>
+    // ========== FAQ MANAGEMENT FUNCTIONS ==========
+    let faqs = [];
+
+    function loadFAQs() {
+        const saved = localStorage.getItem('faqs');
+        if(saved) {
+            faqs = JSON.parse(saved);
+        } else {
+            faqs = [
+                { question: "How quickly can you start working on my project?", answer: "I typically respond within 24 hours. Once we agree on the scope, I can start immediately or schedule according to your timeline." },
+                { question: "What is your typical turnaround time?", answer: "Turnaround time depends on project scope. A landing page usually takes 3-5 days, email sequences 5-7 days, and full website copy 7-14 days." },
+                { question: "Do you offer revisions?", answer: "Absolutely! All my packages include 2-3 rounds of revisions to ensure you're completely satisfied." }
+            ];
+            localStorage.setItem('faqs', JSON.stringify(faqs));
+        }
+        renderFAQsList();
+    }
+
+    function renderFAQsList() {
+        const container = document.getElementById('faqsList');
+        if(!container) return;
+        
+        if(faqs.length === 0) {
+            container.innerHTML = '<p style="color: #94a3b8; text-align: center; padding: 20px;">No FAQs yet. Add your first one above!</p>';
+            return;
+        }
+        
+        container.innerHTML = faqs.map((faq, index) => `
+            <div style="background: #0f172a; border-radius: 8px; padding: 15px; margin-bottom: 10px;">
+                <div style="font-weight: 600; margin-bottom: 8px;">❓ ${escapeHtml(faq.question)}</div>
+                <div style="font-size: 13px; color: #94a3b8; margin-bottom: 10px;">${escapeHtml(faq.answer)}</div>
+                <button onclick="deleteFAQ(${index})" style="background: #ef4444; padding: 6px 12px; font-size: 12px;">Delete</button>
+            </div>
+        `).join('');
+    }
+
+    function addFAQ() {
+        const question = document.getElementById('faqQuestion')?.value;
+        const answer = document.getElementById('faqAnswer')?.value;
+        
+        if(!question || !answer) {
+            alert('Please fill in both question and answer');
+            return;
+        }
+        
+        faqs.push({ question, answer });
+        localStorage.setItem('faqs', JSON.stringify(faqs));
+        
+        document.getElementById('faqQuestion').value = '';
+        document.getElementById('faqAnswer').value = '';
+        
+        renderFAQsList();
+        showSuccess('FAQ added! Refresh your website to see it.');
+    }
+
+    function deleteFAQ(index) {
+        if(confirm('Delete this FAQ?')) {
+            faqs.splice(index, 1);
+            localStorage.setItem('faqs', JSON.stringify(faqs));
+            renderFAQsList();
+            showSuccess('FAQ deleted!');
+        }
+    }
+
+    // Load FAQs when page loads
+    loadFAQs();
+</script>
+    </div>
+
+    <script>
+        // ========== PERSONAL INFO FUNCTIONS ==========
+        function loadPersonalInfo() {
+            const saved = localStorage.getItem('personalInfo');
+            if(saved) {
+                const info = JSON.parse(saved);
+                document.getElementById('personalName').value = info.name || '';
+                document.getElementById('personalTitle').value = info.title || '';
+                document.getElementById('personalBio').value = info.bio || '';
+                document.getElementById('personalEmail').value = info.email || '';
+                document.getElementById('heroPhrases').value = (info.heroPhrases || ['SaaS Copywriter', 'Conversion Expert']).join(', ');
+            }
+        }
+
+        function savePersonalInfo() {
+            const heroPhrasesStr = document.getElementById('heroPhrases').value;
+            const heroPhrases = heroPhrasesStr.split(',').map(p => p.trim()).filter(p => p);
+            
+            const info = {
+                name: document.getElementById('personalName').value,
+                title: document.getElementById('personalTitle').value,
+                bio: document.getElementById('personalBio').value,
+                email: document.getElementById('personalEmail').value,
+                heroPhrases: heroPhrases.length ? heroPhrases : ["SaaS Copywriter", "Conversion Expert"]
+            };
+            
+            localStorage.setItem('personalInfo', JSON.stringify(info));
+            showSuccess('Personal info saved!');
+        }
+
+        // ========== STATISTICS FUNCTIONS ==========
+        function loadStats() {
+            const saved = localStorage.getItem('statistics');
+            if(saved) {
+                const stats = JSON.parse(saved);
+                document.getElementById('statYears').value = stats.years || 0;
+                document.getElementById('statProjects').value = stats.projects || 0;
+                document.getElementById('statClients').value = stats.clients || 0;
+                document.getElementById('statGrowth').value = stats.growth || 0;
+            } else {
+                document.getElementById('statYears').value = 4;
+                document.getElementById('statProjects').value = 60;
+                document.getElementById('statClients').value = 55;
+                document.getElementById('statGrowth').value = 30;
+            }
+        }
+
+        function saveStats() {
+            const stats = {
+                years: parseInt(document.getElementById('statYears').value) || 0,
+                projects: parseInt(document.getElementById('statProjects').value) || 0,
+                clients: parseInt(document.getElementById('statClients').value) || 0,
+                growth: parseInt(document.getElementById('statGrowth').value) || 0
+            };
+            
+            localStorage.setItem('statistics', JSON.stringify(stats));
+            showSuccess('Statistics saved!');
+        }
+
+        // ========== TESTIMONIALS FUNCTIONS ==========
+        let testimonials = [];
+
+        function loadTestimonials() {
+            const saved = localStorage.getItem('testimonials');
+            if(saved) {
+                testimonials = JSON.parse(saved);
+            } else {
+                testimonials = [
+                    {
+                        id: 1,
+                        name: "John Mwangi",
+                        company: "Pinnacle Systems",
+                        role: "Marketing Director",
+                        rating: 5,
+                        testimonial: "The copy transformed how we communicate our GPS tracking solutions. Our engagement increased significantly and we saw a 30% boost in conversions."
+                    },
+                    {
+                        id: 2,
+                        name: "Sarah Wanjiku",
+                        company: "Highland Logistics",
+                        role: "Operations Manager",
+                        rating: 5,
+                        testimonial: "Finally a copywriter who understands the fleet industry! The case studies practically wrote themselves and our clients love them."
+                    },
+                    {
+                        id: 3,
+                        name: "David Otieno",
+                        company: "NTSA Compliance Ltd",
+                        role: "Compliance Officer",
+                        rating: 4,
+                        testimonial: "Clear, professional, and conversion-focused copy. Highly recommend for any transport sector business looking to grow."
+                    }
+                ];
+                localStorage.setItem('testimonials', JSON.stringify(testimonials));
+            }
+            renderTestimonialsList();
+        }
+
+        function renderTestimonialsList() {
+            const container = document.getElementById('testimonialsList');
+            if(!container) return;
+            
+            if(testimonials.length === 0) {
+                container.innerHTML = '<p style="color: #94a3b8; text-align: center; padding: 20px;">No testimonials yet. Add your first one above!</p>';
+                return;
+            }
+            
+            container.innerHTML = testimonials.map((t, index) => `
+                <div class="testimonial-item">
+                    <div class="testimonial-info">
+                        <div class="testimonial-name">${escapeHtml(t.name)} - ${escapeHtml(t.company)}</div>
+                        <div style="font-size: 12px; color: #fbbf24;">${'★'.repeat(t.rating)}${'☆'.repeat(5-t.rating)}</div>
+                        <div style="font-size: 13px; color: #94a3b8; margin: 5px 0;">${escapeHtml(t.role)}</div>
+                        <div class="testimonial-text">"${escapeHtml(t.testimonial)}"</div>
+                    </div>
+                    <button onclick="deleteTestimonial(${index})" class="delete-btn" style="padding: 6px 12px;">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        function addTestimonial() {
+            const name = document.getElementById('testName')?.value;
+            const company = document.getElementById('testCompany')?.value;
+            const role = document.getElementById('testRole')?.value;
+            const rating = parseInt(document.getElementById('testRating')?.value);
+            const testimonialText = document.getElementById('testText')?.value;
+            
+            if(!name || !testimonialText) {
+                alert('Please fill in client name and testimonial text');
+                return;
+            }
+            
+            testimonials.push({
+                id: Date.now(),
+                name: name,
+                company: company || 'Client',
+                role: role || 'Client',
+                rating: rating || 5,
+                testimonial: testimonialText
+            });
+            
+            localStorage.setItem('testimonials', JSON.stringify(testimonials));
+            
+            document.getElementById('testName').value = '';
+            document.getElementById('testCompany').value = '';
+            document.getElementById('testRole').value = '';
+            document.getElementById('testText').value = '';
+            document.getElementById('testRating').value = '5';
+            
+            renderTestimonialsList();
+            showSuccess('Testimonial added! Refresh your website to see it.');
+        }
+
+        function deleteTestimonial(index) {
+            if(confirm('Delete this testimonial?')) {
+                testimonials.splice(index, 1);
+                localStorage.setItem('testimonials', JSON.stringify(testimonials));
+                renderTestimonialsList();
+                showSuccess('Testimonial deleted!');
+            }
+        }
+
+        // ========== CONTACT LEADS FUNCTIONS ==========
+        function loadLeads() {
+            const leads = JSON.parse(localStorage.getItem('contactLeads') || '[]');
+            const tbody = document.getElementById('leadsBody');
+            
+            if(leads.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No leads yet</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = leads.map(lead => `
+                <tr>
+                    <td>${escapeHtml(lead.name)}</td>
+                    <td>${escapeHtml(lead.email)}</td>
+                    <td>${escapeHtml(lead.company || '-')}</td>
+                    <td>${escapeHtml(lead.message.substring(0, 50))}${lead.message.length > 50 ? '...' : ''}</td>
+                    <td>${new Date(lead.date).toLocaleDateString()}</td>
+                </tr>
+            `).join('');
+        }
+
+        function exportLeads() {
+            const leads = JSON.parse(localStorage.getItem('contactLeads') || '[]');
+            if(leads.length === 0) {
+                alert('No leads to export');
+                return;
+            }
+            
+            let csv = 'Name,Email,Company,Message,Date\n';
+            leads.forEach(lead => {
+                csv += `"${lead.name}","${lead.email}","${lead.company || ''}","${lead.message.replace(/"/g, '""')}","${lead.date}"\n`;
+            });
+            
+            const blob = new Blob([csv], {type: 'text/csv'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `leads_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function clearLeads() {
+            if(confirm('Delete all contact leads? This cannot be undone.')) {
+                localStorage.setItem('contactLeads', '[]');
+                loadLeads();
+                alert('All leads cleared');
+            }
+        }
+
+        // ========== MULTI-CHAT SETTINGS FUNCTIONS ==========
+        function loadMultiChatSettings() {
+            const saved = localStorage.getItem('chatSettings');
+            if(saved) {
+                const settings = JSON.parse(saved);
+                document.getElementById('whatsappNumber').value = settings.whatsappNumber || settings.phoneNumber || '';
+                document.getElementById('chatEmail').value = settings.email || '';
+                document.getElementById('facebookPage').value = settings.facebookPage || '';
+                document.getElementById('chatMessageTemplate').value = settings.messageTemplate || '';
+                document.getElementById('emailSubject').value = settings.emailSubject || 'Inquiry from Portfolio Website';
+                document.getElementById('chatName').value = settings.name || '';
+            } else {
+                document.getElementById('whatsappNumber').value = '254700000000';
+                document.getElementById('chatEmail').value = 'your@email.com';
+                document.getElementById('facebookPage').value = 'https://facebook.com/yourpage';
+                document.getElementById('chatMessageTemplate').value = 'Hi, I saw your portfolio website and would like to discuss a potential project.';
+                document.getElementById('emailSubject').value = 'Inquiry from Portfolio Website';
+            }
+        }
+
+        function saveMultiChatSettings() {
+            const settings = {
+                whatsappNumber: document.getElementById('whatsappNumber').value,
+                phoneNumber: document.getElementById('whatsappNumber').value,
+                email: document.getElementById('chatEmail').value,
+                facebookPage: document.getElementById('facebookPage').value,
+                messageTemplate: document.getElementById('chatMessageTemplate').value,
+                emailSubject: document.getElementById('emailSubject').value,
+                name: document.getElementById('chatName').value,
+                enabled: true
+            };
+            localStorage.setItem('chatSettings', JSON.stringify(settings));
+            showSuccess('Chat settings saved! Refresh your website to see changes.');
+        }
+
+        // ========== HELPER FUNCTIONS ==========
+        function showSuccess(message) {
+            const msg = document.getElementById('successMsg');
+            msg.innerHTML = '✓ ' + message;
+            msg.style.display = 'block';
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 3000);
+        }
+
+        function escapeHtml(text) {
+            if(!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ========== LOAD EVERYTHING ==========
+        loadPersonalInfo();
+        loadStats();
+        loadTestimonials();
+        loadLeads();
+        loadMultiChatSettings();
+        loadFAQs();
+
+ // This now loads the multi-chat settings
+    </script>
+</body>
+</html>

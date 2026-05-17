@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Editor | Portfolio CMS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #f1f5f9;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: #1e293b;
+            padding: 30px 20px;
+        }
+        .sidebar h2 { font-size: 20px; margin-bottom: 30px; color: #818cf8; }
+        .sidebar nav a {
+            display: block;
+            padding: 12px 16px;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .sidebar nav a:hover { background: #334155; color: white; }
+        .sidebar nav a.active { background: #6366f1; color: white; }
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+        }
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #334155;
+        }
+        .save-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .design-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        .design-section {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .design-section h3 {
+            margin-bottom: 20px;
+            color: #818cf8;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: white;
+        }
+        input[type="color"] {
+            height: 50px;
+            cursor: pointer;
+        }
+        .range-value {
+            display: inline-block;
+            margin-left: 10px;
+            color: #818cf8;
+        }
+        .preview-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--preview-bg, #1e293b);
+            border-radius: var(--preview-radius, 12px);
+            text-align: center;
+        }
+        .preview-button {
+            background: var(--preview-primary, #6366f1);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--preview-button-radius, 50px);
+            cursor: pointer;
+        }
+        .success-msg {
+            background: #10b981;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        hr {
+            border-color: #334155;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>🎛️ Portfolio CMS</h2>
+        <nav>
+            <a href="dashboard.html">📊 Dashboard</a>
+            <a href="design.html" class="active">🎨 Design Editor</a>
+            <a href="media.html">🖼️ Media Manager</a>
+            <a href="projects.html">📂 Projects</a>
+            <a href="settings.html">⚙️ Settings</a>
+        </nav>
+    </div>
+    <div class="main-content">
+        <div class="header-bar">
+            <h1>🎨 Design Editor</h1>
+            <button class="save-btn" onclick="saveDesignSettings()">💾 Save All Changes</button>
+        </div>
+
+        <div class="success-msg" id="successMsg">✓ Design settings saved! Refresh your website to see changes.</div>
+
+        <div class="design-grid">
+            <!-- Colors Section -->
+            <div class="design-section">
+                <h3>🎨 Colors</h3>
+                <div class="form-group">
+                    <label>Primary Color (Buttons, Links, Highlights)</label>
+                    <input type="color" id="primaryColor" value="#6366f1">
+                </div>
+                <div class="form-group">
+                    <label>Secondary Color (Hover Effects)</label>
+                    <input type="color" id="secondaryColor" value="#4f46e5">
+                </div>
+                <div class="form-group">
+                    <label>Background Color</label>
+                    <input type="color" id="bgColor" value="#f8fafc">
+                </div>
+                <div class="form-group">
+                    <label>Text Color</label>
+                    <input type="color" id="textColor" value="#0f172a">
+                </div>
+                <div class="form-group">
+                    <label>Card Background Color</label>
+                    <input type="color" id="cardBgColor" value="#ffffff">
+                </div>
+            </div>
+
+            <!-- Layout Section -->
+            <div class="design-section">
+                <h3>📐 Layout & Spacing</h3>
+                <div class="form-group">
+                    <label>Hero Section Height</label>
+                    <select id="heroHeight">
+                        <option value="60vh">Short (60% of screen)</option>
+                        <option value="80vh" selected>Medium (80% of screen)</option>
+                        <option value="100vh">Full Screen (100%)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Border Radius (Cards, Images)</label>
+                    <input type="range" id="borderRadius" min="0" max="30" value="12">
+                    <span class="range-value" id="borderRadiusValue">12px</span>
+                </div>
+                <div class="form-group">
+                    <label>Button Border Radius</label>
+                    <input type="range" id="buttonRadius" min="0" max="50" value="50">
+                    <span class="range-value" id="buttonRadiusValue">50px</span>
+                </div>
+                <div class="form-group">
+                    <label>Spacing Between Sections (px)</label>
+                    <input type="range" id="spacing" min="10" max="80" value="20">
+                    <span class="range-value" id="spacingValue">20px</span>
+                </div>
+            </div>
+
+            <!-- Typography Section -->
+            <div class="design-section">
+                <h3>📝 Typography</h3>
+                <div class="form-group">
+                    <label>Heading 1 Size (Hero Title)</label>
+                    <input type="range" id="h1Size" min="32" max="80" value="56">
+                    <span class="range-value" id="h1SizeValue">56px</span>
+                </div>
+                <div class="form-group">
+                    <label>Heading 2 Size (Section Titles)</label>
+                    <input type="range" id="h2Size" min="24" max="60" value="36">
+                    <span class="range-value" id="h2SizeValue">36px</span>
+                </div>
+                <div class="form-group">
+                    <label>Body Text Size</label>
+                    <input type="range" id="bodySize" min="14" max="24" value="18">
+                    <span class="range-value" id="bodySizeValue">18px</span>
+                </div>
+            </div>
+
+            <!-- Live Preview Section -->
+            <div class="design-section">
+                <h3>🔍 Live Preview</h3>
+                <div class="preview-box" id="previewBox">
+                    <h4 style="margin-bottom: 15px;">Sample Button</h4>
+                    <button class="preview-button" id="previewButton">Click Me</button>
+                    <p style="margin-top: 15px; font-size: 14px;">This is how your buttons will look</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Background Image Section -->
+        <div class="design-section" style="margin-top: 30px;">
+            <h3>🖼️ Hero Background Image</h3>
+            <div class="form-group">
+                <label>Background Image URL (or upload in Media Manager)</label>
+                <input type="text" id="bgImage" placeholder="path/to/image.jpg or leave empty for solid color">
+                <small style="color: #94a3b8; display: block; margin-top: 5px;">Tip: Upload an image in Media Manager first, then copy the filename here</small>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load saved settings
+        function loadSettings() {
+            const saved = localStorage.getItem('designSettings');
+            if(saved) {
+                const settings = JSON.parse(saved);
+                if(settings.primaryColor) document.getElementById('primaryColor').value = settings.primaryColor;
+                if(settings.secondaryColor) document.getElementById('secondaryColor').value = settings.secondaryColor;
+                if(settings.bgColor) document.getElementById('bgColor').value = settings.bgColor;
+                if(settings.textColor) document.getElementById('textColor').value = settings.textColor;
+                if(settings.cardBgColor) document.getElementById('cardBgColor').value = settings.cardBgColor;
+                if(settings.heroHeight) document.getElementById('heroHeight').value = settings.heroHeight;
+                if(settings.borderRadius) document.getElementById('borderRadius').value = settings.borderRadius;
+                if(settings.buttonRadius) document.getElementById('buttonRadius').value = settings.buttonRadius;
+                if(settings.spacing) document.getElementById('spacing').value = settings.spacing;
+                if(settings.h1Size) document.getElementById('h1Size').value = settings.h1Size;
+                if(settings.h2Size) document.getElementById('h2Size').value = settings.h2Size;
+                if(settings.bodySize) document.getElementById('bodySize').value = settings.bodySize;
+                if(settings.bgImage) document.getElementById('bgImage').value = settings.bgImage;
+            }
+            updateAllValues();
+            updatePreview();
+        }
+
+        function updateAllValues() {
+            document.getElementById('borderRadiusValue').innerText = document.getElementById('borderRadius').value + 'px';
+            document.getElementById('buttonRadiusValue').innerText = document.getElementById('buttonRadius').value + 'px';
+            document.getElementById('spacingValue').innerText = document.getElementById('spacing').value + 'px';
+            document.getElementById('h1SizeValue').innerText = document.getElementById('h1Size').value + 'px';
+            document.getElementById('h2SizeValue').innerText = document.getElementById('h2Size').value + 'px';
+            document.getElementById('bodySizeValue').innerText = document.getElementById('bodySize').value + 'px';
+        }
+
+        function updatePreview() {
+            const previewBox = document.getElementById('previewBox');
+            const previewButton = document.getElementById('previewButton');
+            const primary = document.getElementById('primaryColor').value;
+            const buttonRadius = document.getElementById('buttonRadius').value + 'px';
+            const cardBg = document.getElementById('cardBgColor').value;
+            
+            previewBox.style.setProperty('--preview-bg', cardBg);
+            previewBox.style.setProperty('--preview-radius', document.getElementById('borderRadius').value + 'px');
+            previewButton.style.background = primary;
+            previewButton.style.borderRadius = buttonRadius;
+        }
+
+        function saveDesignSettings() {
+            const settings = {
+                colors: {
+                    primary: document.getElementById('primaryColor').value,
+                    secondary: document.getElementById('secondaryColor').value,
+                    background: document.getElementById('bgColor').value,
+                    text: document.getElementById('textColor').value,
+                    cardBg: document.getElementById('cardBgColor').value
+                },
+                layout: {
+                    heroHeight: document.getElementById('heroHeight').value,
+                    borderRadius: document.getElementById('borderRadius').value + 'px',
+                    buttonRadius: document.getElementById('buttonRadius').value + 'px',
+                    spacing: document.getElementById('spacing').value + 'px'
+                },
+                typography: {
+                    h1Size: document.getElementById('h1Size').value + 'px',
+                    h2Size: document.getElementById('h2Size').value + 'px',
+                    bodySize: document.getElementById('bodySize').value + 'px'
+                },
+                backgroundImage: document.getElementById('bgImage').value
+            };
+            
+            // Save to localStorage for now (will save to JSON file when going live)
+            localStorage.setItem('designSettings', JSON.stringify(settings));
+            
+            // Also save to settings.json file
+            const dataStr = JSON.stringify(settings, null, 2);
+            const blob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'settings.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            // Show success message
+            const msg = document.getElementById('successMsg');
+            msg.style.display = 'block';
+            setTimeout(() => msg.style.display = 'none', 3000);
+        }
+
+        // Add event listeners to all inputs for live preview
+        const inputs = ['primaryColor', 'secondaryColor', 'bgColor', 'textColor', 'cardBgColor', 'borderRadius', 'buttonRadius', 'spacing', 'h1Size', 'h2Size', 'bodySize', 'heroHeight'];
+        inputs.forEach(id => {
+            const element = document.getElementById(id);
+            if(element) {
+                element.addEventListener('input', () => {
+                    updateAllValues();
+                    updatePreview();
+                });
+            }
+        });
+        
+        document.getElementById('borderRadius')?.addEventListener('input', () => updatePreview());
+        document.getElementById('buttonRadius')?.addEventListener('input', () => updatePreview());
+        document.getElementById('cardBgColor')?.addEventListener('input', () => updatePreview());
+        document.getElementById('primaryColor')?.addEventListener('input', () => updatePreview());
+
+        loadSettings();
+    </script>
+</body>
+</html>

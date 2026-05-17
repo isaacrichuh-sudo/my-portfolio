@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Manager | Portfolio CMS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #f1f5f9;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: #1e293b;
+            padding: 30px 20px;
+            overflow-y: auto;
+        }
+        .sidebar h2 { font-size: 20px; margin-bottom: 30px; color: #818cf8; }
+        .sidebar nav a {
+            display: block;
+            padding: 12px 16px;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .sidebar nav a:hover { background: #334155; color: white; }
+        .sidebar nav a.active { background: #6366f1; color: white; }
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+        }
+        .upload-area {
+            border: 2px dashed #334155;
+            border-radius: 16px;
+            padding: 50px;
+            text-align: center;
+            margin-bottom: 30px;
+            background: #1e293b;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .upload-area:hover {
+            border-color: #6366f1;
+            background: #334155;
+        }
+        .upload-area.drag-over {
+            border-color: #10b981;
+            background: #2d5a3b;
+        }
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .media-item {
+            background: #1e293b;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+        .media-image-container {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .media-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .media-info {
+            padding: 12px;
+            font-size: 12px;
+            word-break: break-all;
+        }
+        .media-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #cbd5e1;
+            font-size: 11px;
+        }
+        .media-size {
+            font-size: 10px;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+        .delete-media {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+        .copy-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .success-msg {
+            background: #10b981;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .error-msg {
+            background: #ef4444;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .warning-msg {
+            background: #f59e0b;
+            color: #0f172a;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .storage-info {
+            background: #334155;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>🎛️ Portfolio CMS</h2>
+        <nav>
+            <a href="dashboard.html">📊 Dashboard</a>
+            <a href="design.html">🎨 Design Editor</a>
+            <a href="media.html" class="active">🖼️ Media Manager</a>
+            <a href="projects.html">📂 Projects</a>
+            <a href="settings.html">⚙️ Settings</a>
+        </nav>
+    </div>
+    <div class="main-content">
+        <h1>🖼️ Media Manager</h1>
+
+        <div class="storage-info" id="storageInfo">
+            Loading storage info...
+        </div>
+
+        <div class="success-msg" id="successMsg">✓ File uploaded successfully!</div>
+        <div class="error-msg" id="errorMsg">✗ Upload failed. File too large or storage full.</div>
+        <div class="warning-msg" id="warningMsg">⚠️ Storage is nearly full! Delete some files to continue uploading.</div>
+
+        <div class="upload-area" id="uploadArea">
+            <div style="font-size: 48px; margin-bottom: 15px;">📸</div>
+            <p>Drag & Drop images here</p>
+            <p style="color: #94a3b8; font-size: 14px; margin-top: 10px;">PNG, JPG, GIF, WEBP (Max 2MB each)</p>
+            <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+        </div>
+
+        <h3>📋 Your Media Files (<span id="fileCount">0</span>)</h3>
+        <div id="mediaGrid" class="media-grid">
+            <p style="grid-column: 1/-1; text-align: center; padding: 40px;">No files uploaded yet. Drag and drop images above!</p>
+        </div>
+        
+        <button onclick="clearAllMedia()" style="background: #ef4444; margin-top: 20px;">🗑️ Clear All Media</button>
+    </div>
+
+    <script>
+        let mediaFiles = [];
+
+        function getStorageUsage() {
+            const total = JSON.stringify(localStorage).length;
+            const usedMB = (total / 1024 / 1024).toFixed(2);
+            const percent = (total / (5 * 1024 * 1024) * 100).toFixed(0);
+            return { total, usedMB, percent };
+        }
+
+        function updateStorageInfo() {
+            const info = getStorageUsage();
+            const infoDiv = document.getElementById('storageInfo');
+            const warningDiv = document.getElementById('warningMsg');
+            
+            infoDiv.innerHTML = `💾 Storage used: ${info.usedMB} MB / ~5 MB limit (${info.percent}%)`;
+            
+            if (info.percent > 80) {
+                warningDiv.style.display = 'block';
+            } else {
+                warningDiv.style.display = 'none';
+            }
+        }
+
+        function loadMediaList() {
+            const saved = localStorage.getItem('mediaFiles');
+            if(saved) {
+                try {
+                    mediaFiles = JSON.parse(saved);
+                } catch(e) {
+                    mediaFiles = [];
+                }
+            } else {
+                mediaFiles = [];
+            }
+            document.getElementById('fileCount').innerText = mediaFiles.length;
+            renderMediaGrid();
+            updateStorageInfo();
+        }
+
+        function renderMediaGrid() {
+            const grid = document.getElementById('mediaGrid');
+            if(mediaFiles.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px;">No files uploaded yet. Drag and drop images above!</p>';
+                return;
+            }
+            
+            grid.innerHTML = mediaFiles.map((file, index) => `
+                <div class="media-item">
+                    <div class="media-image-container">
+                        ${file.type && file.type.startsWith('image/') ? 
+                            `<img src="${file.data}" class="media-image" alt="${file.name}">` : 
+                            `<div style="display: flex; align-items: center; justify-content: center; height: 100%;">🖼️ No preview</div>`
+                        }
+                    </div>
+                    <div class="media-info">
+                        <div class="media-name">📷 ${file.name}</div>
+                        <div class="media-size">${(file.size / 1024).toFixed(1)} KB</div>
+                        <button class="delete-media" onclick="deleteMedia(${index})">🗑️ Delete</button>
+                        <button class="copy-btn" onclick="copyFilename('${file.name.replace(/'/g, "\\'")}')">📋 Copy Filename</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addMediaFile(file) {
+            // Check file size (max 2MB)
+            if(file.size > 2 * 1024 * 1024) {
+                const errorMsg = document.getElementById('errorMsg');
+                errorMsg.innerHTML = '✗ File too large! Maximum size is 2MB. Please compress your image.';
+                errorMsg.style.display = 'block';
+                setTimeout(() => errorMsg.style.display = 'none', 3000);
+                return false;
+            }
+            
+            // Check file type
+            if(!file.type.startsWith('image/')) {
+                const errorMsg = document.getElementById('errorMsg');
+                errorMsg.innerHTML = '✗ Please upload an image file (PNG, JPG, GIF, WEBP)';
+                errorMsg.style.display = 'block';
+                setTimeout(() => errorMsg.style.display = 'none', 3000);
+                return false;
+            }
+            
+            // Check storage space
+            const currentSize = JSON.stringify(localStorage).length;
+            const estimatedNewSize = file.size;
+            if(currentSize + estimatedNewSize > 4.5 * 1024 * 1024) {
+                const errorMsg = document.getElementById('errorMsg');
+                errorMsg.innerHTML = '✗ Storage full! Delete some files before uploading more.';
+                errorMsg.style.display = 'block';
+                setTimeout(() => errorMsg.style.display = 'none', 3000);
+                return false;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                mediaFiles.push({
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    data: e.target.result,
+                    uploadDate: new Date().toISOString()
+                });
+                localStorage.setItem('mediaFiles', JSON.stringify(mediaFiles));
+                renderMediaGrid();
+                updateStorageInfo();
+                document.getElementById('fileCount').innerText = mediaFiles.length;
+                
+                const successMsg = document.getElementById('successMsg');
+                successMsg.style.display = 'block';
+                setTimeout(() => successMsg.style.display = 'none', 2000);
+            };
+            reader.onerror = function() {
+                const errorMsg = document.getElementById('errorMsg');
+                errorMsg.innerHTML = '✗ Error reading file. Please try again.';
+                errorMsg.style.display = 'block';
+                setTimeout(() => errorMsg.style.display = 'none', 3000);
+            };
+            reader.readAsDataURL(file);
+            return true;
+        }
+
+        function deleteMedia(index) {
+            if(confirm('Delete this file? This will remove it from any projects using it.')) {
+                mediaFiles.splice(index, 1);
+                localStorage.setItem('mediaFiles', JSON.stringify(mediaFiles));
+                renderMediaGrid();
+                updateStorageInfo();
+                document.getElementById('fileCount').innerText = mediaFiles.length;
+            }
+        }
+
+        function clearAllMedia() {
+            if(confirm('⚠️ WARNING: This will delete ALL media files. This action cannot be undone. Continue?')) {
+                mediaFiles = [];
+                localStorage.setItem('mediaFiles', JSON.stringify(mediaFiles));
+                renderMediaGrid();
+                updateStorageInfo();
+                document.getElementById('fileCount').innerText = 0;
+                const successMsg = document.getElementById('successMsg');
+                successMsg.innerHTML = '✓ All media files cleared.';
+                successMsg.style.display = 'block';
+                setTimeout(() => successMsg.style.display = 'none', 2000);
+            }
+        }
+
+        function copyFilename(filename) {
+            navigator.clipboard.writeText(filename);
+            alert('✅ Filename copied: ' + filename + '\n\nPaste this in the Project Image field in Projects Manager.');
+        }
+
+        // Drag & Drop handlers
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('drag-over');
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('drag-over');
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+            const files = Array.from(e.dataTransfer.files);
+            files.forEach(file => addMediaFile(file));
+        });
+        fileInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            files.forEach(file => addMediaFile(file));
+            fileInput.value = '';
+        });
+
+        // Initialize
+        loadMediaList();
+    </script>
+</body>
+</html>
