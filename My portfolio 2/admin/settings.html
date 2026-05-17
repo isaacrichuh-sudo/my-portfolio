@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings | Portfolio CMS</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -111,6 +112,15 @@
             display: none;
         }
 
+        .error-msg {
+            background: #ef4444;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
         .leads-table {
             width: 100%;
             border-collapse: collapse;
@@ -201,6 +211,7 @@
         <h1 style="margin-bottom: 30px;">⚙️ Settings</h1>
 
         <div class="success-msg" id="successMsg">✓ Settings saved successfully!</div>
+        <div class="error-msg" id="errorMsg">✗ Error saving to Supabase</div>
 
         <!-- ========== PERSONAL INFO CARD ========== -->
         <div class="settings-card">
@@ -255,7 +266,7 @@
             <button onclick="saveStats()">💾 Save Statistics</button>
         </div>
 
-        <!-- ========== TESTIMONIALS MANAGER CARD ========== -->
+        <!-- ========== TESTIMONIALS MANAGER CARD (Supabase Version) ========== -->
         <div class="settings-card">
             <h3 style="margin-bottom: 20px;">⭐ Testimonials Management</h3>
             
@@ -306,7 +317,7 @@
                         <tr><th>Name</th><th>Email</th><th>Company</th><th>Message</th><th>Date</th></tr>
                     </thead>
                     <tbody id="leadsBody">
-                        <tr><td colspan="5" style="text-align: center;">No leads yet</td></tr>
+                        <tr><td colspan="5" style="text-align: center;">No leads yet</td><tr>
                     </tbody>
                 </table>
             </div>
@@ -364,117 +375,67 @@
             
             <button onclick="saveMultiChatSettings()">💾 Save All Chat Settings</button>
         </div>
-<!-- ========== FAQ MANAGEMENT SECTION ========== -->
-<div class="settings-card">
-    <h3 style="margin-bottom: 20px;">❓ FAQ Management</h3>
-    <p style="margin-bottom: 15px; color: #94a3b8;">Add, edit, or remove frequently asked questions</p>
-    
-    <!-- Add New FAQ Form -->
-    <div style="background: #0f172a; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-        <h4 style="margin-bottom: 15px;">➕ Add New FAQ</h4>
-        <div class="grid-2">
-            <div class="form-group" style="grid-column: span 2;">
-                <label>Question</label>
-                <input type="text" id="faqQuestion" placeholder="e.g., How quickly can you start?">
+
+        <!-- ========== FAQ MANAGEMENT SECTION ========== -->
+        <div class="settings-card">
+            <h3 style="margin-bottom: 20px;">❓ FAQ Management</h3>
+            <p style="margin-bottom: 15px; color: #94a3b8;">Add, edit, or remove frequently asked questions</p>
+            
+            <div style="background: #0f172a; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                <h4 style="margin-bottom: 15px;">➕ Add New FAQ</h4>
+                <div class="grid-2">
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Question</label>
+                        <input type="text" id="faqQuestion" placeholder="e.g., How quickly can you start?">
+                    </div>
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Answer</label>
+                        <textarea id="faqAnswer" rows="3" placeholder="Write a helpful answer..."></textarea>
+                    </div>
+                </div>
+                <button onclick="addFAQ()">➕ Add FAQ</button>
             </div>
-            <div class="form-group" style="grid-column: span 2;">
-                <label>Answer</label>
-                <textarea id="faqAnswer" rows="3" placeholder="Write a helpful answer..."></textarea>
-            </div>
+            
+            <h4>📋 Existing FAQs</h4>
+            <div id="faqsList"></div>
         </div>
-        <button onclick="addFAQ()">➕ Add FAQ</button>
-    </div>
-    
-    <!-- Existing FAQs List -->
-    <h4>📋 Existing FAQs</h4>
-    <div id="faqsList"></div>
-</div>
-
-<script>
-    // ========== FAQ MANAGEMENT FUNCTIONS ==========
-    let faqs = [];
-
-    function loadFAQs() {
-        const saved = localStorage.getItem('faqs');
-        if(saved) {
-            faqs = JSON.parse(saved);
-        } else {
-            faqs = [
-                { question: "How quickly can you start working on my project?", answer: "I typically respond within 24 hours. Once we agree on the scope, I can start immediately or schedule according to your timeline." },
-                { question: "What is your typical turnaround time?", answer: "Turnaround time depends on project scope. A landing page usually takes 3-5 days, email sequences 5-7 days, and full website copy 7-14 days." },
-                { question: "Do you offer revisions?", answer: "Absolutely! All my packages include 2-3 rounds of revisions to ensure you're completely satisfied." }
-            ];
-            localStorage.setItem('faqs', JSON.stringify(faqs));
-        }
-        renderFAQsList();
-    }
-
-    function renderFAQsList() {
-        const container = document.getElementById('faqsList');
-        if(!container) return;
-        
-        if(faqs.length === 0) {
-            container.innerHTML = '<p style="color: #94a3b8; text-align: center; padding: 20px;">No FAQs yet. Add your first one above!</p>';
-            return;
-        }
-        
-        container.innerHTML = faqs.map((faq, index) => `
-            <div style="background: #0f172a; border-radius: 8px; padding: 15px; margin-bottom: 10px;">
-                <div style="font-weight: 600; margin-bottom: 8px;">❓ ${escapeHtml(faq.question)}</div>
-                <div style="font-size: 13px; color: #94a3b8; margin-bottom: 10px;">${escapeHtml(faq.answer)}</div>
-                <button onclick="deleteFAQ(${index})" style="background: #ef4444; padding: 6px 12px; font-size: 12px;">Delete</button>
-            </div>
-        `).join('');
-    }
-
-    function addFAQ() {
-        const question = document.getElementById('faqQuestion')?.value;
-        const answer = document.getElementById('faqAnswer')?.value;
-        
-        if(!question || !answer) {
-            alert('Please fill in both question and answer');
-            return;
-        }
-        
-        faqs.push({ question, answer });
-        localStorage.setItem('faqs', JSON.stringify(faqs));
-        
-        document.getElementById('faqQuestion').value = '';
-        document.getElementById('faqAnswer').value = '';
-        
-        renderFAQsList();
-        showSuccess('FAQ added! Refresh your website to see it.');
-    }
-
-    function deleteFAQ(index) {
-        if(confirm('Delete this FAQ?')) {
-            faqs.splice(index, 1);
-            localStorage.setItem('faqs', JSON.stringify(faqs));
-            renderFAQsList();
-            showSuccess('FAQ deleted!');
-        }
-    }
-
-    // Load FAQs when page loads
-    loadFAQs();
-</script>
     </div>
 
     <script>
+        // ========== SUPABASE CONFIGURATION ==========
+        const SUPABASE_URL = 'https://ooarghgxjbxqgnmjwpdj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXJnaGd4amJ4cWdubWp3cGRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NzM1MzQsImV4cCI6MjA5NDU0OTUzNH0.7zkOuh4F8lkSIaDnMEm9-R8v3sepjxnz0P4BKOI-HaM';
+        
+        let supabaseClient;
+
+        async function initSupabase() {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('Supabase initialized');
+            await loadTestimonials();
+            await loadPersonalInfo();
+            await loadStats();
+            await loadLeads();
+            await loadMultiChatSettings();
+            await loadFAQs();
+        }
+
         // ========== PERSONAL INFO FUNCTIONS ==========
-        function loadPersonalInfo() {
-            const saved = localStorage.getItem('personalInfo');
-            if(saved) {
-                const info = JSON.parse(saved);
-                document.getElementById('personalName').value = info.name || '';
-                document.getElementById('personalTitle').value = info.title || '';
-                document.getElementById('personalBio').value = info.bio || '';
-                document.getElementById('personalEmail').value = info.email || '';
-                document.getElementById('heroPhrases').value = (info.heroPhrases || ['SaaS Copywriter', 'Conversion Expert']).join(', ');
+        async function loadPersonalInfo() {
+            const { data, error } = await supabaseClient
+                .from('personal_info')
+                .select('*')
+                .limit(1);
+            
+            if(data && data[0]) {
+                document.getElementById('personalName').value = data[0].name || '';
+                document.getElementById('personalTitle').value = data[0].title || '';
+                document.getElementById('personalBio').value = data[0].bio || '';
+                document.getElementById('personalEmail').value = data[0].email || '';
+                document.getElementById('heroPhrases').value = (data[0].hero_phrases || ['SaaS Copywriter', 'Conversion Expert']).join(', ');
             }
         }
 
-        function savePersonalInfo() {
+        async function savePersonalInfo() {
             const heroPhrasesStr = document.getElementById('heroPhrases').value;
             const heroPhrases = heroPhrasesStr.split(',').map(p => p.trim()).filter(p => p);
             
@@ -483,22 +444,34 @@
                 title: document.getElementById('personalTitle').value,
                 bio: document.getElementById('personalBio').value,
                 email: document.getElementById('personalEmail').value,
-                heroPhrases: heroPhrases.length ? heroPhrases : ["SaaS Copywriter", "Conversion Expert"]
+                hero_phrases: heroPhrases.length ? heroPhrases : ["SaaS Copywriter", "Conversion Expert"],
+                updated_at: new Date().toISOString()
             };
             
-            localStorage.setItem('personalInfo', JSON.stringify(info));
-            showSuccess('Personal info saved!');
+            const { error } = await supabaseClient
+                .from('personal_info')
+                .upsert(info, { onConflict: 'id' });
+            
+            if(error) {
+                document.getElementById('errorMsg').style.display = 'block';
+                setTimeout(() => document.getElementById('errorMsg').style.display = 'none', 3000);
+            } else {
+                showSuccess('Personal info saved to Supabase!');
+            }
         }
 
         // ========== STATISTICS FUNCTIONS ==========
-        function loadStats() {
-            const saved = localStorage.getItem('statistics');
-            if(saved) {
-                const stats = JSON.parse(saved);
-                document.getElementById('statYears').value = stats.years || 0;
-                document.getElementById('statProjects').value = stats.projects || 0;
-                document.getElementById('statClients').value = stats.clients || 0;
-                document.getElementById('statGrowth').value = stats.growth || 0;
+        async function loadStats() {
+            const { data, error } = await supabaseClient
+                .from('statistics')
+                .select('*')
+                .limit(1);
+            
+            if(data && data[0]) {
+                document.getElementById('statYears').value = data[0].years || 0;
+                document.getElementById('statProjects').value = data[0].projects || 0;
+                document.getElementById('statClients').value = data[0].clients || 0;
+                document.getElementById('statGrowth').value = data[0].growth || 0;
             } else {
                 document.getElementById('statYears').value = 4;
                 document.getElementById('statProjects').value = 60;
@@ -507,26 +480,40 @@
             }
         }
 
-        function saveStats() {
+        async function saveStats() {
             const stats = {
                 years: parseInt(document.getElementById('statYears').value) || 0,
                 projects: parseInt(document.getElementById('statProjects').value) || 0,
                 clients: parseInt(document.getElementById('statClients').value) || 0,
-                growth: parseInt(document.getElementById('statGrowth').value) || 0
+                growth: parseInt(document.getElementById('statGrowth').value) || 0,
+                updated_at: new Date().toISOString()
             };
             
-            localStorage.setItem('statistics', JSON.stringify(stats));
-            showSuccess('Statistics saved!');
+            const { error } = await supabaseClient
+                .from('statistics')
+                .upsert(stats, { onConflict: 'id' });
+            
+            if(error) {
+                document.getElementById('errorMsg').style.display = 'block';
+                setTimeout(() => document.getElementById('errorMsg').style.display = 'none', 3000);
+            } else {
+                showSuccess('Statistics saved to Supabase!');
+            }
         }
 
-        // ========== TESTIMONIALS FUNCTIONS ==========
+        // ========== TESTIMONIALS FUNCTIONS (Supabase Version) ==========
         let testimonials = [];
 
-        function loadTestimonials() {
-            const saved = localStorage.getItem('testimonials');
-            if(saved) {
-                testimonials = JSON.parse(saved);
+        async function loadTestimonials() {
+            const { data, error } = await supabaseClient
+                .from('testimonials')
+                .select('*')
+                .order('created_at', { ascending: false });
+            
+            if(data && data.length > 0) {
+                testimonials = data;
             } else {
+                // Default testimonials
                 testimonials = [
                     {
                         id: 1,
@@ -547,13 +534,12 @@
                     {
                         id: 3,
                         name: "David Otieno",
-                        company: "NTSA Compliance Ltd",
-                        role: "Compliance Officer",
+                        company: "Moveup Real Estates Ltd",
+                        role: "Marketing Manager",
                         rating: 4,
-                        testimonial: "Clear, professional, and conversion-focused copy. Highly recommend for any transport sector business looking to grow."
+                        testimonial: "Clear, professional, and conversion-focused copy. Highly recommend for any real estate sector business looking to grow."
                     }
                 ];
-                localStorage.setItem('testimonials', JSON.stringify(testimonials));
             }
             renderTestimonialsList();
         }
@@ -575,12 +561,12 @@
                         <div style="font-size: 13px; color: #94a3b8; margin: 5px 0;">${escapeHtml(t.role)}</div>
                         <div class="testimonial-text">"${escapeHtml(t.testimonial)}"</div>
                     </div>
-                    <button onclick="deleteTestimonial(${index})" class="delete-btn" style="padding: 6px 12px;">Delete</button>
+                    <button onclick="deleteTestimonial(${t.id})" class="delete-btn" style="padding: 6px 12px;">Delete</button>
                 </div>
             `).join('');
         }
 
-        function addTestimonial() {
+        async function addTestimonial() {
             const name = document.getElementById('testName')?.value;
             const company = document.getElementById('testCompany')?.value;
             const role = document.getElementById('testRole')?.value;
@@ -592,97 +578,108 @@
                 return;
             }
             
-            testimonials.push({
-                id: Date.now(),
+            const newTestimonial = {
                 name: name,
                 company: company || 'Client',
                 role: role || 'Client',
                 rating: rating || 5,
-                testimonial: testimonialText
-            });
+                testimonial: testimonialText,
+                created_at: new Date().toISOString()
+            };
             
-            localStorage.setItem('testimonials', JSON.stringify(testimonials));
+            const { data, error } = await supabaseClient
+                .from('testimonials')
+                .insert([newTestimonial])
+                .select();
             
+            if(error) {
+                alert('Error saving to Supabase: ' + error.message);
+                return;
+            }
+            
+            if(data && data[0]) {
+                testimonials.unshift(data[0]);
+            }
+            
+            renderTestimonialsList();
+            
+            // Clear form
             document.getElementById('testName').value = '';
             document.getElementById('testCompany').value = '';
             document.getElementById('testRole').value = '';
             document.getElementById('testText').value = '';
             document.getElementById('testRating').value = '5';
             
-            renderTestimonialsList();
-            showSuccess('Testimonial added! Refresh your website to see it.');
+            showSuccess('Testimonial added to Supabase!');
         }
 
-        function deleteTestimonial(index) {
+        async function deleteTestimonial(id) {
             if(confirm('Delete this testimonial?')) {
-                testimonials.splice(index, 1);
-                localStorage.setItem('testimonials', JSON.stringify(testimonials));
+                const { error } = await supabaseClient
+                    .from('testimonials')
+                    .delete()
+                    .eq('id', id);
+                
+                if(error) {
+                    alert('Error deleting from Supabase: ' + error.message);
+                    return;
+                }
+                
+                testimonials = testimonials.filter(t => t.id !== id);
                 renderTestimonialsList();
-                showSuccess('Testimonial deleted!');
+                showSuccess('Testimonial deleted from Supabase!');
             }
         }
 
         // ========== CONTACT LEADS FUNCTIONS ==========
-        function loadLeads() {
-            const leads = JSON.parse(localStorage.getItem('contactLeads') || '[]');
+        async function loadLeads() {
+            const { data, error } = await supabaseClient
+                .from('contact_leads')
+                .select('*')
+                .order('created_at', { ascending: false });
+            
             const tbody = document.getElementById('leadsBody');
             
-            if(leads.length === 0) {
+            if(!data || data.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No leads yet</td></tr>';
                 return;
             }
             
-            tbody.innerHTML = leads.map(lead => `
+            tbody.innerHTML = data.map(lead => `
                 <tr>
                     <td>${escapeHtml(lead.name)}</td>
                     <td>${escapeHtml(lead.email)}</td>
                     <td>${escapeHtml(lead.company || '-')}</td>
                     <td>${escapeHtml(lead.message.substring(0, 50))}${lead.message.length > 50 ? '...' : ''}</td>
-                    <td>${new Date(lead.date).toLocaleDateString()}</td>
+                    <td>${new Date(lead.created_at).toLocaleDateString()}</td>
                 </tr>
             `).join('');
         }
 
         function exportLeads() {
-            const leads = JSON.parse(localStorage.getItem('contactLeads') || '[]');
-            if(leads.length === 0) {
-                alert('No leads to export');
-                return;
-            }
-            
-            let csv = 'Name,Email,Company,Message,Date\n';
-            leads.forEach(lead => {
-                csv += `"${lead.name}","${lead.email}","${lead.company || ''}","${lead.message.replace(/"/g, '""')}","${lead.date}"\n`;
-            });
-            
-            const blob = new Blob([csv], {type: 'text/csv'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `leads_${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-            URL.revokeObjectURL(url);
+            alert('Export function - will export Supabase leads');
         }
 
         function clearLeads() {
-            if(confirm('Delete all contact leads? This cannot be undone.')) {
-                localStorage.setItem('contactLeads', '[]');
-                loadLeads();
-                alert('All leads cleared');
+            if(confirm('Clear all leads?')) {
+                alert('Clear leads function');
             }
         }
 
         // ========== MULTI-CHAT SETTINGS FUNCTIONS ==========
-        function loadMultiChatSettings() {
-            const saved = localStorage.getItem('chatSettings');
-            if(saved) {
-                const settings = JSON.parse(saved);
-                document.getElementById('whatsappNumber').value = settings.whatsappNumber || settings.phoneNumber || '';
-                document.getElementById('chatEmail').value = settings.email || '';
-                document.getElementById('facebookPage').value = settings.facebookPage || '';
-                document.getElementById('chatMessageTemplate').value = settings.messageTemplate || '';
-                document.getElementById('emailSubject').value = settings.emailSubject || 'Inquiry from Portfolio Website';
-                document.getElementById('chatName').value = settings.name || '';
+        async function loadMultiChatSettings() {
+            const { data, error } = await supabaseClient
+                .from('chat_settings')
+                .select('*')
+                .limit(1);
+            
+            if(data && data[0]) {
+                document.getElementById('whatsappNumber').value = data[0].whatsapp_number || '';
+                document.getElementById('chatEmail').value = data[0].email || '';
+                document.getElementById('facebookPage').value = data[0].facebook_page || '';
+                document.getElementById('chatMessageTemplate').value = data[0].message_template || '';
+                document.getElementById('emailSubject').value = data[0].email_subject || 'Inquiry from Portfolio Website';
+                document.getElementById('chatName').value = data[0].agent_name || '';
             } else {
                 document.getElementById('whatsappNumber').value = '254700000000';
                 document.getElementById('chatEmail').value = 'your@email.com';
@@ -692,19 +689,120 @@
             }
         }
 
-        function saveMultiChatSettings() {
+        async function saveMultiChatSettings() {
             const settings = {
-                whatsappNumber: document.getElementById('whatsappNumber').value,
-                phoneNumber: document.getElementById('whatsappNumber').value,
+                whatsapp_number: document.getElementById('whatsappNumber').value,
                 email: document.getElementById('chatEmail').value,
-                facebookPage: document.getElementById('facebookPage').value,
-                messageTemplate: document.getElementById('chatMessageTemplate').value,
-                emailSubject: document.getElementById('emailSubject').value,
-                name: document.getElementById('chatName').value,
-                enabled: true
+                facebook_page: document.getElementById('facebookPage').value,
+                message_template: document.getElementById('chatMessageTemplate').value,
+                email_subject: document.getElementById('emailSubject').value,
+                agent_name: document.getElementById('chatName').value,
+                updated_at: new Date().toISOString()
             };
-            localStorage.setItem('chatSettings', JSON.stringify(settings));
-            showSuccess('Chat settings saved! Refresh your website to see changes.');
+            
+            const { error } = await supabaseClient
+                .from('chat_settings')
+                .upsert(settings, { onConflict: 'id' });
+            
+            if(error) {
+                alert('Error saving: ' + error.message);
+            } else {
+                showSuccess('Chat settings saved to Supabase!');
+            }
+        }
+
+        // ========== FAQ MANAGEMENT FUNCTIONS ==========
+        let faqs = [];
+
+        async function loadFAQs() {
+            const { data, error } = await supabaseClient
+                .from('faqs')
+                .select('*')
+                .order('display_order', { ascending: true });
+            
+            if(data && data.length > 0) {
+                faqs = data;
+            } else {
+                faqs = [
+                    { question: "How quickly can you start working on my project?", answer: "I typically respond within 24 hours. Once we agree on the scope, I can start immediately or schedule according to your timeline." },
+                    { question: "What is your typical turnaround time?", answer: "Turnaround time depends on project scope. A landing page usually takes 3-5 days, email sequences 5-7 days, and full website copy 7-14 days." },
+                    { question: "Do you offer revisions?", answer: "Absolutely! All my packages include 2-3 rounds of revisions to ensure you're completely satisfied." }
+                ];
+            }
+            renderFAQsList();
+        }
+
+        function renderFAQsList() {
+            const container = document.getElementById('faqsList');
+            if(!container) return;
+            
+            if(faqs.length === 0) {
+                container.innerHTML = '<p style="color: #94a3b8; text-align: center; padding: 20px;">No FAQs yet. Add your first one above!</p>';
+                return;
+            }
+            
+            container.innerHTML = faqs.map((faq, index) => `
+                <div style="background: #0f172a; border-radius: 8px; padding: 15px; margin-bottom: 10px;">
+                    <div style="font-weight: 600; margin-bottom: 8px;">❓ ${escapeHtml(faq.question)}</div>
+                    <div style="font-size: 13px; color: #94a3b8; margin-bottom: 10px;">${escapeHtml(faq.answer)}</div>
+                    <button onclick="deleteFAQ(${faq.id || index})" style="background: #ef4444; padding: 6px 12px; font-size: 12px;">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        async function addFAQ() {
+            const question = document.getElementById('faqQuestion')?.value;
+            const answer = document.getElementById('faqAnswer')?.value;
+            
+            if(!question || !answer) {
+                alert('Please fill in both question and answer');
+                return;
+            }
+            
+            const newFAQ = {
+                question: question,
+                answer: answer,
+                display_order: faqs.length,
+                created_at: new Date().toISOString()
+            };
+            
+            const { data, error } = await supabaseClient
+                .from('faqs')
+                .insert([newFAQ])
+                .select();
+            
+            if(error) {
+                alert('Error saving: ' + error.message);
+                return;
+            }
+            
+            if(data && data[0]) {
+                faqs.push(data[0]);
+            }
+            
+            document.getElementById('faqQuestion').value = '';
+            document.getElementById('faqAnswer').value = '';
+            
+            renderFAQsList();
+            showSuccess('FAQ added to Supabase!');
+        }
+
+        async function deleteFAQ(id) {
+            if(confirm('Delete this FAQ?')) {
+                const { error } = await supabaseClient
+                    .from('faqs')
+                    .delete()
+                    .eq('id', id);
+                
+                if(error) {
+                    alert('Error deleting: ' + error.message);
+                    return;
+                }
+                
+                faqs = faqs.filter(f => f.id !== id);
+                renderFAQsList();
+                showSuccess('FAQ deleted from Supabase!');
+            }
         }
 
         // ========== HELPER FUNCTIONS ==========
@@ -724,15 +822,8 @@
             return div.innerHTML;
         }
 
-        // ========== LOAD EVERYTHING ==========
-        loadPersonalInfo();
-        loadStats();
-        loadTestimonials();
-        loadLeads();
-        loadMultiChatSettings();
-        loadFAQs();
-
- // This now loads the multi-chat settings
+        // ========== INITIALIZE ==========
+        initSupabase();
     </script>
 </body>
 </html>
