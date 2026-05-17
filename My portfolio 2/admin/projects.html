@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Manager | Portfolio CMS</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -23,6 +24,7 @@
             height: 100vh;
             background: #1e293b;
             padding: 30px 20px;
+            overflow-y: auto;
         }
         .sidebar h2 { font-size: 20px; margin-bottom: 30px; color: #818cf8; }
         .sidebar nav a {
@@ -38,6 +40,7 @@
         .main-content {
             margin-left: 260px;
             padding: 30px;
+            min-height: 100vh;
         }
         .form-card {
             background: #1e293b;
@@ -61,6 +64,7 @@
             border: 1px solid #334155;
             border-radius: 6px;
             color: white;
+            font-family: inherit;
         }
         textarea {
             resize: vertical;
@@ -73,9 +77,17 @@
             padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #4f46e5;
+            transform: translateY(-1px);
         }
         .delete-btn {
             background: #ef4444;
+        }
+        .delete-btn:hover {
+            background: #dc2626;
         }
         .project-list {
             margin-top: 30px;
@@ -89,6 +101,7 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+            gap: 15px;
         }
         .project-info {
             flex: 1;
@@ -97,6 +110,7 @@
             font-weight: 600;
             font-size: 18px;
             margin-bottom: 5px;
+            color: #f1f5f9;
         }
         .project-meta {
             font-size: 12px;
@@ -114,10 +128,43 @@
             margin-bottom: 20px;
             display: none;
         }
+        .error-msg {
+            background: #ef4444;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .project-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            .project-actions {
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -133,19 +180,20 @@
         </nav>
     </div>
     <div class="main-content">
-        <div class="header-bar" style="margin-bottom: 30px;">
+        <div style="margin-bottom: 30px;">
             <h1>📂 Project Manager</h1>
         </div>
 
-        <div class="success-msg" id="successMsg">✓ Project saved successfully!</div>
+        <div class="success-msg" id="successMsg">✓ Project saved to Supabase successfully!</div>
+        <div class="error-msg" id="errorMsg">✗ Error saving to Supabase. Check console for details.</div>
 
         <!-- Add/Edit Project Form -->
         <div class="form-card">
             <h3 style="margin-bottom: 20px;">➕ Add New Project</h3>
             <div class="grid-2">
                 <div class="form-group">
-                    <label>Project Title</label>
-                    <input type="text" id="projectTitle" placeholder="e.g., Pinnacle Systems - Website Copy">
+                    <label>Project Title *</label>
+                    <input type="text" id="projectTitle" placeholder="e.g., Telematic Systems - Website Copy">
                 </div>
                 <div class="form-group">
                     <label>Category</label>
@@ -169,100 +217,150 @@
                     <input type="text" id="projectDate" placeholder="2024">
                 </div>
                 <div class="form-group">
-                    <label>Project Image (Filename from Media Manager)</label>
-                    <input type="text" id="projectImage" placeholder="filename.jpg (upload in Media Manager first)">
-                    <small style="color: #94a3b8;">Tip: Go to Media Manager, upload image, then copy filename</small>
+                    <label>Project Image</label>
+                    <input type="text" id="projectImage" placeholder="filename.jpg (from images folder)">
+                    <small style="color: #94a3b8;">💡 Tip: Place image in "images" folder, then enter filename only</small>
                 </div>
             </div>
             <div class="form-group">
-                <label>Project Description</label>
+                <label>Project Description *</label>
                 <textarea id="projectDescription" placeholder="Describe the project, your process, and the results..."></textarea>
             </div>
-            <button onclick="addProject()">➕ Add Project</button>
+            <button onclick="addProject()">➕ Add Project to Supabase</button>
         </div>
 
         <!-- Existing Projects List -->
-        <h3 style="margin: 30px 0 15px;">📋 Your Projects</h3>
-        <div id="projectsList" class="project-list"></div>
+        <h3 style="margin: 30px 0 15px;">📋 Your Projects (from Supabase)</h3>
+        <div id="projectsList" class="project-list">
+            <div class="loading">Loading projects from Supabase...</div>
+        </div>
     </div>
 
     <script>
+        // ========== SUPABASE CONFIGURATION ==========
+        const SUPABASE_URL = 'https://ooarghgxjbxqgnmjwpdj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXJnaGd4amJ4cWdubWp3cGRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NzM1MzQsImV4cCI6MjA5NDU0OTUzNH0.7zkOuh4F8lkSIaDnMEm9-R8v3sepjxnz0P4BKOI-HaM';
+        
+        let supabaseClient;
         let projects = [];
-        let editId = null;
+        let editingProjectId = null;
 
-        function loadProjects() {
-            const saved = localStorage.getItem('portfolioProjects');
-            if(saved) {
-                projects = JSON.parse(saved);
+        // Initialize Supabase
+        async function initSupabase() {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('Supabase initialized');
+            await loadProjects();
+        }
+
+        // Load projects from Supabase
+        async function loadProjects() {
+            const container = document.getElementById('projectsList');
+            container.innerHTML = '<div class="loading">Loading projects from Supabase...</div>';
+            
+            const { data, error } = await supabaseClient
+                .from('projects')
+                .select('*')
+                .order('created_at', { ascending: false });
+            
+            if(error) {
+                console.error('Error loading projects:', error);
+                container.innerHTML = '<p style="text-align: center; color: #ef4444;">Error loading projects. Check console.</p>';
+                return;
+            }
+            
+            if(data && data.length > 0) {
+                projects = data;
             } else {
                 projects = [];
             }
             renderProjects();
         }
 
+        // Render projects list
         function renderProjects() {
             const container = document.getElementById('projectsList');
             if(projects.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #94a3b8;">No projects yet. Add your first project above!</p>';
+                container.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 40px;">📂 No projects yet. Add your first project above!</p>';
                 return;
             }
             
-            container.innerHTML = projects.map((project, index) => `
+            container.innerHTML = projects.map(project => `
                 <div class="project-item">
                     <div class="project-info">
                         <div class="project-title">${escapeHtml(project.title)}</div>
                         <div class="project-meta">${project.category} | ${project.client || 'No client'} | ${project.results || 'No results'} | ${project.date || 'No date'}</div>
-                        <div class="project-meta" style="margin-top: 5px;">${project.description.substring(0, 100)}${project.description.length > 100 ? '...' : ''}</div>
-                        ${project.image ? `<div class="project-meta">📷 Image: ${project.image}</div>` : ''}
+                        <div class="project-meta" style="margin-top: 5px;">${escapeHtml(project.description.substring(0, 100))}${project.description.length > 100 ? '...' : ''}</div>
+                        ${project.image ? `<div class="project-meta">🖼️ Image: ${project.image}</div>` : ''}
+                        <div class="project-meta" style="font-size: 10px; color: #64748b; margin-top: 5px;">ID: ${project.id} | Created: ${new Date(project.created_at).toLocaleDateString()}</div>
                     </div>
                     <div class="project-actions">
-                        <button onclick="editProject(${index})">✏️ Edit</button>
-                        <button class="delete-btn" onclick="deleteProject(${index})">🗑️ Delete</button>
+                        <button onclick="editProject(${project.id})">✏️ Edit</button>
+                        <button class="delete-btn" onclick="deleteProject(${project.id})">🗑️ Delete</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function addProject() {
-            const newProject = {
-                id: Date.now(),
-                title: document.getElementById('projectTitle').value,
-                category: document.getElementById('projectCategory').value,
-                description: document.getElementById('projectDescription').value,
-                client: document.getElementById('projectClient').value,
-                results: document.getElementById('projectResults').value,
-                date: document.getElementById('projectDate').value,
-                image: document.getElementById('projectImage').value
-            };
+        // Add new project to Supabase
+        async function addProject() {
+            const title = document.getElementById('projectTitle').value;
+            const description = document.getElementById('projectDescription').value;
             
-            if(!newProject.title || !newProject.description) {
+            if(!title || !description) {
                 alert('Please fill in project title and description');
                 return;
             }
             
-            projects.push(newProject);
-            localStorage.setItem('portfolioProjects', JSON.stringify(projects));
+            const newProject = {
+                title: title,
+                category: document.getElementById('projectCategory').value,
+                description: description,
+                client: document.getElementById('projectClient').value,
+                results: document.getElementById('projectResults').value,
+                date: document.getElementById('projectDate').value,
+                image: document.getElementById('projectImage').value,
+                created_at: new Date().toISOString()
+            };
             
-            // Also save as JSON file for website to read
-            saveProjectsToFile();
+            const { data, error } = await supabaseClient
+                .from('projects')
+                .insert([newProject])
+                .select();
             
-            // Clear form
-            document.getElementById('projectTitle').value = '';
-            document.getElementById('projectDescription').value = '';
-            document.getElementById('projectClient').value = '';
-            document.getElementById('projectResults').value = '';
-            document.getElementById('projectDate').value = '';
-            document.getElementById('projectImage').value = '';
+            if(error) {
+                console.error('Error adding project:', error);
+                document.getElementById('errorMsg').style.display = 'block';
+                setTimeout(() => document.getElementById('errorMsg').style.display = 'none', 3000);
+                return;
+            }
             
-            renderProjects();
-            
-            const msg = document.getElementById('successMsg');
-            msg.style.display = 'block';
-            setTimeout(() => msg.style.display = 'none', 2000);
+            if(data && data[0]) {
+                projects.unshift(data[0]);
+                renderProjects();
+                
+                // Clear form
+                document.getElementById('projectTitle').value = '';
+                document.getElementById('projectDescription').value = '';
+                document.getElementById('projectClient').value = '';
+                document.getElementById('projectResults').value = '';
+                document.getElementById('projectDate').value = '';
+                document.getElementById('projectImage').value = '';
+                document.getElementById('projectCategory').value = 'landing';
+                
+                const msg = document.getElementById('successMsg');
+                msg.style.display = 'block';
+                setTimeout(() => msg.style.display = 'none', 3000);
+            }
         }
 
-        function editProject(index) {
-            const project = projects[index];
+        // Edit project
+        async function editProject(id) {
+            const project = projects.find(p => p.id === id);
+            if(!project) return;
+            
+            editingProjectId = id;
+            
+            // Populate form
             document.getElementById('projectTitle').value = project.title;
             document.getElementById('projectCategory').value = project.category;
             document.getElementById('projectDescription').value = project.description;
@@ -271,29 +369,105 @@
             document.getElementById('projectDate').value = project.date || '';
             document.getElementById('projectImage').value = project.image || '';
             
-            // Remove the old project
-            projects.splice(index, 1);
-            renderProjects();
+            // Change button to Update
+            const addBtn = document.querySelector('.form-card button');
+            addBtn.textContent = '✏️ Update Project';
+            addBtn.setAttribute('onclick', 'updateProject()');
+            
+            // Scroll to form
+            document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function deleteProject(index) {
-            if(confirm('Delete this project?')) {
-                projects.splice(index, 1);
-                localStorage.setItem('portfolioProjects', JSON.stringify(projects));
-                saveProjectsToFile();
-                renderProjects();
+        // Update project in Supabase
+        async function updateProject() {
+            if(!editingProjectId) return;
+            
+            const updatedProject = {
+                title: document.getElementById('projectTitle').value,
+                category: document.getElementById('projectCategory').value,
+                description: document.getElementById('projectDescription').value,
+                client: document.getElementById('projectClient').value,
+                results: document.getElementById('projectResults').value,
+                date: document.getElementById('projectDate').value,
+                image: document.getElementById('projectImage').value,
+                updated_at: new Date().toISOString()
+            };
+            
+            const { error } = await supabaseClient
+                .from('projects')
+                .update(updatedProject)
+                .eq('id', editingProjectId);
+            
+            if(error) {
+                console.error('Error updating project:', error);
+                document.getElementById('errorMsg').style.display = 'block';
+                setTimeout(() => document.getElementById('errorMsg').style.display = 'none', 3000);
+                return;
             }
+            
+            // Reset form button
+            const addBtn = document.querySelector('.form-card button');
+            addBtn.textContent = '➕ Add Project to Supabase';
+            addBtn.setAttribute('onclick', 'addProject()');
+            
+            // Clear form
+            document.getElementById('projectTitle').value = '';
+            document.getElementById('projectDescription').value = '';
+            document.getElementById('projectClient').value = '';
+            document.getElementById('projectResults').value = '';
+            document.getElementById('projectDate').value = '';
+            document.getElementById('projectImage').value = '';
+            document.getElementById('projectCategory').value = 'landing';
+            
+            editingProjectId = null;
+            
+            // Reload projects
+            await loadProjects();
+            
+            const msg = document.getElementById('successMsg');
+            msg.innerHTML = '✓ Project updated in Supabase!';
+            msg.style.display = 'block';
+            setTimeout(() => msg.style.display = 'none', 3000);
         }
 
-        function saveProjectsToFile() {
-            const dataStr = JSON.stringify(projects, null, 2);
-            const blob = new Blob([dataStr], {type: 'application/json'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'projects.json';
-            a.click();
-            URL.revokeObjectURL(url);
+        // Delete project from Supabase
+        async function deleteProject(id) {
+            if(!confirm('Delete this project permanently? This cannot be undone.')) return;
+            
+            const { error } = await supabaseClient
+                .from('projects')
+                .delete()
+                .eq('id', id);
+            
+            if(error) {
+                console.error('Error deleting project:', error);
+                alert('Error deleting project: ' + error.message);
+                return;
+            }
+            
+            projects = projects.filter(p => p.id !== id);
+            renderProjects();
+            
+            const msg = document.getElementById('successMsg');
+            msg.innerHTML = '✓ Project deleted from Supabase!';
+            msg.style.display = 'block';
+            setTimeout(() => msg.style.display = 'none', 3000);
+        }
+
+        // Reset form (cancel edit)
+        function resetForm() {
+            document.getElementById('projectTitle').value = '';
+            document.getElementById('projectDescription').value = '';
+            document.getElementById('projectClient').value = '';
+            document.getElementById('projectResults').value = '';
+            document.getElementById('projectDate').value = '';
+            document.getElementById('projectImage').value = '';
+            document.getElementById('projectCategory').value = 'landing';
+            
+            const addBtn = document.querySelector('.form-card button');
+            addBtn.textContent = '➕ Add Project to Supabase';
+            addBtn.setAttribute('onclick', 'addProject()');
+            editingProjectId = null;
         }
 
         function escapeHtml(text) {
@@ -303,7 +477,8 @@
             return div.innerHTML;
         }
 
-        loadProjects();
+        // Initialize
+        initSupabase();
     </script>
 </body>
 </html>
