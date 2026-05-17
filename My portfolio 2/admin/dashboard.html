@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Portfolio CMS</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -188,73 +189,6 @@
             color: #94a3b8;
         }
 
-        /* ========== FORM STYLES ========== */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: #94a3b8;
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 10px;
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 6px;
-            color: white;
-            font-family: inherit;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        button {
-            background: #6366f1;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        button:hover {
-            background: #4f46e5;
-            transform: translateY(-1px);
-        }
-
-        .delete-btn {
-            background: #ef4444;
-        }
-
-        .delete-btn:hover {
-            background: #dc2626;
-        }
-
-        .export-btn {
-            background: #10b981;
-        }
-
-        .export-btn:hover {
-            background: #059669;
-        }
-
-        .success-msg {
-            background: #10b981;
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
         /* ========== TESTIMONIAL ITEMS ========== */
         .testimonial-item {
             background: #0f172a;
@@ -325,6 +259,19 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Loading indicator */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
+
+        .error-badge {
+            color: #ef4444;
+            font-size: 12px;
+            margin-left: 8px;
+        }
     </style>
 </head>
 <body>
@@ -347,22 +294,22 @@
             <a href="../index.html" class="preview-link" target="_blank">🔍 View Website</a>
         </div>
 
-        <!-- ========== STATS CARDS ========== -->
+        <!-- ========== STATS CARDS (from Supabase) ========== -->
         <div class="stats-grid" id="statsGrid">
             <div class="stat-card">
-                <div class="stat-number" id="projectCount">0</div>
+                <div class="stat-number" id="projectCount">-</div>
                 <div class="stat-label">Total Projects</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="testimonialCount">0</div>
+                <div class="stat-number" id="testimonialCount">-</div>
                 <div class="stat-label">Testimonials</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="leadsCount">0</div>
+                <div class="stat-number" id="leadsCount">-</div>
                 <div class="stat-label">Contact Leads</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="faqCount">0</div>
+                <div class="stat-number" id="faqCount">-</div>
                 <div class="stat-label">FAQs</div>
             </div>
         </div>
@@ -460,20 +407,80 @@
     </div>
 
     <script>
-        // ========== LOAD STATS ==========
-        function loadStats() {
-            const projects = JSON.parse(localStorage.getItem('portfolioProjects') || '[]');
-            const testimonials = JSON.parse(localStorage.getItem('testimonials') || '[]');
-            const leads = JSON.parse(localStorage.getItem('contactLeads') || '[]');
-            const faqs = JSON.parse(localStorage.getItem('faqs') || '[]');
-            
-            document.getElementById('projectCount').innerText = projects.length;
-            document.getElementById('testimonialCount').innerText = testimonials.length;
-            document.getElementById('leadsCount').innerText = leads.length;
-            document.getElementById('faqCount').innerText = faqs.length;
+        // ========== SUPABASE CONFIGURATION ==========
+        const SUPABASE_URL = 'https://ooarghgxjbxqgnmjwpdj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXJnaGd4amJ4cWdubWp3cGRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NzM1MzQsImV4cCI6MjA5NDU0OTUzNH0.7zkOuh4F8lkSIaDnMEm9-R8v3sepjxnz0P4BKOI-HaM';
+        
+        let supabaseClient;
+
+        // ========== INITIALIZE SUPABASE ==========
+        async function initSupabase() {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('Supabase initialized');
+            await loadAllStats();
         }
 
-        // ========== CHATBOT ANALYTICS ==========
+        // ========== LOAD STATS FROM SUPABASE ==========
+        async function loadAllStats() {
+            await loadProjectCount();
+            await loadTestimonialCount();
+            await loadLeadsCount();
+            await loadFaqCount();
+        }
+
+        async function loadProjectCount() {
+            const { count, error } = await supabaseClient
+                .from('projects')
+                .select('*', { count: 'exact', head: true });
+            
+            if(error) {
+                console.error('Error loading projects count:', error);
+                document.getElementById('projectCount').innerHTML = '0 <span class="error-badge">⚠️</span>';
+                return;
+            }
+            document.getElementById('projectCount').innerText = count || 0;
+        }
+
+        async function loadTestimonialCount() {
+            const { count, error } = await supabaseClient
+                .from('testimonials')
+                .select('*', { count: 'exact', head: true });
+            
+            if(error) {
+                console.error('Error loading testimonials count:', error);
+                document.getElementById('testimonialCount').innerHTML = '0 <span class="error-badge">⚠️</span>';
+                return;
+            }
+            document.getElementById('testimonialCount').innerText = count || 0;
+        }
+
+        async function loadLeadsCount() {
+            const { count, error } = await supabaseClient
+                .from('contact_leads')
+                .select('*', { count: 'exact', head: true });
+            
+            if(error) {
+                console.error('Error loading leads count:', error);
+                document.getElementById('leadsCount').innerHTML = '0 <span class="error-badge">⚠️</span>';
+                return;
+            }
+            document.getElementById('leadsCount').innerText = count || 0;
+        }
+
+        async function loadFaqCount() {
+            const { count, error } = await supabaseClient
+                .from('faqs')
+                .select('*', { count: 'exact', head: true });
+            
+            if(error) {
+                console.error('Error loading FAQs count:', error);
+                document.getElementById('faqCount').innerHTML = '0 <span class="error-badge">⚠️</span>';
+                return;
+            }
+            document.getElementById('faqCount').innerText = count || 0;
+        }
+
+        // ========== CHATBOT ANALYTICS (LocalStorage - fine to keep) ==========
         function loadChatAnalytics() {
             const analytics = JSON.parse(localStorage.getItem('chatAnalytics') || '{"sessions":[],"clickData":{"whatsappClicks":0,"quickReplyClicks":{}},"unrecognizedQuestions":[]}');
             const unrecognized = JSON.parse(localStorage.getItem('unrecognizedQuestions') || '[]');
@@ -535,7 +542,7 @@
             }
         }
 
-        // ========== WEBSITE ANALYTICS ==========
+        // ========== WEBSITE ANALYTICS (LocalStorage - fine to keep) ==========
         function loadWebsiteAnalytics() {
             // Unique visitors
             const visitorInfo = JSON.parse(localStorage.getItem('visitorInfo') || '{}');
@@ -639,7 +646,7 @@
         }
 
         // ========== INITIALIZE ==========
-        loadStats();
+        initSupabase();
         loadChatAnalytics();
         loadWebsiteAnalytics();
     </script>
