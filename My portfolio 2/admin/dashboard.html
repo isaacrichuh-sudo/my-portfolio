@@ -96,6 +96,23 @@
             transform: translateY(-2px);
         }
 
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
         /* ========== STATS GRID ========== */
         .stats-grid {
             display: grid;
@@ -272,6 +289,15 @@
             font-size: 12px;
             margin-left: 8px;
         }
+        
+        .export-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -291,7 +317,10 @@
     <div class="main-content">
         <div class="dashboard-header">
             <h1>📊 Admin Dashboard</h1>
-            <a href="../index.html" class="preview-link" target="_blank">🔍 View Website</a>
+            <div>
+                <a href="../index.html" class="preview-link" target="_blank">🔍 View Website</a>
+                <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+            </div>
         </div>
 
         <!-- ========== STATS CARDS (from Supabase) ========== -->
@@ -412,10 +441,37 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXJnaGd4amJ4cWdubWp3cGRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NzM1MzQsImV4cCI6MjA5NDU0OTUzNH0.7zkOuh4F8lkSIaDnMEm9-R8v3sepjxnz0P4BKOI-HaM';
         
         let supabaseClient;
+        let currentSession = null;
+
+        // ========== AUTHENTICATION CHECK ==========
+        async function checkAuth() {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
+            
+            if (error || !session) {
+                // Redirect to login page
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            currentSession = session;
+            console.log('Authenticated as:', session.user.email);
+            return true;
+        }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            localStorage.removeItem('adminSession');
+            window.location.href = 'login.html';
+        }
 
         // ========== INITIALIZE SUPABASE ==========
         async function initSupabase() {
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            // Already initialized in checkAuth, but ensure client exists
+            if (!supabaseClient) {
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
             console.log('Supabase initialized');
             await loadAllStats();
         }
@@ -646,9 +702,16 @@
         }
 
         // ========== INITIALIZE ==========
-        initSupabase();
-        loadChatAnalytics();
-        loadWebsiteAnalytics();
+        async function initialize() {
+            const isAuthenticated = await checkAuth();
+            if (!isAuthenticated) return;
+            
+            await initSupabase();
+            loadChatAnalytics();
+            loadWebsiteAnalytics();
+        }
+        
+        initialize();
     </script>
 </body>
 </html>
