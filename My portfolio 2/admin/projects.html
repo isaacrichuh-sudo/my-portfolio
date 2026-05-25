@@ -34,6 +34,7 @@
             text-decoration: none;
             border-radius: 8px;
             margin-bottom: 8px;
+            transition: all 0.3s;
         }
         .sidebar nav a:hover { background: #334155; color: white; }
         .sidebar nav a.active { background: #6366f1; color: white; }
@@ -41,6 +42,28 @@
             margin-left: 260px;
             padding: 30px;
             min-height: 100vh;
+        }
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #334155;
+        }
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .logout-btn:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
         }
         .form-card {
             background: #1e293b;
@@ -146,6 +169,25 @@
             padding: 40px;
             color: #94a3b8;
         }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+        .loading-spinner {
+            background: #1e293b;
+            padding: 20px 40px;
+            border-radius: 12px;
+            text-align: center;
+        }
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
@@ -169,6 +211,13 @@
     </style>
 </head>
 <body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div style="font-size: 40px; margin-bottom: 10px;">⏳</div>
+            <div>Saving to Supabase...</div>
+        </div>
+    </div>
+
     <div class="sidebar">
         <h2>🎛️ Portfolio CMS</h2>
         <nav>
@@ -180,8 +229,9 @@
         </nav>
     </div>
     <div class="main-content">
-        <div style="margin-bottom: 30px;">
+        <div class="header-bar">
             <h1>📂 Project Manager</h1>
+            <button class="logout-btn" onclick="logout()">🚪 Logout</button>
         </div>
 
         <div class="success-msg" id="successMsg">✓ Project saved to Supabase successfully!</div>
@@ -218,8 +268,8 @@
                 </div>
                 <div class="form-group">
                     <label>Project Image</label>
-                    <input type="text" id="projectImage" placeholder="filename.jpg (from images folder)">
-                    <small style="color: #94a3b8;">💡 Tip: Place image in "images" folder, then enter filename only</small>
+                    <input type="text" id="projectImage" placeholder="filename.jpg or full URL from Media Manager">
+                    <small style="color: #94a3b8;">💡 Tip: Upload image in Media Manager first, then copy the URL or filename</small>
                 </div>
             </div>
             <div class="form-group">
@@ -227,6 +277,7 @@
                 <textarea id="projectDescription" placeholder="Describe the project, your process, and the results..."></textarea>
             </div>
             <button onclick="addProject()">➕ Add Project to Supabase</button>
+            <button onclick="resetForm()" style="background: #64748b; margin-left: 10px;">⟳ Reset Form</button>
         </div>
 
         <!-- Existing Projects List -->
@@ -244,13 +295,31 @@
         let supabaseClient;
         let projects = [];
         let editingProjectId = null;
+        let currentSession = null;
 
-        // Initialize Supabase
-        async function initSupabase() {
+        // ========== AUTHENTICATION CHECK ==========
+        async function checkAuth() {
             supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            console.log('Supabase initialized');
-            await loadProjects();
+            
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
+            
+            if (error || !session) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            currentSession = session;
+            console.log('Authenticated as:', session.user.email);
+            return true;
         }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            localStorage.removeItem('adminSession');
+            window.location.href = 'login.html';
+        }
+
+        // ========== PROJECT MANAGEMENT FUNCTIONS ==========
 
         // Load projects from Supabase
         async function loadProjects() {
@@ -264,7 +333,7 @@
             
             if(error) {
                 console.error('Error loading projects:', error);
-                container.innerHTML = '<p style="text-align: center; color: #ef4444;">Error loading projects. Check console.</p>';
+                container.innerHTML = '<p style="text-align: center; color: #ef4444;">Error loading projects. Make sure you are logged in.</p>';
                 return;
             }
             
@@ -290,7 +359,7 @@
                         <div class="project-title">${escapeHtml(project.title)}</div>
                         <div class="project-meta">${project.category} | ${project.client || 'No client'} | ${project.results || 'No results'} | ${project.date || 'No date'}</div>
                         <div class="project-meta" style="margin-top: 5px;">${escapeHtml(project.description.substring(0, 100))}${project.description.length > 100 ? '...' : ''}</div>
-                        ${project.image ? `<div class="project-meta">🖼️ Image: ${project.image}</div>` : ''}
+                        ${project.image ? `<div class="project-meta">🖼️ Image: ${project.image.length > 50 ? project.image.substring(0, 50) + '...' : project.image}</div>` : ''}
                         <div class="project-meta" style="font-size: 10px; color: #64748b; margin-top: 5px;">ID: ${project.id} | Created: ${new Date(project.created_at).toLocaleDateString()}</div>
                     </div>
                     <div class="project-actions">
@@ -311,6 +380,9 @@
                 return;
             }
             
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex';
+            
             const newProject = {
                 title: title,
                 category: document.getElementById('projectCategory').value,
@@ -327,6 +399,8 @@
                 .insert([newProject])
                 .select();
             
+            loadingOverlay.style.display = 'none';
+            
             if(error) {
                 console.error('Error adding project:', error);
                 document.getElementById('errorMsg').style.display = 'block';
@@ -339,13 +413,7 @@
                 renderProjects();
                 
                 // Clear form
-                document.getElementById('projectTitle').value = '';
-                document.getElementById('projectDescription').value = '';
-                document.getElementById('projectClient').value = '';
-                document.getElementById('projectResults').value = '';
-                document.getElementById('projectDate').value = '';
-                document.getElementById('projectImage').value = '';
-                document.getElementById('projectCategory').value = 'landing';
+                resetForm();
                 
                 const msg = document.getElementById('successMsg');
                 msg.style.display = 'block';
@@ -353,7 +421,7 @@
             }
         }
 
-        // Edit project
+        // Edit project - populate form for editing
         async function editProject(id) {
             const project = projects.find(p => p.id === id);
             if(!project) return;
@@ -382,6 +450,9 @@
         async function updateProject() {
             if(!editingProjectId) return;
             
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex';
+            
             const updatedProject = {
                 title: document.getElementById('projectTitle').value,
                 category: document.getElementById('projectCategory').value,
@@ -398,6 +469,8 @@
                 .update(updatedProject)
                 .eq('id', editingProjectId);
             
+            loadingOverlay.style.display = 'none';
+            
             if(error) {
                 console.error('Error updating project:', error);
                 document.getElementById('errorMsg').style.display = 'block';
@@ -405,20 +478,12 @@
                 return;
             }
             
-            // Reset form button
+            // Reset form button back to Add mode
             const addBtn = document.querySelector('.form-card button');
             addBtn.textContent = '➕ Add Project to Supabase';
             addBtn.setAttribute('onclick', 'addProject()');
             
-            // Clear form
-            document.getElementById('projectTitle').value = '';
-            document.getElementById('projectDescription').value = '';
-            document.getElementById('projectClient').value = '';
-            document.getElementById('projectResults').value = '';
-            document.getElementById('projectDate').value = '';
-            document.getElementById('projectImage').value = '';
-            document.getElementById('projectCategory').value = 'landing';
-            
+            resetForm();
             editingProjectId = null;
             
             // Reload projects
@@ -434,10 +499,15 @@
         async function deleteProject(id) {
             if(!confirm('Delete this project permanently? This cannot be undone.')) return;
             
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex';
+            
             const { error } = await supabaseClient
                 .from('projects')
                 .delete()
                 .eq('id', id);
+            
+            loadingOverlay.style.display = 'none';
             
             if(error) {
                 console.error('Error deleting project:', error);
@@ -477,8 +547,15 @@
             return div.innerHTML;
         }
 
-        // Initialize
-        initSupabase();
+        // ========== INITIALIZE ==========
+        async function initialize() {
+            const isAuthenticated = await checkAuth();
+            if (!isAuthenticated) return;
+            
+            await loadProjects();
+        }
+        
+        initialize();
     </script>
 </body>
 </html>
