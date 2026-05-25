@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Design Editor | Portfolio CMS</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -23,6 +24,7 @@
             height: 100vh;
             background: #1e293b;
             padding: 30px 20px;
+            overflow-y: auto;
         }
         .sidebar h2 { font-size: 20px; margin-bottom: 30px; color: #818cf8; }
         .sidebar nav a {
@@ -32,12 +34,14 @@
             text-decoration: none;
             border-radius: 8px;
             margin-bottom: 8px;
+            transition: all 0.3s;
         }
         .sidebar nav a:hover { background: #334155; color: white; }
         .sidebar nav a.active { background: #6366f1; color: white; }
         .main-content {
             margin-left: 260px;
             padding: 30px;
+            min-height: 100vh;
         }
         .header-bar {
             display: flex;
@@ -55,6 +59,26 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
+            transition: all 0.3s;
+        }
+        .save-btn:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+            transition: all 0.3s;
+        }
+        .logout-btn:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
         }
         .design-grid {
             display: grid;
@@ -119,13 +143,47 @@
             margin-bottom: 20px;
             display: none;
         }
+        .error-msg {
+            background: #ef4444;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
         hr {
             border-color: #334155;
             margin: 20px 0;
         }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+        .loading-spinner {
+            background: #1e293b;
+            padding: 20px 40px;
+            border-radius: 12px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div style="font-size: 40px; margin-bottom: 10px;">⏳</div>
+            <div>Saving to Supabase...</div>
+        </div>
+    </div>
+
     <div class="sidebar">
         <h2>🎛️ Portfolio CMS</h2>
         <nav>
@@ -139,10 +197,14 @@
     <div class="main-content">
         <div class="header-bar">
             <h1>🎨 Design Editor</h1>
-            <button class="save-btn" onclick="saveDesignSettings()">💾 Save All Changes</button>
+            <div>
+                <button class="save-btn" onclick="saveDesignSettings()">💾 Save All Changes</button>
+                <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+            </div>
         </div>
 
-        <div class="success-msg" id="successMsg">✓ Design settings saved! Refresh your website to see changes.</div>
+        <div class="success-msg" id="successMsg">✓ Design settings saved to Supabase! Refresh your website to see changes.</div>
+        <div class="error-msg" id="errorMsg">✗ Error saving to Supabase. Please check your connection.</div>
 
         <div class="design-grid">
             <!-- Colors Section -->
@@ -150,11 +212,11 @@
                 <h3>🎨 Colors</h3>
                 <div class="form-group">
                     <label>Primary Color (Buttons, Links, Highlights)</label>
-                    <input type="color" id="primaryColor" value="#6366f1">
+                    <input type="color" id="primaryColor" value="#818cf8">
                 </div>
                 <div class="form-group">
                     <label>Secondary Color (Hover Effects)</label>
-                    <input type="color" id="secondaryColor" value="#4f46e5">
+                    <input type="color" id="secondaryColor" value="#6366f1">
                 </div>
                 <div class="form-group">
                     <label>Background Color</label>
@@ -218,6 +280,27 @@
                 </div>
             </div>
 
+            <!-- Dark Mode Settings Section -->
+            <div class="design-section">
+                <h3>🌙 Dark Mode Settings</h3>
+                <div class="form-group">
+                    <label>Dark Mode Background Color</label>
+                    <input type="color" id="darkBgColor" value="#0f172a">
+                </div>
+                <div class="form-group">
+                    <label>Dark Mode Card Color</label>
+                    <input type="color" id="darkCardColor" value="#1e293b">
+                </div>
+                <div class="form-group">
+                    <label>Dark Mode Text Color</label>
+                    <input type="color" id="darkTextColor" value="#f1f5f9">
+                </div>
+                <div class="form-group">
+                    <label>Dark Mode Border Color</label>
+                    <input type="color" id="darkBorderColor" value="#334155">
+                </div>
+            </div>
+
             <!-- Live Preview Section -->
             <div class="design-section">
                 <h3>🔍 Live Preview</h3>
@@ -233,35 +316,105 @@
         <div class="design-section" style="margin-top: 30px;">
             <h3>🖼️ Hero Background Image</h3>
             <div class="form-group">
-                <label>Background Image URL (or upload in Media Manager)</label>
-                <input type="text" id="bgImage" placeholder="path/to/image.jpg or leave empty for solid color">
-                <small style="color: #94a3b8; display: block; margin-top: 5px;">Tip: Upload an image in Media Manager first, then copy the filename here</small>
+                <label>Background Image URL</label>
+                <input type="text" id="bgImage" placeholder="images/your-image.jpg or leave empty for solid color">
+                <small style="color: #94a3b8; display: block; margin-top: 5px;">Tip: Place images in the "images" folder, then enter the path (e.g., images/hero.jpg)</small>
             </div>
         </div>
     </div>
 
     <script>
-        // Load saved settings
-        function loadSettings() {
+        // ========== SUPABASE CONFIGURATION ==========
+        const SUPABASE_URL = 'https://ooarghgxjbxqgnmjwpdj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXJnaGd4amJ4cWdubWp3cGRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NzM1MzQsImV4cCI6MjA5NDU0OTUzNH0.7zkOuh4F8lkSIaDnMEm9-R8v3sepjxnz0P4BKOI-HaM';
+        
+        let supabaseClient;
+        let currentSession = null;
+
+        // ========== AUTHENTICATION CHECK ==========
+        async function checkAuth() {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
+            
+            if (error || !session) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            currentSession = session;
+            console.log('Authenticated as:', session.user.email);
+            return true;
+        }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            localStorage.removeItem('adminSession');
+            window.location.href = 'login.html';
+        }
+
+        // ========== DESIGN SETTINGS FUNCTIONS ==========
+        
+        // Load saved settings from Supabase
+        async function loadSettings() {
+            const { data, error } = await supabaseClient
+                .from('design_settings')
+                .select('*')
+                .limit(1);
+            
+            if (error) {
+                console.error('Error loading design settings:', error);
+                // Fallback to localStorage
+                loadFromLocalStorage();
+                return;
+            }
+            
+            if (data && data[0] && data[0].settings) {
+                const settings = data[0].settings;
+                applySettingsToForm(settings);
+            } else {
+                // No settings in Supabase, try localStorage
+                loadFromLocalStorage();
+            }
+            
+            updateAllValues();
+            updatePreview();
+        }
+        
+        function loadFromLocalStorage() {
             const saved = localStorage.getItem('designSettings');
             if(saved) {
                 const settings = JSON.parse(saved);
-                if(settings.primaryColor) document.getElementById('primaryColor').value = settings.primaryColor;
-                if(settings.secondaryColor) document.getElementById('secondaryColor').value = settings.secondaryColor;
-                if(settings.bgColor) document.getElementById('bgColor').value = settings.bgColor;
-                if(settings.textColor) document.getElementById('textColor').value = settings.textColor;
-                if(settings.cardBgColor) document.getElementById('cardBgColor').value = settings.cardBgColor;
-                if(settings.heroHeight) document.getElementById('heroHeight').value = settings.heroHeight;
-                if(settings.borderRadius) document.getElementById('borderRadius').value = settings.borderRadius;
-                if(settings.buttonRadius) document.getElementById('buttonRadius').value = settings.buttonRadius;
-                if(settings.spacing) document.getElementById('spacing').value = settings.spacing;
-                if(settings.h1Size) document.getElementById('h1Size').value = settings.h1Size;
-                if(settings.h2Size) document.getElementById('h2Size').value = settings.h2Size;
-                if(settings.bodySize) document.getElementById('bodySize').value = settings.bodySize;
-                if(settings.bgImage) document.getElementById('bgImage').value = settings.bgImage;
+                applySettingsToForm(settings);
             }
-            updateAllValues();
-            updatePreview();
+        }
+        
+        function applySettingsToForm(settings) {
+            if(settings.colors) {
+                if(settings.colors.primary) document.getElementById('primaryColor').value = settings.colors.primary;
+                if(settings.colors.secondary) document.getElementById('secondaryColor').value = settings.colors.secondary;
+                if(settings.colors.background) document.getElementById('bgColor').value = settings.colors.background;
+                if(settings.colors.text) document.getElementById('textColor').value = settings.colors.text;
+                if(settings.colors.cardBg) document.getElementById('cardBgColor').value = settings.colors.cardBg;
+                if(settings.colors.darkBg) document.getElementById('darkBgColor').value = settings.colors.darkBg;
+                if(settings.colors.darkCard) document.getElementById('darkCardColor').value = settings.colors.darkCard;
+                if(settings.colors.darkText) document.getElementById('darkTextColor').value = settings.colors.darkText;
+                if(settings.colors.darkBorder) document.getElementById('darkBorderColor').value = settings.colors.darkBorder;
+            }
+            if(settings.layout) {
+                if(settings.layout.heroHeight) document.getElementById('heroHeight').value = settings.layout.heroHeight;
+                if(settings.layout.borderRadius) document.getElementById('borderRadius').value = parseInt(settings.layout.borderRadius);
+                if(settings.layout.buttonRadius) document.getElementById('buttonRadius').value = parseInt(settings.layout.buttonRadius);
+                if(settings.layout.spacing) document.getElementById('spacing').value = parseInt(settings.layout.spacing);
+            }
+            if(settings.typography) {
+                if(settings.typography.h1Size) document.getElementById('h1Size').value = parseInt(settings.typography.h1Size);
+                if(settings.typography.h2Size) document.getElementById('h2Size').value = parseInt(settings.typography.h2Size);
+                if(settings.typography.bodySize) document.getElementById('bodySize').value = parseInt(settings.typography.bodySize);
+            }
+            if(settings.backgroundImage) {
+                document.getElementById('bgImage').value = settings.backgroundImage;
+            }
         }
 
         function updateAllValues() {
@@ -286,14 +439,21 @@
             previewButton.style.borderRadius = buttonRadius;
         }
 
-        function saveDesignSettings() {
+        async function saveDesignSettings() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex';
+            
             const settings = {
                 colors: {
                     primary: document.getElementById('primaryColor').value,
                     secondary: document.getElementById('secondaryColor').value,
                     background: document.getElementById('bgColor').value,
                     text: document.getElementById('textColor').value,
-                    cardBg: document.getElementById('cardBgColor').value
+                    cardBg: document.getElementById('cardBgColor').value,
+                    darkBg: document.getElementById('darkBgColor').value,
+                    darkCard: document.getElementById('darkCardColor').value,
+                    darkText: document.getElementById('darkTextColor').value,
+                    darkBorder: document.getElementById('darkBorderColor').value
                 },
                 layout: {
                     heroHeight: document.getElementById('heroHeight').value,
@@ -306,30 +466,38 @@
                     h2Size: document.getElementById('h2Size').value + 'px',
                     bodySize: document.getElementById('bodySize').value + 'px'
                 },
-                backgroundImage: document.getElementById('bgImage').value
+                backgroundImage: document.getElementById('bgImage').value,
+                updated_at: new Date().toISOString()
             };
             
-            // Save to localStorage for now (will save to JSON file when going live)
+            // Save to Supabase
+            const { error } = await supabaseClient
+                .from('design_settings')
+                .upsert({ id: 1, settings: settings, updated_at: new Date().toISOString() });
+            
+            loadingOverlay.style.display = 'none';
+            
+            if (error) {
+                console.error('Error saving to Supabase:', error);
+                const errorMsg = document.getElementById('errorMsg');
+                errorMsg.style.display = 'block';
+                setTimeout(() => errorMsg.style.display = 'none', 3000);
+                
+                // Fallback to localStorage
+                localStorage.setItem('designSettings', JSON.stringify(settings));
+                return;
+            }
+            
+            // Also save to localStorage as backup
             localStorage.setItem('designSettings', JSON.stringify(settings));
             
-            // Also save to settings.json file
-            const dataStr = JSON.stringify(settings, null, 2);
-            const blob = new Blob([dataStr], {type: 'application/json'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'settings.json';
-            a.click();
-            URL.revokeObjectURL(url);
-            
-            // Show success message
-            const msg = document.getElementById('successMsg');
-            msg.style.display = 'block';
-            setTimeout(() => msg.style.display = 'none', 3000);
+            const successMsg = document.getElementById('successMsg');
+            successMsg.style.display = 'block';
+            setTimeout(() => successMsg.style.display = 'none', 3000);
         }
 
         // Add event listeners to all inputs for live preview
-        const inputs = ['primaryColor', 'secondaryColor', 'bgColor', 'textColor', 'cardBgColor', 'borderRadius', 'buttonRadius', 'spacing', 'h1Size', 'h2Size', 'bodySize', 'heroHeight'];
+        const inputs = ['primaryColor', 'secondaryColor', 'bgColor', 'textColor', 'cardBgColor', 'darkBgColor', 'darkCardColor', 'darkTextColor', 'darkBorderColor', 'borderRadius', 'buttonRadius', 'spacing', 'h1Size', 'h2Size', 'bodySize', 'heroHeight'];
         inputs.forEach(id => {
             const element = document.getElementById(id);
             if(element) {
@@ -345,7 +513,25 @@
         document.getElementById('cardBgColor')?.addEventListener('input', () => updatePreview());
         document.getElementById('primaryColor')?.addEventListener('input', () => updatePreview());
 
-        loadSettings();
+        // ========== CREATE DESIGN_SETTINGS TABLE IF NOT EXISTS ==========
+        // Run this SQL in Supabase if the table doesn't exist:
+        /*
+        CREATE TABLE IF NOT EXISTS design_settings (
+            id INTEGER PRIMARY KEY DEFAULT 1,
+            settings JSONB,
+            updated_at TIMESTAMP DEFAULT NOW()
+        );
+        */
+
+        // ========== INITIALIZE ==========
+        async function initialize() {
+            const isAuthenticated = await checkAuth();
+            if (!isAuthenticated) return;
+            
+            await loadSettings();
+        }
+        
+        initialize();
     </script>
 </body>
 </html>
