@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Media Manager | Portfolio CMS</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -33,12 +34,154 @@
             text-decoration: none;
             border-radius: 8px;
             margin-bottom: 8px;
+            transition: all 0.3s;
         }
         .sidebar nav a:hover { background: #334155; color: white; }
         .sidebar nav a.active { background: #6366f1; color: white; }
         .main-content {
             margin-left: 260px;
             padding: 30px;
+            min-height: 100vh;
+        }
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #334155;
+        }
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .logout-btn:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+        .upload-area {
+            border: 2px dashed #334155;
+            border-radius: 16px;
+            padding: 50px;
+            text-align: center;
+            margin-bottom: 30px;
+            background: #1e293b;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .upload-area:hover {
+            border-color: #6366f1;
+            background: #334155;
+        }
+        .upload-area.drag-over {
+            border-color: #10b981;
+            background: #2d5a3b;
+        }
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .media-item {
+            background: #1e293b;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s;
+        }
+        .media-item:hover {
+            transform: translateY(-3px);
+        }
+        .media-image-container {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .media-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .media-info {
+            padding: 12px;
+            font-size: 12px;
+            word-break: break-all;
+        }
+        .media-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #cbd5e1;
+            font-size: 11px;
+        }
+        .media-size {
+            font-size: 10px;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+        .delete-media {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+        .copy-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .success-msg {
+            background: #10b981;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .error-msg {
+            background: #ef4444;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+        .loading-spinner {
+            background: #1e293b;
+            padding: 20px 40px;
+            border-radius: 12px;
+            text-align: center;
         }
         .info-card {
             background: #1e293b;
@@ -72,19 +215,6 @@
             margin-bottom: 10px;
             margin-left: 20px;
         }
-        button {
-            background: #6366f1;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        button:hover {
-            background: #4f46e5;
-            transform: translateY(-1px);
-        }
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -98,15 +228,8 @@
             word-break: break-all;
             margin-top: 10px;
         }
-        .copy-btn {
-            background: #3b82f6;
-            margin-left: 10px;
-            padding: 5px 12px;
-            font-size: 12px;
-        }
-        hr {
-            border-color: #334155;
-            margin: 20px 0;
+        button {
+            cursor: pointer;
         }
         @media (max-width: 768px) {
             .sidebar {
@@ -124,6 +247,13 @@
     </style>
 </head>
 <body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div style="font-size: 40px; margin-bottom: 10px;">⏳</div>
+            <div>Uploading to Supabase Storage...</div>
+        </div>
+    </div>
+
     <div class="sidebar">
         <h2>🎛️ Portfolio CMS</h2>
         <nav>
@@ -135,136 +265,256 @@
         </nav>
     </div>
     <div class="main-content">
-        <h1>🖼️ Media Manager</h1>
+        <div class="header-bar">
+            <h1>🖼️ Media Manager</h1>
+            <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+        </div>
+
+        <div class="success-msg" id="successMsg">✓ File uploaded to Supabase Storage!</div>
+        <div class="error-msg" id="errorMsg">✗ Upload failed. Please try again.</div>
 
         <!-- Info Card -->
         <div class="info-card">
-            <h3>📁 How Images Work on Your Live Site</h3>
-            <p>Your website now uses the <strong>images/ folder</strong> for project images, not localStorage. This means:</p>
+            <h3>📁 Supabase Storage Integration</h3>
+            <p>Images are now stored in <strong>Supabase Storage</strong>. This means:</p>
             <ul class="steps">
-                <li>✅ Images are stored in the <code>images/</code> folder on your computer</li>
-                <li>✅ No storage limits (unlike localStorage)</li>
-                <li>✅ Images load faster on your live site</li>
-                <li>✅ You can organize images with normal file management</li>
+                <li>✅ Images are stored in the cloud, accessible from anywhere</li>
+                <li>✅ No storage limits on your local computer</li>
+                <li>✅ Images are backed up and secure</li>
+                <li>✅ You can upload directly from this page</li>
             </ul>
         </div>
 
-        <div class="grid-2">
-            <!-- Instructions Card -->
-            <div class="info-card">
-                <h3>📤 How to Add Images</h3>
-                <p>To add images for your projects:</p>
-                <ol class="steps" style="list-style-type: decimal; padding-left: 25px;">
-                    <li>Open your <strong>My Portfolio/images/</strong> folder on your computer</li>
-                    <li>Drag and drop your images directly into that folder</li>
-                    <li>Use the <strong>Project Manager</strong> to add the filename to your project</li>
-                </ol>
-                <p style="margin-top: 15px;"><strong>Supported formats:</strong> JPG, PNG, GIF, WEBP, SVG</p>
-                <p><strong>Tip:</strong> Use descriptive filenames like <code>telematic-systems.jpg</code> (no spaces)</p>
-            </div>
-
-            <!-- Quick Reference Card -->
-            <div class="info-card">
-                <h3>📋 Quick Reference</h3>
-                <p>When adding a project in <strong>Project Manager</strong>, enter the filename in the <strong>"Project Image"</strong> field:</p>
-                <div class="filename-box">
-                    <code id="exampleFilename">telematic-systems.jpg</code>
-                    <button class="copy-btn" onclick="copyExampleFilename()">📋 Copy</button>
-                </div>
-                <p style="margin-top: 15px;"><strong>Your images folder path:</strong></p>
-                <div class="filename-box">
-                    <code>My Portfolio/images/</code>
-                </div>
-                <hr>
-                <p><strong>Current images in your folder:</strong></p>
-                <div id="imageSuggestions">
-                    <p style="color: #94a3b8;">Loading suggestions...</p>
-                </div>
-            </div>
+        <!-- Upload Area -->
+        <div class="upload-area" id="uploadArea">
+            <div style="font-size: 48px; margin-bottom: 15px;">📸</div>
+            <p>Drag & Drop images here to upload to Supabase Storage</p>
+            <p style="color: #94a3b8; font-size: 14px; margin-top: 10px;">PNG, JPG, GIF, WEBP (Max 5MB each)</p>
+            <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
         </div>
 
-        <!-- Existing Images List (from localStorage - for reference) -->
-        <div class="info-card">
-            <h3>🖼️ Images Currently in localStorage (Old System)</h3>
-            <p>These images are stored in your browser's localStorage from before. For your live site, use the <strong>images/ folder</strong> instead.</p>
-            <div id="oldImagesList">
-                <p style="color: #94a3b8;">Loading...</p>
-            </div>
-            <button onclick="clearOldMedia()" style="background: #ef4444; margin-top: 15px;">🗑️ Clear Old localStorage Images</button>
+        <h3>📋 Your Media Files (<span id="fileCount">0</span>)</h3>
+        <div id="mediaGrid" class="media-grid">
+            <p style="grid-column: 1/-1; text-align: center; padding: 40px;">Loading images from Supabase...</p>
         </div>
     </div>
 
     <script>
-        // Load old localStorage images (for reference only)
-        function loadOldMediaList() {
-            const saved = localStorage.getItem('mediaFiles');
-            const container = document.getElementById('oldImagesList');
+        // ========== SUPABASE CONFIGURATION ==========
+        const SUPABASE_URL = 'https://ooarghgxjbxqgnmjwpdj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXJnaGd4amJ4cWdubWp3cGRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NzM1MzQsImV4cCI6MjA5NDU0OTUzNH0.7zkOuh4F8lkSIaDnMEm9-R8v3sepjxnz0P4BKOI-HaM';
+        
+        let supabaseClient;
+        let currentSession = null;
+        let mediaFiles = [];
+
+        // ========== AUTHENTICATION CHECK ==========
+        async function checkAuth() {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             
-            if(saved) {
-                try {
-                    const mediaFiles = JSON.parse(saved);
-                    if(mediaFiles.length === 0) {
-                        container.innerHTML = '<p style="color: #94a3b8;">No old images in localStorage.</p>';
-                    } else {
-                        let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
-                        mediaFiles.forEach(file => {
-                            html += `<div style="background: #0f172a; padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
-                                        <span>📷 ${file.name}</span>
-                                        <span style="font-size: 11px; color: #64748b;">${(file.size / 1024).toFixed(1)} KB</span>
-                                    </div>`;
-                        });
-                        html += '</div>';
-                        container.innerHTML = html;
-                    }
-                } catch(e) {
-                    container.innerHTML = '<p style="color: #94a3b8;">No old images in localStorage.</p>';
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
+            
+            if (error || !session) {
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            currentSession = session;
+            console.log('Authenticated as:', session.user.email);
+            return true;
+        }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            localStorage.removeItem('adminSession');
+            window.location.href = 'login.html';
+        }
+
+        // ========== SUPABASE STORAGE FUNCTIONS ==========
+        
+        // Create bucket if not exists (run this once in Supabase SQL)
+        // Run this SQL in Supabase SQL Editor first:
+        /*
+        -- Create storage bucket for images
+        INSERT INTO storage.buckets (id, name, public) 
+        VALUES ('project-images', 'project-images', true)
+        ON CONFLICT (id) DO NOTHING;
+        
+        -- Allow public access to images
+        CREATE POLICY "Public Access" ON storage.objects
+            FOR SELECT USING (bucket_id = 'project-images');
+        
+        -- Allow authenticated uploads
+        CREATE POLICY "Auth Upload" ON storage.objects
+            FOR INSERT WITH CHECK (bucket_id = 'project-images' AND auth.role() = 'authenticated');
+        
+        -- Allow authenticated deletes
+        CREATE POLICY "Auth Delete" ON storage.objects
+            FOR DELETE USING (bucket_id = 'project-images' AND auth.role() = 'authenticated');
+        */
+
+        async function loadMediaFiles() {
+            const { data, error } = await supabaseClient
+                .storage
+                .from('project-images')
+                .list('', {
+                    limit: 100,
+                    sortBy: { column: 'created_at', order: 'desc' }
+                });
+            
+            if (error) {
+                console.error('Error loading media:', error);
+                document.getElementById('mediaGrid').innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px;">Error loading images. Make sure the storage bucket is created.</p>';
+                return;
+            }
+            
+            mediaFiles = data || [];
+            document.getElementById('fileCount').innerText = mediaFiles.length;
+            renderMediaGrid();
+        }
+
+        function renderMediaGrid() {
+            const grid = document.getElementById('mediaGrid');
+            if(mediaFiles.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px;">No files uploaded yet. Drag and drop images above!</p>';
+                return;
+            }
+            
+            const supabaseUrl = SUPABASE_URL;
+            
+            grid.innerHTML = mediaFiles.map((file, index) => {
+                const publicUrl = `${supabaseUrl}/storage/v1/object/public/project-images/${file.name}`;
+                const fileSize = file.metadata?.size || 0;
+                const sizeKB = (fileSize / 1024).toFixed(1);
+                
+                return `
+                    <div class="media-item">
+                        <div class="media-image-container">
+                            <img src="${publicUrl}" class="media-image" alt="${file.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27200%27 height=%27200%27 viewBox=%270 0 200 200%27%3E%3Crect width=%27200%27 height=%27200%27 fill=%27%23334155%27/%3E%3Ctext x=%2750%25%27 y=%2750%25%27 text-anchor=%27middle%27 dy=%27.3em%27 fill=%27white%27%3E📷%3C/text%3E%3C/svg%3E'">
+                        </div>
+                        <div class="media-info">
+                            <div class="media-name">📷 ${file.name}</div>
+                            <div class="media-size">${sizeKB} KB</div>
+                            <button class="delete-media" onclick="deleteMedia('${file.name}')">🗑️ Delete</button>
+                            <button class="copy-btn" onclick="copyFilename('${file.name}')">📋 Copy URL</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function uploadFile(file) {
+            // Check file size (max 5MB)
+            if(file.size > 5 * 1024 * 1024) {
+                const errorMsg = document.getElementById('errorMsg');
+                errorMsg.innerHTML = '✗ File too large! Maximum size is 5MB.';
+                errorMsg.style.display = 'block';
+                setTimeout(() => errorMsg.style.display = 'none', 3000);
+                return false;
+            }
+            
+            // Check file type
+            if(!file.type.startsWith('image/')) {
+                const errorMsg = document.getElementById('errorMsg');
+                errorMsg.innerHTML = '✗ Please upload an image file (PNG, JPG, GIF, WEBP)';
+                errorMsg.style.display = 'block';
+                setTimeout(() => errorMsg.style.display = 'none', 3000);
+                return false;
+            }
+            
+            // Sanitize filename (remove spaces, special characters)
+            const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_').toLowerCase();
+            
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex';
+            
+            const { data, error } = await supabaseClient
+                .storage
+                .from('project-images')
+                .upload(sanitizedName, file, {
+                    cacheControl: '3600',
+                    upsert: true
+                });
+            
+            loadingOverlay.style.display = 'none';
+            
+            if (error) {
+                console.error('Upload error:', error);
+                const errorMsg = document.getElementById('errorMsg');
+                errorMsg.innerHTML = '✗ Upload failed: ' + error.message;
+                errorMsg.style.display = 'block';
+                setTimeout(() => errorMsg.style.display = 'none', 3000);
+                return false;
+            }
+            
+            const successMsg = document.getElementById('successMsg');
+            successMsg.style.display = 'block';
+            setTimeout(() => successMsg.style.display = 'none', 3000);
+            
+            await loadMediaFiles();
+            return true;
+        }
+
+        async function deleteMedia(filename) {
+            if(confirm(`Delete "${filename}" permanently? This will remove it from all projects using it.`)) {
+                const { error } = await supabaseClient
+                    .storage
+                    .from('project-images')
+                    .remove([filename]);
+                
+                if (error) {
+                    alert('Error deleting: ' + error.message);
+                    return;
                 }
-            } else {
-                container.innerHTML = '<p style="color: #94a3b8;">No old images in localStorage.</p>';
+                
+                await loadMediaFiles();
+                alert('✅ File deleted successfully');
             }
         }
 
-        function clearOldMedia() {
-            if(confirm('⚠️ Delete ALL images from localStorage? This does NOT affect your images/ folder. Continue?')) {
-                localStorage.removeItem('mediaFiles');
-                loadOldMediaList();
-                alert('✅ Old localStorage images cleared. Your images/ folder images are unaffected.');
+        function copyFilename(filename) {
+            const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/project-images/${filename}`;
+            navigator.clipboard.writeText(publicUrl);
+            alert('✅ URL copied: ' + publicUrl + '\n\nUse this URL in your projects, or just use the filename: ' + filename);
+        }
+
+        // ========== DRAG & DROP HANDLERS ==========
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('drag-over');
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('drag-over');
+        });
+        uploadArea.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+            const files = Array.from(e.dataTransfer.files);
+            for (const file of files) {
+                await uploadFile(file);
             }
-        }
+        });
+        fileInput.addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files);
+            for (const file of files) {
+                await uploadFile(file);
+            }
+            fileInput.value = '';
+        });
 
-        function copyExampleFilename() {
-            const filename = 'telematic-systems.jpg';
-            navigator.clipboard.writeText(filename);
-            alert('✅ Filename copied: ' + filename + '\n\nPaste this in the Project Image field in Projects Manager.');
-        }
-
-        // Generate image suggestions based on common project names
-        function loadImageSuggestions() {
-            const suggestions = [
-                'telematic-systems.jpg',
-                'saas-emails.jpg',
-                'seo-blog.jpg',
-                'pinnacle-systems.jpg',
-                'project-thumbnail.jpg'
-            ];
+        // ========== INITIALIZE ==========
+        async function initialize() {
+            const isAuthenticated = await checkAuth();
+            if (!isAuthenticated) return;
             
-            const container = document.getElementById('imageSuggestions');
-            let html = '<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">';
-            suggestions.forEach(suggestion => {
-                html += `<button onclick="copySuggestion('${suggestion}')" style="background: #334155; padding: 6px 12px; font-size: 12px;">📋 ${suggestion}</button>`;
-            });
-            html += '</div>';
-            container.innerHTML = html;
+            await loadMediaFiles();
         }
-
-        function copySuggestion(filename) {
-            navigator.clipboard.writeText(filename);
-            alert('✅ Filename copied: ' + filename);
-        }
-
-        // Initialize
-        loadOldMediaList();
-        loadImageSuggestions();
+        
+        initialize();
     </script>
 </body>
 </html>
