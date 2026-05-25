@@ -139,14 +139,11 @@
             }
             
             if (data.session) {
-                // Store session info
                 localStorage.setItem('adminSession', JSON.stringify(data.session));
-                // Redirect to dashboard
                 window.location.href = 'dashboard.html';
             }
         }
         
-        // Check if already logged in
         async function checkSession() {
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
@@ -155,7 +152,6 @@
         }
         checkSession();
         
-        // Enter key to submit
         document.getElementById('password').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') login();
         });
