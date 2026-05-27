@@ -356,7 +356,7 @@
             border-top: 1px solid var(--border);
         }
 
-        /* Chat Agent Styles (condensed - same as work.html) */
+        /* Chat Agent Styles (condensed) */
         .chat-agent { position: fixed; bottom: 110px; right: 30px; z-index: 1001; }
         .chat-agent-toggle { width: 70px; height: 70px; background: linear-gradient(135deg, #818cf8, #6366f1); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: all 0.3s; cursor: pointer; animation: agentPulse 2s infinite; position: relative; overflow: hidden; border: 3px solid white; }
         .chat-agent-toggle:hover { transform: scale(1.1); }
@@ -419,11 +419,11 @@
 
         @media (max-width: 768px) {
             .container { padding-left: 20px; padding-right: 20px; }
-            .hero-content { max-width: 100%; text-align: center; }
+            .hero-content { max-width: 100%; text-align: left; }  /* FIXED: now left-aligned */
             .hero-title { font-size: 36px; }
             .typed-text { font-size: 24px; }
             .section-title { font-size: 28px; }
-            .nav-container { flex-direction: column; }
+            .nav-container { flex-direction: column; align-items: flex-start; }
             .btn-primary, .btn-secondary { padding: 10px 24px; font-size: 14px; }
             .chat-main-btn, .chat-agent-toggle { width: 55px; height: 55px; }
             .chat-agent-window { width: calc(100vw - 40px); right: -10px; height: 500px; }
@@ -683,27 +683,11 @@
             .select('*')
             .limit(1);
         
-        if(statsData && statsData[0]) {
-            siteData.statistics = statsData[0];
-        } else {
-            const statistics = JSON.parse(localStorage.getItem('statistics') || '{}');
-            siteData.statistics = statistics;
-        }
-        
         // Load personal info from Supabase
         const { data: personalData } = await supabaseClient
             .from('personal_info')
             .select('*')
             .limit(1);
-        
-        if(personalData && personalData[0]) {
-            siteData.personalInfo = personalData[0];
-            siteData.heroPhrases = personalData[0].hero_phrases || ["Insights.....", "Strategy.......", "Growth..", "Words That Drive Results"];
-        } else {
-            const personalInfo = JSON.parse(localStorage.getItem('personalInfo') || '{}');
-            siteData.personalInfo = personalInfo;
-            siteData.heroPhrases = personalInfo.heroPhrases || ["Insights.....", "Strategy.......", "Growth..", "Words That Drive Results"];
-        }
         
         // Load testimonials from Supabase
         const { data: testimonialsData } = await supabaseClient
@@ -711,12 +695,35 @@
             .select('*')
             .order('created_at', { ascending: false });
         
-        if(testimonialsData && testimonialsData.length > 0) {
-            siteData.testimonials = testimonialsData;
+        // Fallback to localStorage if Supabase returns empty or null
+        const localStats = JSON.parse(localStorage.getItem('statistics') || '{}');
+        const localPersonal = JSON.parse(localStorage.getItem('personalInfo') || '{}');
+        const localTestimonials = JSON.parse(localStorage.getItem('testimonials') || '[]');
+
+        // Statistics
+        siteData.statistics = (statsData && statsData[0]) ? statsData[0] : localStats;
+
+        // Personal info – robust fallback: Supabase → localStorage → brand default
+        if (personalData && personalData[0] && personalData[0].name && personalData[0].name.trim() !== '') {
+            siteData.personalInfo = personalData[0];
+        } else if (localPersonal.name && localPersonal.name.trim() !== '') {
+            siteData.personalInfo = localPersonal;
         } else {
-            const testimonials = JSON.parse(localStorage.getItem('testimonials') || '[]');
-            siteData.testimonials = testimonials;
+            // Brand fallback – change these to your permanent branding
+            siteData.personalInfo = {
+                name: 'Qreative Content',
+                title: 'SaaS Copywriter',
+                bio: 'Scale Your Revenue With Content That Speaks The Language of Your Clients.',
+                hero_phrases: ['Insights.....', 'Strategy.......', 'Growth..', 'Words That Drive Results']
+            };
         }
+
+        // Hero phrases
+        siteData.heroPhrases = siteData.personalInfo.hero_phrases || 
+                               (localPersonal.heroPhrases ? localPersonal.heroPhrases : ['SaaS Copywriter', 'Conversion Expert']);
+
+        // Testimonials
+        siteData.testimonials = (testimonialsData && testimonialsData.length > 0) ? testimonialsData : localTestimonials;
         
         applyDataToPage();
         applyDesignSettings();
