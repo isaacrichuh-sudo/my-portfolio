@@ -58,6 +58,12 @@
             border-bottom: 1px solid #334155;
         }
 
+        .user-info {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-right: 15px;
+        }
+
         .logout-btn {
             background: #ef4444;
             color: white;
@@ -78,6 +84,11 @@
             border-radius: 12px;
             padding: 25px;
             margin-bottom: 30px;
+        }
+
+        .settings-card h3 {
+            margin-bottom: 20px;
+            color: #f1f5f9;
         }
 
         .form-group {
@@ -101,6 +112,11 @@
             font-family: inherit;
         }
 
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #818cf8;
+        }
+
         textarea {
             resize: vertical;
             min-height: 100px;
@@ -114,11 +130,16 @@
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s;
+            font-weight: 600;
         }
 
         button:hover {
             background: #4f46e5;
             transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
         }
 
         .delete-btn {
@@ -130,8 +151,9 @@
         }
 
         .success-msg {
-            background: #10b981;
-            color: white;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid #10b981;
+            color: #6ee7b7;
             padding: 12px;
             border-radius: 8px;
             margin-bottom: 20px;
@@ -139,8 +161,9 @@
         }
 
         .error-msg {
-            background: #ef4444;
-            color: white;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
             padding: 12px;
             border-radius: 8px;
             margin-bottom: 20px;
@@ -154,19 +177,31 @@
         }
 
         .leads-table th, .leads-table td {
-            padding: 10px;
+            padding: 12px 10px;
             text-align: left;
             border-bottom: 1px solid #334155;
         }
 
         .leads-table th {
             color: #818cf8;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .leads-table tbody tr:hover {
+            background: rgba(99, 102, 241, 0.05);
         }
 
         .export-btn {
             background: #10b981;
             margin-top: 15px;
             margin-right: 10px;
+        }
+
+        .export-btn:hover {
+            background: #059669;
         }
 
         .grid-2 {
@@ -184,6 +219,7 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+            border: 1px solid #334155;
         }
 
         .testimonial-info {
@@ -199,6 +235,13 @@
             font-size: 13px;
             color: #94a3b8;
             margin-top: 5px;
+            font-style: italic;
+        }
+
+        .star-rating {
+            color: #fbbf24;
+            font-size: 14px;
+            margin: 5px 0;
         }
 
         hr {
@@ -226,6 +269,44 @@
             text-align: center;
         }
 
+        .small-text {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .card-subsection {
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #334155;
+        }
+
+        .card-subsection h4 {
+            margin-bottom: 15px;
+            color: #c7d2fe;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+        }
+
+        .badge-info {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
@@ -237,6 +318,16 @@
             }
             .grid-2 {
                 grid-template-columns: 1fr;
+            }
+            .testimonial-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .leads-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
             }
         }
     </style>
@@ -262,37 +353,43 @@
 
     <div class="main-content">
         <div class="header-bar">
-            <h1>⚙️ Settings</h1>
-            <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+            <div style="display: flex; align-items: center;">
+                <h1>⚙️ Settings</h1>
+            </div>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <span class="user-info" id="userEmailDisplay"></span>
+                <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+            </div>
         </div>
 
         <div class="success-msg" id="successMsg">✓ Settings saved successfully!</div>
-        <div class="error-msg" id="errorMsg">✗ Error saving to Supabase</div>
+        <div class="error-msg" id="errorMsg">✗ Error saving to Supabase. Check console for details.</div>
 
         <!-- ========== PERSONAL INFO CARD ========== -->
         <div class="settings-card">
-            <h3 style="margin-bottom: 20px;">👤 Personal Information</h3>
+            <h3>👤 Personal Information <span class="badge badge-info">Public Profile</span></h3>
+            <p class="small-text" style="margin-bottom: 20px;">This information appears on your public portfolio website.</p>
             <div class="grid-2">
                 <div class="form-group">
-                    <label>Your Full Name</label>
+                    <label>Your Full Name *</label>
                     <input type="text" id="personalName" placeholder="Your Name">
                 </div>
                 <div class="form-group">
-                    <label>Professional Title</label>
+                    <label>Professional Title *</label>
                     <input type="text" id="personalTitle" placeholder="SaaS Copywriter">
                 </div>
-                <div class="form-group">
-                    <label>Bio / About Text</label>
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Bio / About Text *</label>
                     <textarea id="personalBio" rows="3" placeholder="Tell visitors about yourself and your expertise..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Email Address</label>
+                    <label>Email Address *</label>
                     <input type="email" id="personalEmail" placeholder="your@email.com">
                 </div>
                 <div class="form-group">
                     <label>Hero Phrases (comma separated)</label>
                     <input type="text" id="heroPhrases" placeholder="SaaS Copywriter, Conversion Expert, B2B Marketing Writer">
-                    <small style="color: #94a3b8;">These will type one after another in the hero section</small>
+                    <p class="small-text">These will type one after another in the hero section</p>
                 </div>
             </div>
             <button onclick="savePersonalInfo()">💾 Save Personal Info</button>
@@ -300,23 +397,24 @@
 
         <!-- ========== STATISTICS CARD ========== -->
         <div class="settings-card">
-            <h3 style="margin-bottom: 20px;">📊 Statistics Numbers</h3>
+            <h3>📊 Statistics Numbers <span class="badge badge-info">Homepage Stats</span></h3>
+            <p class="small-text" style="margin-bottom: 20px;">These numbers display in the statistics section of your homepage.</p>
             <div class="grid-2">
                 <div class="form-group">
                     <label>Years Experience</label>
-                    <input type="number" id="statYears" min="0">
+                    <input type="number" id="statYears" min="0" value="4">
                 </div>
                 <div class="form-group">
                     <label>Projects Completed</label>
-                    <input type="number" id="statProjects" min="0">
+                    <input type="number" id="statProjects" min="0" value="60">
                 </div>
                 <div class="form-group">
                     <label>Happy Clients</label>
-                    <input type="number" id="statClients" min="0">
+                    <input type="number" id="statClients" min="0" value="55">
                 </div>
                 <div class="form-group">
                     <label>Avg. Growth (%)</label>
-                    <input type="number" id="statGrowth" min="0">
+                    <input type="number" id="statGrowth" min="0" value="30">
                 </div>
             </div>
             <button onclick="saveStats()">💾 Save Statistics</button>
@@ -324,13 +422,14 @@
 
         <!-- ========== TESTIMONIALS MANAGER CARD ========== -->
         <div class="settings-card">
-            <h3 style="margin-bottom: 20px;">⭐ Testimonials Management</h3>
+            <h3>⭐ Testimonials Management <span class="badge badge-success" id="testimonialCount">0 total</span></h3>
+            <p class="small-text" style="margin-bottom: 20px;">Client testimonials displayed on your portfolio.</p>
             
-            <div style="background: #0f172a; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-                <h4 style="margin-bottom: 15px;">➕ Add New Testimonial</h4>
+            <div class="card-subsection">
+                <h4>➕ Add New Testimonial</h4>
                 <div class="grid-2">
                     <div class="form-group">
-                        <label>Client Name</label>
+                        <label>Client Name *</label>
                         <input type="text" id="testName" placeholder="e.g., John Mwangi">
                     </div>
                     <div class="form-group">
@@ -347,10 +446,12 @@
                             <option value="5">★★★★★ (5 stars)</option>
                             <option value="4">★★★★☆ (4 stars)</option>
                             <option value="3">★★★☆☆ (3 stars)</option>
+                            <option value="2">★★☆☆☆ (2 stars)</option>
+                            <option value="1">★☆☆☆☆ (1 star)</option>
                         </select>
                     </div>
                     <div class="form-group" style="grid-column: span 2;">
-                        <label>Testimonial Text</label>
+                        <label>Testimonial Text *</label>
                         <textarea id="testText" rows="3" placeholder="What did the client say about your work?"></textarea>
                     </div>
                 </div>
@@ -365,52 +466,54 @@
 
         <!-- ========== CONTACT LEADS CARD ========== -->
         <div class="settings-card">
-            <h3 style="margin-bottom: 20px;">📋 Contact Form Leads</h3>
+            <h3>📋 Contact Form Leads <span class="badge badge-info" id="leadsCount">0 leads</span></h3>
             <p style="margin-bottom: 15px; color: #94a3b8;">People who have contacted you through the website:</p>
             <div id="leadsContainer">
                 <table class="leads-table" id="leadsTable">
                     <thead>
-                        <tr><th>Name</th><th>Email</th><th>Company</th><th>Message</th><th>Date</th></td>
+                        <tr><th>Name</th><th>Email</th><th>Company</th><th>Message</th><th>Date</th><th>Status</th></tr>
                     </thead>
                     <tbody id="leadsBody">
-                        <tr><td colspan="5" style="text-align: center;">No leads yet</td></tr>
+                        <tr><td colspan="6" style="text-align: center;">No leads yet</td></tr>
                     </tbody>
                 </table>
             </div>
-            <button class="export-btn" onclick="exportLeads()">📥 Export Leads to CSV</button>
-            <button onclick="clearLeads()" style="background: #ef4444;">🗑️ Clear All Leads</button>
+            <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="export-btn" onclick="exportLeads()">📥 Export Leads to CSV</button>
+                <button onclick="clearLeads()" style="background: #ef4444;">🗑️ Clear All Leads</button>
+            </div>
         </div>
 
         <!-- ========== MULTI-CHAT SETTINGS ========== -->
         <div class="settings-card">
-            <h3 style="margin-bottom: 20px;">💬 Multi-Chat Button Settings</h3>
-            <p style="margin-bottom: 15px; color: #94a3b8;">Configure all chat options in one place</p>
+            <h3>💬 Multi-Chat Button Settings <span class="badge badge-success">Contact Options</span></h3>
+            <p style="margin-bottom: 15px; color: #94a3b8;">Configure all chat options in one place. These appear on your public portfolio.</p>
             
             <div class="grid-2">
-                <div style="background: #0f172a; padding: 15px; border-radius: 10px;">
+                <div class="card-subsection" style="margin-bottom: 0;">
                     <div class="form-group">
                         <label>💚 WhatsApp Number</label>
                         <input type="tel" id="whatsappNumber" placeholder="e.g., 254712345678">
-                        <small style="color: #94a3b8;">Format: 254 followed by 9 digits</small>
+                        <p class="small-text">Format: 254 followed by 9 digits (no + or spaces)</p>
                     </div>
                 </div>
                 
-                <div style="background: #0f172a; padding: 15px; border-radius: 10px;">
+                <div class="card-subsection" style="margin-bottom: 0;">
                     <div class="form-group">
-                        <label>✉️ Email Address</label>
+                        <label>✉️ Email Address for Chat</label>
                         <input type="email" id="chatEmail" placeholder="your@email.com">
                     </div>
                 </div>
                 
-                <div style="background: #0f172a; padding: 15px; border-radius: 10px;">
+                <div class="card-subsection" style="margin-bottom: 0;">
                     <div class="form-group">
                         <label>💙 Facebook Page URL</label>
                         <input type="url" id="facebookPage" placeholder="https://facebook.com/yourpage">
-                        <small style="color: #94a3b8;">Your Facebook page or profile link</small>
+                        <p class="small-text">Your Facebook page or profile link</p>
                     </div>
                 </div>
                 
-                <div style="background: #0f172a; padding: 15px; border-radius: 10px;">
+                <div class="card-subsection" style="margin-bottom: 0;">
                     <div class="form-group">
                         <label>📝 Default Message Template</label>
                         <textarea id="chatMessageTemplate" rows="2" placeholder="Hi, I saw your portfolio website and would like to discuss..."></textarea>
@@ -418,7 +521,7 @@
                 </div>
             </div>
             
-            <div class="grid-2">
+            <div class="grid-2" style="margin-top: 15px;">
                 <div class="form-group">
                     <label>📧 Email Subject Line</label>
                     <input type="text" id="emailSubject" value="Inquiry from Portfolio Website">
@@ -434,18 +537,18 @@
 
         <!-- ========== FAQ MANAGEMENT SECTION ========== -->
         <div class="settings-card">
-            <h3 style="margin-bottom: 20px;">❓ FAQ Management</h3>
-            <p style="margin-bottom: 15px; color: #94a3b8;">Add, edit, or remove frequently asked questions</p>
+            <h3>❓ FAQ Management <span class="badge badge-info" id="faqCount">0 FAQs</span></h3>
+            <p style="margin-bottom: 15px; color: #94a3b8;">Add, edit, or remove frequently asked questions displayed on your portfolio.</p>
             
-            <div style="background: #0f172a; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-                <h4 style="margin-bottom: 15px;">➕ Add New FAQ</h4>
+            <div class="card-subsection">
+                <h4>➕ Add New FAQ</h4>
                 <div class="grid-2">
                     <div class="form-group" style="grid-column: span 2;">
-                        <label>Question</label>
+                        <label>Question *</label>
                         <input type="text" id="faqQuestion" placeholder="e.g., How quickly can you start?">
                     </div>
                     <div class="form-group" style="grid-column: span 2;">
-                        <label>Answer</label>
+                        <label>Answer *</label>
                         <textarea id="faqAnswer" rows="3" placeholder="Write a helpful answer..."></textarea>
                     </div>
                 </div>
@@ -453,7 +556,9 @@
             </div>
             
             <h4>📋 Existing FAQs</h4>
-            <div id="faqsList"></div>
+            <div id="faqsList">
+                <p style="color: #94a3b8; text-align: center; padding: 20px;">Loading FAQs...</p>
+            </div>
         </div>
     </div>
 
@@ -463,28 +568,47 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXJnaGd4amJ4cWdubWp3cGRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NzM1MzQsImV4cCI6MjA5NDU0OTUzNH0.7zkOuh4F8lkSIaDnMEm9-R8v3sepjxnz0P4BKOI-HaM';
         
         let supabaseClient;
-        let currentSession = null;
+        let testimonials = [];
+        let faqs = [];
 
-        // ========== AUTHENTICATION CHECK ==========
-        async function checkAuth() {
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            
-            const { data: { session }, error } = await supabaseClient.auth.getSession();
-            
-            if (error || !session) {
+        // ========== AUTHENTICATION CHECK (CONSISTENT WITH projects.html) ==========
+        function checkAuth() {
+            const token = localStorage.getItem('supabase_token');
+            if (!token) {
+                console.log('No auth token found, redirecting to login...');
                 window.location.href = 'login.html';
                 return false;
             }
-            
-            currentSession = session;
-            console.log('Authenticated as:', session.user.email);
+            // Initialize Supabase client
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('Supabase client initialized - user authenticated');
             return true;
         }
 
-        async function logout() {
-            await supabaseClient.auth.signOut();
-            localStorage.removeItem('adminSession');
+        function logout() {
+            localStorage.removeItem('supabase_token');
+            localStorage.removeItem('supabase_refresh_token');
+            console.log('Logged out, redirecting to login...');
             window.location.href = 'login.html';
+        }
+
+        // Display user email if available
+        function displayUserInfo() {
+            const userEmailDisplay = document.getElementById('userEmailDisplay');
+            if (userEmailDisplay) {
+                // Try to decode the token to get user email
+                const token = localStorage.getItem('supabase_token');
+                if (token) {
+                    try {
+                        const payload = JSON.parse(atob(token.split('.')[1]));
+                        if (payload.email) {
+                            userEmailDisplay.textContent = '👤 ' + payload.email;
+                        }
+                    } catch (e) {
+                        userEmailDisplay.textContent = '👤 Logged in';
+                    }
+                }
+            }
         }
 
         // ========== PERSONAL INFO FUNCTIONS ==========
@@ -494,7 +618,12 @@
                 .select('*')
                 .limit(1);
             
-            if(data && data[0]) {
+            if (error) {
+                console.error('Error loading personal info:', error);
+                return;
+            }
+            
+            if (data && data[0]) {
                 document.getElementById('personalName').value = data[0].name || '';
                 document.getElementById('personalTitle').value = data[0].title || '';
                 document.getElementById('personalBio').value = data[0].bio || '';
@@ -504,6 +633,15 @@
         }
 
         async function savePersonalInfo() {
+            const name = document.getElementById('personalName').value.trim();
+            const title = document.getElementById('personalTitle').value.trim();
+            const bio = document.getElementById('personalBio').value.trim();
+            
+            if (!name || !title || !bio) {
+                showError('Please fill in name, title, and bio');
+                return;
+            }
+            
             const loadingOverlay = document.getElementById('loadingOverlay');
             loadingOverlay.style.display = 'flex';
             
@@ -511,10 +649,10 @@
             const heroPhrases = heroPhrasesStr.split(',').map(p => p.trim()).filter(p => p);
             
             const info = {
-                name: document.getElementById('personalName').value,
-                title: document.getElementById('personalTitle').value,
-                bio: document.getElementById('personalBio').value,
-                email: document.getElementById('personalEmail').value,
+                name: name,
+                title: title,
+                bio: bio,
+                email: document.getElementById('personalEmail').value.trim(),
                 hero_phrases: heroPhrases.length ? heroPhrases : ["SaaS Copywriter", "Conversion Expert"],
                 updated_at: new Date().toISOString()
             };
@@ -525,9 +663,9 @@
             
             loadingOverlay.style.display = 'none';
             
-            if(error) {
-                document.getElementById('errorMsg').style.display = 'block';
-                setTimeout(() => document.getElementById('errorMsg').style.display = 'none', 3000);
+            if (error) {
+                console.error('Error saving personal info:', error);
+                showError('Error saving personal info: ' + error.message);
             } else {
                 showSuccess('Personal info saved to Supabase!');
             }
@@ -540,16 +678,16 @@
                 .select('*')
                 .limit(1);
             
-            if(data && data[0]) {
+            if (error) {
+                console.error('Error loading statistics:', error);
+                return;
+            }
+            
+            if (data && data[0]) {
                 document.getElementById('statYears').value = data[0].years || 0;
                 document.getElementById('statProjects').value = data[0].projects || 0;
                 document.getElementById('statClients').value = data[0].clients || 0;
                 document.getElementById('statGrowth').value = data[0].growth || 0;
-            } else {
-                document.getElementById('statYears').value = 4;
-                document.getElementById('statProjects').value = 60;
-                document.getElementById('statClients').value = 55;
-                document.getElementById('statGrowth').value = 30;
             }
         }
 
@@ -571,62 +709,71 @@
             
             loadingOverlay.style.display = 'none';
             
-            if(error) {
-                document.getElementById('errorMsg').style.display = 'block';
-                setTimeout(() => document.getElementById('errorMsg').style.display = 'none', 3000);
+            if (error) {
+                console.error('Error saving statistics:', error);
+                showError('Error saving statistics: ' + error.message);
             } else {
                 showSuccess('Statistics saved to Supabase!');
             }
         }
 
         // ========== TESTIMONIALS FUNCTIONS ==========
-        let testimonials = [];
-
         async function loadTestimonials() {
             const { data, error } = await supabaseClient
                 .from('testimonials')
                 .select('*')
                 .order('created_at', { ascending: false });
             
-            if(data && data.length > 0) {
-                testimonials = data;
-            } else {
-                testimonials = [];
+            if (error) {
+                console.error('Error loading testimonials:', error);
+                document.getElementById('testimonialsList').innerHTML = 
+                    '<p style="color: #ef4444; text-align: center; padding: 20px;">Error loading testimonials</p>';
+                return;
             }
+            
+            testimonials = data || [];
             renderTestimonialsList();
+            updateTestimonialCount();
         }
 
         function renderTestimonialsList() {
             const container = document.getElementById('testimonialsList');
-            if(!container) return;
+            if (!container) return;
             
-            if(testimonials.length === 0) {
+            if (testimonials.length === 0) {
                 container.innerHTML = '<p style="color: #94a3b8; text-align: center; padding: 20px;">No testimonials yet. Add your first one above!</p>';
                 return;
             }
             
-            container.innerHTML = testimonials.map((t, index) => `
+            container.innerHTML = testimonials.map((t) => `
                 <div class="testimonial-item">
                     <div class="testimonial-info">
-                        <div class="testimonial-name">${escapeHtml(t.name)} - ${escapeHtml(t.company)}</div>
-                        <div style="font-size: 12px; color: #fbbf24;">${'★'.repeat(t.rating)}${'☆'.repeat(5-t.rating)}</div>
-                        <div style="font-size: 13px; color: #94a3b8; margin: 5px 0;">${escapeHtml(t.role)}</div>
+                        <div class="testimonial-name">${escapeHtml(t.name)} - ${escapeHtml(t.company || 'Client')}</div>
+                        <div class="star-rating">${'★'.repeat(t.rating || 5)}${'☆'.repeat(5 - (t.rating || 5))}</div>
+                        <div style="font-size: 12px; color: #94a3b8;">${escapeHtml(t.role || 'Client')}</div>
                         <div class="testimonial-text">"${escapeHtml(t.testimonial)}"</div>
                     </div>
-                    <button onclick="deleteTestimonial(${t.id})" class="delete-btn" style="padding: 6px 12px;">Delete</button>
+                    <button onclick="deleteTestimonial(${t.id})" class="delete-btn" style="padding: 6px 12px; font-size: 12px;">🗑️ Delete</button>
                 </div>
             `).join('');
         }
 
+        function updateTestimonialCount() {
+            const countBadge = document.getElementById('testimonialCount');
+            if (countBadge) {
+                countBadge.textContent = testimonials.length + ' total';
+            }
+        }
+
         async function addTestimonial() {
-            const name = document.getElementById('testName')?.value;
-            const company = document.getElementById('testCompany')?.value;
-            const role = document.getElementById('testRole')?.value;
-            const rating = parseInt(document.getElementById('testRating')?.value);
-            const testimonialText = document.getElementById('testText')?.value;
+            const name = document.getElementById('testName')?.value.trim();
+            const company = document.getElementById('testCompany')?.value.trim();
+            const role = document.getElementById('testRole')?.value.trim();
+            const rating = parseInt(document.getElementById('testRating')?.value) || 5;
+            const testimonialText = document.getElementById('testText')?.value.trim();
             
-            if(!name || !testimonialText) {
-                alert('Please fill in client name and testimonial text');
+            if (!name || !testimonialText) {
+                showError('Please fill in client name and testimonial text');
                 return;
             }
             
@@ -637,7 +784,7 @@
                 name: name,
                 company: company || 'Client',
                 role: role || 'Client',
-                rating: rating || 5,
+                rating: rating,
                 testimonial: testimonialText,
                 created_at: new Date().toISOString()
             };
@@ -649,17 +796,20 @@
             
             loadingOverlay.style.display = 'none';
             
-            if(error) {
-                alert('Error saving to Supabase: ' + error.message);
+            if (error) {
+                console.error('Error saving testimonial:', error);
+                showError('Error saving testimonial: ' + error.message);
                 return;
             }
             
-            if(data && data[0]) {
+            if (data && data[0]) {
                 testimonials.unshift(data[0]);
             }
             
             renderTestimonialsList();
+            updateTestimonialCount();
             
+            // Clear form
             document.getElementById('testName').value = '';
             document.getElementById('testCompany').value = '';
             document.getElementById('testRole').value = '';
@@ -670,26 +820,28 @@
         }
 
         async function deleteTestimonial(id) {
-            if(confirm('Delete this testimonial?')) {
-                const loadingOverlay = document.getElementById('loadingOverlay');
-                loadingOverlay.style.display = 'flex';
-                
-                const { error } = await supabaseClient
-                    .from('testimonials')
-                    .delete()
-                    .eq('id', id);
-                
-                loadingOverlay.style.display = 'none';
-                
-                if(error) {
-                    alert('Error deleting from Supabase: ' + error.message);
-                    return;
-                }
-                
-                testimonials = testimonials.filter(t => t.id !== id);
-                renderTestimonialsList();
-                showSuccess('Testimonial deleted from Supabase!');
+            if (!confirm('Delete this testimonial? This cannot be undone.')) return;
+            
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex';
+            
+            const { error } = await supabaseClient
+                .from('testimonials')
+                .delete()
+                .eq('id', id);
+            
+            loadingOverlay.style.display = 'none';
+            
+            if (error) {
+                console.error('Error deleting testimonial:', error);
+                showError('Error deleting testimonial: ' + error.message);
+                return;
             }
+            
+            testimonials = testimonials.filter(t => t.id !== id);
+            renderTestimonialsList();
+            updateTestimonialCount();
+            showSuccess('Testimonial deleted from Supabase!');
         }
 
         // ========== CONTACT LEADS FUNCTIONS ==========
@@ -700,31 +852,96 @@
                 .order('created_at', { ascending: false });
             
             const tbody = document.getElementById('leadsBody');
+            const leadsCountBadge = document.getElementById('leadsCount');
             
-            if(!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No leads yet</td></tr>';
+            if (error) {
+                console.error('Error loading leads:', error);
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #ef4444;">Error loading leads</td></tr>';
                 return;
             }
             
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No leads yet</td></tr>';
+                if (leadsCountBadge) leadsCountBadge.textContent = '0 leads';
+                return;
+            }
+            
+            if (leadsCountBadge) leadsCountBadge.textContent = data.length + ' leads';
+            
             tbody.innerHTML = data.map(lead => `
                 <tr>
-                    <td>${escapeHtml(lead.name)}</td>
-                    <td>${escapeHtml(lead.email)}</td>
+                    <td>${escapeHtml(lead.name || '-')}</td>
+                    <td>${escapeHtml(lead.email || '-')}</td>
                     <td>${escapeHtml(lead.company || '-')}</td>
-                    <td>${escapeHtml(lead.message.substring(0, 50))}${lead.message.length > 50 ? '...' : ''}</td>
-                    <td>${new Date(lead.created_at).toLocaleDateString()}</td>
+                    <td>${escapeHtml((lead.message || '').substring(0, 50))}${(lead.message || '').length > 50 ? '...' : ''}</td>
+                    <td>${lead.created_at ? new Date(lead.created_at).toLocaleDateString() : '-'}</td>
+                    <td><span style="color: #fbbf24; font-size: 12px;">New</span></td>
                 </tr>
             `).join('');
         }
 
         function exportLeads() {
-            alert('Export function - will export Supabase leads');
+            const token = localStorage.getItem('supabase_token');
+            if (!token) {
+                alert('Please log in first');
+                return;
+            }
+            
+            // Create CSV content from the table
+            const table = document.getElementById('leadsTable');
+            if (!table) return;
+            
+            let csv = [];
+            const rows = table.querySelectorAll('tr');
+            
+            rows.forEach(row => {
+                const cols = row.querySelectorAll('th, td');
+                const rowData = Array.from(cols).map(col => {
+                    let text = col.textContent.replace(/"/g, '""');
+                    return `"${text}"`;
+                });
+                csv.push(rowData.join(','));
+            });
+            
+            if (csv.length <= 1) {
+                alert('No leads to export');
+                return;
+            }
+            
+            const csvContent = csv.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'contact-leads-' + new Date().toISOString().split('T')[0] + '.csv';
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            showSuccess('Leads exported to CSV!');
         }
 
-        function clearLeads() {
-            if(confirm('Clear all leads?')) {
-                alert('Clear leads function');
+        async function clearLeads() {
+            if (!confirm('Delete ALL contact leads? This cannot be undone.')) return;
+            
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex';
+            
+            const { error } = await supabaseClient
+                .from('contact_leads')
+                .delete()
+                .neq('id', 0); // Delete all rows
+            
+            loadingOverlay.style.display = 'none';
+            
+            if (error) {
+                console.error('Error clearing leads:', error);
+                showError('Error clearing leads: ' + error.message);
+                return;
             }
+            
+            document.getElementById('leadsBody').innerHTML = '<tr><td colspan="6" style="text-align: center;">No leads yet</td></tr>';
+            document.getElementById('leadsCount').textContent = '0 leads';
+            showSuccess('All leads cleared from Supabase!');
         }
 
         // ========== MULTI-CHAT SETTINGS FUNCTIONS ==========
@@ -734,19 +951,18 @@
                 .select('*')
                 .limit(1);
             
-            if(data && data[0]) {
+            if (error) {
+                console.error('Error loading chat settings:', error);
+                return;
+            }
+            
+            if (data && data[0]) {
                 document.getElementById('whatsappNumber').value = data[0].whatsapp_number || '';
                 document.getElementById('chatEmail').value = data[0].email || '';
                 document.getElementById('facebookPage').value = data[0].facebook_page || '';
                 document.getElementById('chatMessageTemplate').value = data[0].message_template || '';
                 document.getElementById('emailSubject').value = data[0].email_subject || 'Inquiry from Portfolio Website';
                 document.getElementById('chatName').value = data[0].agent_name || '';
-            } else {
-                document.getElementById('whatsappNumber').value = '254700000000';
-                document.getElementById('chatEmail').value = 'your@email.com';
-                document.getElementById('facebookPage').value = 'https://facebook.com/yourpage';
-                document.getElementById('chatMessageTemplate').value = 'Hi, I saw your portfolio website and would like to discuss a potential project.';
-                document.getElementById('emailSubject').value = 'Inquiry from Portfolio Website';
             }
         }
 
@@ -755,12 +971,12 @@
             loadingOverlay.style.display = 'flex';
             
             const settings = {
-                whatsapp_number: document.getElementById('whatsappNumber').value,
-                email: document.getElementById('chatEmail').value,
-                facebook_page: document.getElementById('facebookPage').value,
-                message_template: document.getElementById('chatMessageTemplate').value,
-                email_subject: document.getElementById('emailSubject').value,
-                agent_name: document.getElementById('chatName').value,
+                whatsapp_number: document.getElementById('whatsappNumber').value.trim(),
+                email: document.getElementById('chatEmail').value.trim(),
+                facebook_page: document.getElementById('facebookPage').value.trim(),
+                message_template: document.getElementById('chatMessageTemplate').value.trim(),
+                email_subject: document.getElementById('emailSubject').value.trim(),
+                agent_name: document.getElementById('chatName').value.trim(),
                 updated_at: new Date().toISOString()
             };
             
@@ -770,58 +986,64 @@
             
             loadingOverlay.style.display = 'none';
             
-            if(error) {
-                alert('Error saving: ' + error.message);
+            if (error) {
+                console.error('Error saving chat settings:', error);
+                showError('Error saving chat settings: ' + error.message);
             } else {
                 showSuccess('Chat settings saved to Supabase!');
             }
         }
 
         // ========== FAQ MANAGEMENT FUNCTIONS ==========
-        let faqs = [];
-
         async function loadFAQs() {
             const { data, error } = await supabaseClient
                 .from('faqs')
                 .select('*')
                 .order('display_order', { ascending: true });
             
-            if(data && data.length > 0) {
-                faqs = data;
-            } else {
-                faqs = [
-                    { question: "How quickly can you start working on my project?", answer: "I typically respond within 24 hours. Once we agree on the scope, I can start immediately or schedule according to your timeline." },
-                    { question: "What is your typical turnaround time?", answer: "Turnaround time depends on project scope. A landing page usually takes 3-5 days, email sequences 5-7 days, and full website copy 7-14 days." },
-                    { question: "Do you offer revisions?", answer: "Absolutely! All my packages include 2-3 rounds of revisions to ensure you're completely satisfied." }
-                ];
+            if (error) {
+                console.error('Error loading FAQs:', error);
+                document.getElementById('faqsList').innerHTML = 
+                    '<p style="color: #ef4444; text-align: center; padding: 20px;">Error loading FAQs</p>';
+                return;
             }
+            
+            faqs = data || [];
             renderFAQsList();
+            updateFAQCount();
         }
 
         function renderFAQsList() {
             const container = document.getElementById('faqsList');
-            if(!container) return;
+            if (!container) return;
             
-            if(faqs.length === 0) {
+            if (faqs.length === 0) {
                 container.innerHTML = '<p style="color: #94a3b8; text-align: center; padding: 20px;">No FAQs yet. Add your first one above!</p>';
                 return;
             }
             
-            container.innerHTML = faqs.map((faq, index) => `
-                <div style="background: #0f172a; border-radius: 8px; padding: 15px; margin-bottom: 10px;">
+            container.innerHTML = faqs.map((faq) => `
+                <div style="background: #0f172a; border-radius: 8px; padding: 15px; margin-bottom: 10px; border: 1px solid #334155;">
                     <div style="font-weight: 600; margin-bottom: 8px;">❓ ${escapeHtml(faq.question)}</div>
                     <div style="font-size: 13px; color: #94a3b8; margin-bottom: 10px;">${escapeHtml(faq.answer)}</div>
-                    <button onclick="deleteFAQ(${faq.id})" class="delete-btn" style="padding: 6px 12px; font-size: 12px;">Delete</button>
+                    <button onclick="deleteFAQ(${faq.id})" class="delete-btn" style="padding: 6px 12px; font-size: 12px;">🗑️ Delete</button>
                 </div>
             `).join('');
         }
 
+        function updateFAQCount() {
+            const countBadge = document.getElementById('faqCount');
+            if (countBadge) {
+                countBadge.textContent = faqs.length + ' FAQs';
+            }
+        }
+
         async function addFAQ() {
-            const question = document.getElementById('faqQuestion')?.value;
-            const answer = document.getElementById('faqAnswer')?.value;
+            const question = document.getElementById('faqQuestion')?.value.trim();
+            const answer = document.getElementById('faqAnswer')?.value.trim();
             
-            if(!question || !answer) {
-                alert('Please fill in both question and answer');
+            if (!question || !answer) {
+                showError('Please fill in both question and answer');
                 return;
             }
             
@@ -842,12 +1064,13 @@
             
             loadingOverlay.style.display = 'none';
             
-            if(error) {
-                alert('Error saving: ' + error.message);
+            if (error) {
+                console.error('Error saving FAQ:', error);
+                showError('Error saving FAQ: ' + error.message);
                 return;
             }
             
-            if(data && data[0]) {
+            if (data && data[0]) {
                 faqs.push(data[0]);
             }
             
@@ -855,64 +1078,94 @@
             document.getElementById('faqAnswer').value = '';
             
             renderFAQsList();
+            updateFAQCount();
             showSuccess('FAQ added to Supabase!');
         }
 
         async function deleteFAQ(id) {
-            if(confirm('Delete this FAQ?')) {
-                const loadingOverlay = document.getElementById('loadingOverlay');
-                loadingOverlay.style.display = 'flex';
-                
-                const { error } = await supabaseClient
-                    .from('faqs')
-                    .delete()
-                    .eq('id', id);
-                
-                loadingOverlay.style.display = 'none';
-                
-                if(error) {
-                    alert('Error deleting: ' + error.message);
-                    return;
-                }
-                
-                faqs = faqs.filter(f => f.id !== id);
-                renderFAQsList();
-                showSuccess('FAQ deleted from Supabase!');
+            if (!confirm('Delete this FAQ? This cannot be undone.')) return;
+            
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex';
+            
+            const { error } = await supabaseClient
+                .from('faqs')
+                .delete()
+                .eq('id', id);
+            
+            loadingOverlay.style.display = 'none';
+            
+            if (error) {
+                console.error('Error deleting FAQ:', error);
+                showError('Error deleting FAQ: ' + error.message);
+                return;
             }
+            
+            faqs = faqs.filter(f => f.id !== id);
+            renderFAQsList();
+            updateFAQCount();
+            showSuccess('FAQ deleted from Supabase!');
         }
 
         // ========== HELPER FUNCTIONS ==========
         function showSuccess(message) {
-            const msg = document.getElementById('successMsg');
-            msg.innerHTML = '✓ ' + message;
-            msg.style.display = 'block';
+            const successMsg = document.getElementById('successMsg');
+            const errorMsg = document.getElementById('errorMsg');
+            successMsg.innerHTML = '✓ ' + message;
+            successMsg.style.display = 'block';
+            errorMsg.style.display = 'none';
             setTimeout(() => {
-                msg.style.display = 'none';
+                successMsg.style.display = 'none';
             }, 3000);
         }
 
+        function showError(message) {
+            const errorMsg = document.getElementById('errorMsg');
+            const successMsg = document.getElementById('successMsg');
+            errorMsg.innerHTML = '✗ ' + message;
+            errorMsg.style.display = 'block';
+            successMsg.style.display = 'none';
+            setTimeout(() => {
+                errorMsg.style.display = 'none';
+            }, 5000);
+        }
+
         function escapeHtml(text) {
-            if(!text) return '';
+            if (!text) return '';
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
 
         // ========== INITIALIZE ==========
-        async function initialize() {
-            const isAuthenticated = await checkAuth();
+        function initialize() {
+            const isAuthenticated = checkAuth();
             if (!isAuthenticated) return;
             
-            await Promise.all([
+            displayUserInfo();
+            
+            // Add logout button handler
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.onclick = logout;
+            }
+            
+            // Load all data
+            Promise.all([
                 loadPersonalInfo(),
                 loadStats(),
                 loadTestimonials(),
                 loadLeads(),
                 loadMultiChatSettings(),
                 loadFAQs()
-            ]);
+            ]).then(() => {
+                console.log('Settings page fully loaded');
+            }).catch(err => {
+                console.error('Error loading settings data:', err);
+            });
         }
         
+        // Run initialization
         initialize();
     </script>
 </body>
