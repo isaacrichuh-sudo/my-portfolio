@@ -99,13 +99,13 @@
         .logout-btn {
             background: #ef4444;
             color: white;
+            border: none;
             padding: 8px 16px;
             border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s;
-            display: inline-block;
-            margin-left: 10px;
+            cursor: pointer;
             font-size: 14px;
+            transition: all 0.3s;
+            margin-left: 10px;
         }
 
         .logout-btn:hover {
@@ -319,7 +319,7 @@
             <h1>📊 Admin Dashboard</h1>
             <div>
                 <a href="../index.html" class="preview-link" target="_blank">🔍 View Website</a>
-                <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+                <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
             </div>
         </div>
 
@@ -445,30 +445,52 @@
 
         // ========== AUTHENTICATION CHECK ==========
         async function checkAuth() {
+            console.log('Checking authentication...');
+            
             supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             
+            // Try to get existing session
             const { data: { session }, error } = await supabaseClient.auth.getSession();
             
-            if (error || !session) {
-                // Redirect to login page
-                window.location.href = 'login.html';
-                return false;
+            if (error) {
+                console.error('Session check error:', error);
             }
             
-            currentSession = session;
-            console.log('Authenticated as:', session.user.email);
+            if (!session) {
+                // Also check localStorage for token (fallback)
+                const token = localStorage.getItem('supabase_token');
+                if (!token) {
+                    console.log('No session found, redirecting to login...');
+                    window.location.href = 'login.html';
+                    return false;
+                }
+            } else {
+                currentSession = session;
+                console.log('Authenticated as:', session.user.email);
+            }
+            
             return true;
         }
 
+        // ========== LOGOUT FUNCTION ==========
         async function logout() {
-            await supabaseClient.auth.signOut();
+            console.log('Logging out...');
+            
+            if (supabaseClient) {
+                await supabaseClient.auth.signOut();
+            }
+            
+            // Clear all stored auth data
+            localStorage.removeItem('supabase_token');
+            localStorage.removeItem('supabase_refresh_token');
             localStorage.removeItem('adminSession');
+            
+            // Redirect to login page
             window.location.href = 'login.html';
         }
 
         // ========== INITIALIZE SUPABASE ==========
         async function initSupabase() {
-            // Already initialized in checkAuth, but ensure client exists
             if (!supabaseClient) {
                 supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             }
@@ -485,55 +507,75 @@
         }
 
         async function loadProjectCount() {
-            const { count, error } = await supabaseClient
-                .from('projects')
-                .select('*', { count: 'exact', head: true });
-            
-            if(error) {
-                console.error('Error loading projects count:', error);
+            try {
+                const { count, error } = await supabaseClient
+                    .from('projects')
+                    .select('*', { count: 'exact', head: true });
+                
+                if(error) {
+                    console.error('Error loading projects count:', error);
+                    document.getElementById('projectCount').innerHTML = '0 <span class="error-badge">⚠️</span>';
+                    return;
+                }
+                document.getElementById('projectCount').innerText = count || 0;
+            } catch (err) {
+                console.error('Failed to load projects:', err);
                 document.getElementById('projectCount').innerHTML = '0 <span class="error-badge">⚠️</span>';
-                return;
             }
-            document.getElementById('projectCount').innerText = count || 0;
         }
 
         async function loadTestimonialCount() {
-            const { count, error } = await supabaseClient
-                .from('testimonials')
-                .select('*', { count: 'exact', head: true });
-            
-            if(error) {
-                console.error('Error loading testimonials count:', error);
+            try {
+                const { count, error } = await supabaseClient
+                    .from('testimonials')
+                    .select('*', { count: 'exact', head: true });
+                
+                if(error) {
+                    console.error('Error loading testimonials count:', error);
+                    document.getElementById('testimonialCount').innerHTML = '0 <span class="error-badge">⚠️</span>';
+                    return;
+                }
+                document.getElementById('testimonialCount').innerText = count || 0;
+            } catch (err) {
+                console.error('Failed to load testimonials:', err);
                 document.getElementById('testimonialCount').innerHTML = '0 <span class="error-badge">⚠️</span>';
-                return;
             }
-            document.getElementById('testimonialCount').innerText = count || 0;
         }
 
         async function loadLeadsCount() {
-            const { count, error } = await supabaseClient
-                .from('contact_leads')
-                .select('*', { count: 'exact', head: true });
-            
-            if(error) {
-                console.error('Error loading leads count:', error);
+            try {
+                const { count, error } = await supabaseClient
+                    .from('contact_leads')
+                    .select('*', { count: 'exact', head: true });
+                
+                if(error) {
+                    console.error('Error loading leads count:', error);
+                    document.getElementById('leadsCount').innerHTML = '0 <span class="error-badge">⚠️</span>';
+                    return;
+                }
+                document.getElementById('leadsCount').innerText = count || 0;
+            } catch (err) {
+                console.error('Failed to load leads:', err);
                 document.getElementById('leadsCount').innerHTML = '0 <span class="error-badge">⚠️</span>';
-                return;
             }
-            document.getElementById('leadsCount').innerText = count || 0;
         }
 
         async function loadFaqCount() {
-            const { count, error } = await supabaseClient
-                .from('faqs')
-                .select('*', { count: 'exact', head: true });
-            
-            if(error) {
-                console.error('Error loading FAQs count:', error);
+            try {
+                const { count, error } = await supabaseClient
+                    .from('faqs')
+                    .select('*', { count: 'exact', head: true });
+                
+                if(error) {
+                    console.error('Error loading FAQs count:', error);
+                    document.getElementById('faqCount').innerHTML = '0 <span class="error-badge">⚠️</span>';
+                    return;
+                }
+                document.getElementById('faqCount').innerText = count || 0;
+            } catch (err) {
+                console.error('Failed to load FAQs:', err);
                 document.getElementById('faqCount').innerHTML = '0 <span class="error-badge">⚠️</span>';
-                return;
             }
-            document.getElementById('faqCount').innerText = count || 0;
         }
 
         // ========== CHATBOT ANALYTICS (LocalStorage - fine to keep) ==========
@@ -701,14 +743,24 @@
             return div.innerHTML;
         }
 
+        // ========== SETUP LOGOUT BUTTON ==========
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.onclick = logout;
+        }
+
         // ========== INITIALIZE ==========
         async function initialize() {
+            console.log('Dashboard initializing...');
+            
             const isAuthenticated = await checkAuth();
             if (!isAuthenticated) return;
             
             await initSupabase();
             loadChatAnalytics();
             loadWebsiteAnalytics();
+            
+            console.log('Dashboard ready');
         }
         
         initialize();
