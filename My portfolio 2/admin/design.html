@@ -25,6 +25,7 @@
             background: #1e293b;
             padding: 30px 20px;
             overflow-y: auto;
+            z-index: 100;
         }
         .sidebar h2 { font-size: 20px; margin-bottom: 30px; color: #818cf8; }
         .sidebar nav a {
@@ -50,6 +51,18 @@
             margin-bottom: 30px;
             padding-bottom: 20px;
             border-bottom: 1px solid #334155;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .user-info {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-right: 10px;
         }
         .save-btn {
             background: #10b981;
@@ -59,21 +72,42 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
+            font-weight: 600;
             transition: all 0.3s;
         }
         .save-btn:hover {
             background: #059669;
             transform: translateY(-2px);
         }
+        .save-btn:disabled {
+            background: #475569;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .reset-btn {
+            background: #64748b;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .reset-btn:hover {
+            background: #475569;
+            transform: translateY(-1px);
+        }
         .logout-btn {
             background: #ef4444;
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 10px 18px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
-            margin-left: 10px;
+            font-weight: 600;
             transition: all 0.3s;
         }
         .logout-btn:hover {
@@ -82,71 +116,152 @@
         }
         .design-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px;
         }
         .design-section {
             background: #1e293b;
             border-radius: 12px;
-            padding: 20px;
+            padding: 25px;
+            border: 1px solid #334155;
         }
         .design-section h3 {
             margin-bottom: 20px;
-            color: #818cf8;
+            color: #f1f5f9;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .design-section h3 .section-icon {
+            font-size: 24px;
         }
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
         label {
             display: block;
             margin-bottom: 8px;
             font-size: 14px;
             color: #94a3b8;
+            font-weight: 500;
         }
         input, select {
             width: 100%;
-            padding: 10px;
+            padding: 10px 12px;
             background: #0f172a;
             border: 1px solid #334155;
             border-radius: 6px;
             color: white;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #818cf8;
         }
         input[type="color"] {
-            height: 50px;
+            height: 45px;
             cursor: pointer;
+            padding: 4px 8px;
+        }
+        input[type="range"] {
+            padding: 0;
+            cursor: pointer;
+            accent-color: #818cf8;
+        }
+        .range-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .range-group input[type="range"] {
+            flex: 1;
         }
         .range-value {
             display: inline-block;
-            margin-left: 10px;
+            min-width: 45px;
+            text-align: center;
             color: #818cf8;
+            font-weight: 600;
+            font-size: 14px;
+            background: #0f172a;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid #334155;
         }
         .preview-box {
-            margin-top: 20px;
-            padding: 20px;
-            background: var(--preview-bg, #1e293b);
+            margin-top: 15px;
+            padding: 25px;
+            background: var(--preview-bg, #ffffff);
             border-radius: var(--preview-radius, 12px);
             text-align: center;
+            border: 1px solid var(--preview-border, #e2e8f0);
+            transition: all 0.3s;
+        }
+        .preview-heading {
+            color: var(--preview-text, #0f172a);
+            margin-bottom: 15px;
+            font-size: var(--preview-h2, 24px);
         }
         .preview-button {
             background: var(--preview-primary, #6366f1);
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: var(--preview-button-radius, 50px);
             cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+        .preview-button:hover {
+            background: var(--preview-secondary, #4f46e5);
+            transform: translateY(-2px);
+        }
+        .preview-text {
+            color: var(--preview-text, #0f172a);
+            margin-top: 15px;
+            font-size: var(--preview-body, 16px);
+        }
+        .color-presets {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .color-preset {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .color-preset:hover {
+            border-color: white;
+            transform: scale(1.15);
+        }
+        .color-preset.active {
+            border-color: white;
+            box-shadow: 0 0 0 2px #818cf8;
         }
         .success-msg {
-            background: #10b981;
-            color: white;
-            padding: 12px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid #10b981;
+            color: #6ee7b7;
+            padding: 12px 16px;
             border-radius: 8px;
             margin-bottom: 20px;
             display: none;
         }
         .error-msg {
-            background: #ef4444;
-            color: white;
-            padding: 12px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 12px 16px;
             border-radius: 8px;
             margin-bottom: 20px;
             display: none;
@@ -154,6 +269,11 @@
         hr {
             border-color: #334155;
             margin: 20px 0;
+        }
+        .small-text {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 5px;
         }
         .loading-overlay {
             position: fixed;
@@ -173,6 +293,63 @@
             padding: 20px 40px;
             border-radius: 12px;
             text-align: center;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+        }
+        .tab-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: #0f172a;
+            color: #94a3b8;
+            border: 1px solid #334155;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        .tab-btn.active {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+        }
+        .tab-btn:hover {
+            border-color: #818cf8;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .design-grid {
+                grid-template-columns: 1fr;
+            }
+            .header-bar {
+                flex-direction: column;
+                text-align: center;
+            }
+            .header-right {
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -197,8 +374,10 @@
     <div class="main-content">
         <div class="header-bar">
             <h1>🎨 Design Editor</h1>
-            <div>
-                <button class="save-btn" onclick="saveDesignSettings()">💾 Save All Changes</button>
+            <div class="header-right">
+                <span class="user-info" id="userEmailDisplay"></span>
+                <button class="reset-btn" onclick="resetToDefaults()">🔄 Reset Defaults</button>
+                <button class="save-btn" id="saveBtn" onclick="saveDesignSettings()">💾 Save All Changes</button>
                 <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
             </div>
         </div>
@@ -206,10 +385,26 @@
         <div class="success-msg" id="successMsg">✓ Design settings saved to Supabase! Refresh your website to see changes.</div>
         <div class="error-msg" id="errorMsg">✗ Error saving to Supabase. Please check your connection.</div>
 
+        <!-- Color Presets Quick Select -->
+        <div class="design-section" style="margin-bottom: 25px;">
+            <h3>🎨 Quick Color Presets</h3>
+            <p class="small-text" style="margin-bottom: 12px;">Click a preset to quickly apply a color scheme:</p>
+            <div class="color-presets" id="colorPresets">
+                <div class="color-preset" style="background: linear-gradient(135deg, #818cf8, #6366f1);" data-preset="indigo" title="Indigo (Default)"></div>
+                <div class="color-preset" style="background: linear-gradient(135deg, #06b6d4, #0891b2);" data-preset="cyan" title="Cyan"></div>
+                <div class="color-preset" style="background: linear-gradient(135deg, #10b981, #059669);" data-preset="emerald" title="Emerald"></div>
+                <div class="color-preset" style="background: linear-gradient(135deg, #f59e0b, #d97706);" data-preset="amber" title="Amber"></div>
+                <div class="color-preset" style="background: linear-gradient(135deg, #ef4444, #dc2626);" data-preset="red" title="Red"></div>
+                <div class="color-preset" style="background: linear-gradient(135deg, #ec4899, #db2777);" data-preset="pink" title="Pink"></div>
+                <div class="color-preset" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);" data-preset="violet" title="Violet"></div>
+                <div class="color-preset" style="background: linear-gradient(135deg, #3b82f6, #2563eb);" data-preset="blue" title="Blue"></div>
+            </div>
+        </div>
+
         <div class="design-grid">
             <!-- Colors Section -->
             <div class="design-section">
-                <h3>🎨 Colors</h3>
+                <h3><span class="section-icon">🎨</span> Colors</h3>
                 <div class="form-group">
                     <label>Primary Color (Buttons, Links, Highlights)</label>
                     <input type="color" id="primaryColor" value="#818cf8">
@@ -234,7 +429,7 @@
 
             <!-- Layout Section -->
             <div class="design-section">
-                <h3>📐 Layout & Spacing</h3>
+                <h3><span class="section-icon">📐</span> Layout & Spacing</h3>
                 <div class="form-group">
                     <label>Hero Section Height</label>
                     <select id="heroHeight">
@@ -245,44 +440,56 @@
                 </div>
                 <div class="form-group">
                     <label>Border Radius (Cards, Images)</label>
-                    <input type="range" id="borderRadius" min="0" max="30" value="12">
-                    <span class="range-value" id="borderRadiusValue">12px</span>
+                    <div class="range-group">
+                        <input type="range" id="borderRadius" min="0" max="30" value="12">
+                        <span class="range-value" id="borderRadiusValue">12px</span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Button Border Radius</label>
-                    <input type="range" id="buttonRadius" min="0" max="50" value="50">
-                    <span class="range-value" id="buttonRadiusValue">50px</span>
+                    <div class="range-group">
+                        <input type="range" id="buttonRadius" min="0" max="50" value="50">
+                        <span class="range-value" id="buttonRadiusValue">50px</span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Spacing Between Sections (px)</label>
-                    <input type="range" id="spacing" min="10" max="80" value="20">
-                    <span class="range-value" id="spacingValue">20px</span>
+                    <div class="range-group">
+                        <input type="range" id="spacing" min="10" max="80" value="20">
+                        <span class="range-value" id="spacingValue">20px</span>
+                    </div>
                 </div>
             </div>
 
             <!-- Typography Section -->
             <div class="design-section">
-                <h3>📝 Typography</h3>
+                <h3><span class="section-icon">📝</span> Typography</h3>
                 <div class="form-group">
                     <label>Heading 1 Size (Hero Title)</label>
-                    <input type="range" id="h1Size" min="32" max="80" value="56">
-                    <span class="range-value" id="h1SizeValue">56px</span>
+                    <div class="range-group">
+                        <input type="range" id="h1Size" min="32" max="80" value="56">
+                        <span class="range-value" id="h1SizeValue">56px</span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Heading 2 Size (Section Titles)</label>
-                    <input type="range" id="h2Size" min="24" max="60" value="36">
-                    <span class="range-value" id="h2SizeValue">36px</span>
+                    <div class="range-group">
+                        <input type="range" id="h2Size" min="24" max="60" value="36">
+                        <span class="range-value" id="h2SizeValue">36px</span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Body Text Size</label>
-                    <input type="range" id="bodySize" min="14" max="24" value="18">
-                    <span class="range-value" id="bodySizeValue">18px</span>
+                    <div class="range-group">
+                        <input type="range" id="bodySize" min="14" max="24" value="18">
+                        <span class="range-value" id="bodySizeValue">18px</span>
+                    </div>
                 </div>
             </div>
 
             <!-- Dark Mode Settings Section -->
             <div class="design-section">
-                <h3>🌙 Dark Mode Settings</h3>
+                <h3><span class="section-icon">🌙</span> Dark Mode Settings</h3>
                 <div class="form-group">
                     <label>Dark Mode Background Color</label>
                     <input type="color" id="darkBgColor" value="#0f172a">
@@ -302,23 +509,25 @@
             </div>
 
             <!-- Live Preview Section -->
-            <div class="design-section">
-                <h3>🔍 Live Preview</h3>
+            <div class="design-section" style="grid-column: 1 / -1;">
+                <h3><span class="section-icon">🔍</span> Live Preview</h3>
+                <p class="small-text" style="margin-bottom: 15px;">This preview updates in real-time as you make changes above.</p>
                 <div class="preview-box" id="previewBox">
-                    <h4 style="margin-bottom: 15px;">Sample Button</h4>
-                    <button class="preview-button" id="previewButton">Click Me</button>
-                    <p style="margin-top: 15px; font-size: 14px;">This is how your buttons will look</p>
+                    <h4 class="preview-heading" id="previewHeading">Sample Section Title</h4>
+                    <button class="preview-button" id="previewButton1">Primary Button</button>
+                    <button class="preview-button" id="previewButton2" style="background: var(--preview-secondary, #4f46e5);">Secondary Button</button>
+                    <p class="preview-text" id="previewText">This is how your text, buttons, and spacing will look on the live website. Adjust the settings to match your brand.</p>
                 </div>
             </div>
         </div>
 
         <!-- Background Image Section -->
-        <div class="design-section" style="margin-top: 30px;">
-            <h3>🖼️ Hero Background Image</h3>
+        <div class="design-section" style="margin-top: 25px;">
+            <h3><span class="section-icon">🖼️</span> Hero Background Image</h3>
             <div class="form-group">
                 <label>Background Image URL</label>
                 <input type="text" id="bgImage" placeholder="images/your-image.jpg or leave empty for solid color">
-                <small style="color: #94a3b8; display: block; margin-top: 5px;">Tip: Place images in the "images" folder, then enter the path (e.g., images/hero.jpg)</small>
+                <p class="small-text">Tip: Place images in the "images" folder, then enter the path (e.g., images/hero.jpg). Leave empty for a gradient background.</p>
             </div>
         </div>
     </div>
@@ -329,29 +538,114 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXJnaGd4amJ4cWdubWp3cGRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NzM1MzQsImV4cCI6MjA5NDU0OTUzNH0.7zkOuh4F8lkSIaDnMEm9-R8v3sepjxnz0P4BKOI-HaM';
         
         let supabaseClient;
+        let hasUnsavedChanges = false;
 
-        // ========== AUTHENTICATION CHECK (USES LOCALSTORAGE TOKEN) ==========
-        function checkAuth() {
+        // ========== COLOR PRESETS ==========
+        const colorPresets = {
+            indigo: { primary: '#818cf8', secondary: '#6366f1' },
+            cyan: { primary: '#06b6d4', secondary: '#0891b2' },
+            emerald: { primary: '#10b981', secondary: '#059669' },
+            amber: { primary: '#f59e0b', secondary: '#d97706' },
+            red: { primary: '#ef4444', secondary: '#dc2626' },
+            pink: { primary: '#ec4899', secondary: '#db2777' },
+            violet: { primary: '#8b5cf6', secondary: '#7c3aed' },
+            blue: { primary: '#3b82f6', secondary: '#2563eb' }
+        };
+
+        // ========== DEFAULT SETTINGS ==========
+        const defaultSettings = {
+            colors: {
+                primary: '#818cf8',
+                secondary: '#6366f1',
+                background: '#f8fafc',
+                text: '#0f172a',
+                cardBg: '#ffffff',
+                darkBg: '#0f172a',
+                darkCard: '#1e293b',
+                darkText: '#f1f5f9',
+                darkBorder: '#334155'
+            },
+            layout: {
+                heroHeight: '80vh',
+                borderRadius: '12px',
+                buttonRadius: '50px',
+                spacing: '20px'
+            },
+            typography: {
+                h1Size: '56px',
+                h2Size: '36px',
+                bodySize: '18px'
+            },
+            backgroundImage: ''
+        };
+
+        // ========== AUTHENTICATION CHECK (CONSISTENT PATTERN) ==========
+        async function checkAuth() {
             const token = localStorage.getItem('supabase_token');
+            const refreshToken = localStorage.getItem('supabase_refresh_token');
+            
             if (!token) {
+                console.log('No auth token found, redirecting to login...');
                 window.location.href = 'login.html';
                 return false;
             }
-            // Initialize Supabase client
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            console.log('Supabase client initialized');
+            
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                auth: {
+                    autoRefreshToken: true,
+                    persistSession: true,
+                    detectSessionInUrl: false
+                }
+            });
+            
+            const { data, error } = await supabaseClient.auth.setSession({
+                access_token: token,
+                refresh_token: refreshToken || ''
+            });
+            
+            if (error) {
+                console.error('Error setting session:', error);
+                localStorage.removeItem('supabase_token');
+                localStorage.removeItem('supabase_refresh_token');
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            console.log('Design Editor: Supabase session established');
             return true;
         }
 
-        function logout() {
+        async function logout() {
+            if (hasUnsavedChanges) {
+                if (!confirm('You have unsaved changes. Are you sure you want to logout?')) return;
+            }
+            
+            if (supabaseClient) {
+                await supabaseClient.auth.signOut().catch(console.error);
+            }
+            
             localStorage.removeItem('supabase_token');
             localStorage.removeItem('supabase_refresh_token');
             window.location.href = 'login.html';
         }
 
+        function displayUserInfo() {
+            const userEmailDisplay = document.getElementById('userEmailDisplay');
+            if (userEmailDisplay && supabaseClient) {
+                supabaseClient.auth.getUser().then(({ data }) => {
+                    if (data?.user?.email) {
+                        userEmailDisplay.textContent = '👤 ' + data.user.email;
+                    } else {
+                        userEmailDisplay.textContent = '👤 Logged in';
+                    }
+                }).catch(() => {
+                    userEmailDisplay.textContent = '👤 Logged in';
+                });
+            }
+        }
+
         // ========== DESIGN SETTINGS FUNCTIONS ==========
         
-        // Load saved settings from Supabase
         async function loadSettings() {
             const { data, error } = await supabaseClient
                 .from('design_settings')
@@ -373,71 +667,53 @@
             
             updateAllValues();
             updatePreview();
+            markActivePreset();
         }
         
         function loadFromLocalStorage() {
             const saved = localStorage.getItem('designSettings');
-            if(saved) {
-                const settings = JSON.parse(saved);
-                applySettingsToForm(settings);
+            if (saved) {
+                try {
+                    const settings = JSON.parse(saved);
+                    applySettingsToForm(settings);
+                } catch (e) {
+                    applySettingsToForm(defaultSettings);
+                }
+            } else {
+                applySettingsToForm(defaultSettings);
             }
         }
         
         function applySettingsToForm(settings) {
-            if(settings.colors) {
-                if(settings.colors.primary) document.getElementById('primaryColor').value = settings.colors.primary;
-                if(settings.colors.secondary) document.getElementById('secondaryColor').value = settings.colors.secondary;
-                if(settings.colors.background) document.getElementById('bgColor').value = settings.colors.background;
-                if(settings.colors.text) document.getElementById('textColor').value = settings.colors.text;
-                if(settings.colors.cardBg) document.getElementById('cardBgColor').value = settings.colors.cardBg;
-                if(settings.colors.darkBg) document.getElementById('darkBgColor').value = settings.colors.darkBg;
-                if(settings.colors.darkCard) document.getElementById('darkCardColor').value = settings.colors.darkCard;
-                if(settings.colors.darkText) document.getElementById('darkTextColor').value = settings.colors.darkText;
-                if(settings.colors.darkBorder) document.getElementById('darkBorderColor').value = settings.colors.darkBorder;
+            if (settings.colors) {
+                if (settings.colors.primary) document.getElementById('primaryColor').value = settings.colors.primary;
+                if (settings.colors.secondary) document.getElementById('secondaryColor').value = settings.colors.secondary;
+                if (settings.colors.background) document.getElementById('bgColor').value = settings.colors.background;
+                if (settings.colors.text) document.getElementById('textColor').value = settings.colors.text;
+                if (settings.colors.cardBg) document.getElementById('cardBgColor').value = settings.colors.cardBg;
+                if (settings.colors.darkBg) document.getElementById('darkBgColor').value = settings.colors.darkBg;
+                if (settings.colors.darkCard) document.getElementById('darkCardColor').value = settings.colors.darkCard;
+                if (settings.colors.darkText) document.getElementById('darkTextColor').value = settings.colors.darkText;
+                if (settings.colors.darkBorder) document.getElementById('darkBorderColor').value = settings.colors.darkBorder;
             }
-            if(settings.layout) {
-                if(settings.layout.heroHeight) document.getElementById('heroHeight').value = settings.layout.heroHeight;
-                if(settings.layout.borderRadius) document.getElementById('borderRadius').value = parseInt(settings.layout.borderRadius);
-                if(settings.layout.buttonRadius) document.getElementById('buttonRadius').value = parseInt(settings.layout.buttonRadius);
-                if(settings.layout.spacing) document.getElementById('spacing').value = parseInt(settings.layout.spacing);
+            if (settings.layout) {
+                if (settings.layout.heroHeight) document.getElementById('heroHeight').value = settings.layout.heroHeight;
+                if (settings.layout.borderRadius) document.getElementById('borderRadius').value = parseInt(settings.layout.borderRadius);
+                if (settings.layout.buttonRadius) document.getElementById('buttonRadius').value = parseInt(settings.layout.buttonRadius);
+                if (settings.layout.spacing) document.getElementById('spacing').value = parseInt(settings.layout.spacing);
             }
-            if(settings.typography) {
-                if(settings.typography.h1Size) document.getElementById('h1Size').value = parseInt(settings.typography.h1Size);
-                if(settings.typography.h2Size) document.getElementById('h2Size').value = parseInt(settings.typography.h2Size);
-                if(settings.typography.bodySize) document.getElementById('bodySize').value = parseInt(settings.typography.bodySize);
+            if (settings.typography) {
+                if (settings.typography.h1Size) document.getElementById('h1Size').value = parseInt(settings.typography.h1Size);
+                if (settings.typography.h2Size) document.getElementById('h2Size').value = parseInt(settings.typography.h2Size);
+                if (settings.typography.bodySize) document.getElementById('bodySize').value = parseInt(settings.typography.bodySize);
             }
-            if(settings.backgroundImage) {
-                document.getElementById('bgImage').value = settings.backgroundImage;
+            if (settings.backgroundImage !== undefined) {
+                document.getElementById('bgImage').value = settings.backgroundImage || '';
             }
         }
 
-        function updateAllValues() {
-            document.getElementById('borderRadiusValue').innerText = document.getElementById('borderRadius').value + 'px';
-            document.getElementById('buttonRadiusValue').innerText = document.getElementById('buttonRadius').value + 'px';
-            document.getElementById('spacingValue').innerText = document.getElementById('spacing').value + 'px';
-            document.getElementById('h1SizeValue').innerText = document.getElementById('h1Size').value + 'px';
-            document.getElementById('h2SizeValue').innerText = document.getElementById('h2Size').value + 'px';
-            document.getElementById('bodySizeValue').innerText = document.getElementById('bodySize').value + 'px';
-        }
-
-        function updatePreview() {
-            const previewBox = document.getElementById('previewBox');
-            const previewButton = document.getElementById('previewButton');
-            const primary = document.getElementById('primaryColor').value;
-            const buttonRadius = document.getElementById('buttonRadius').value + 'px';
-            const cardBg = document.getElementById('cardBgColor').value;
-            
-            previewBox.style.setProperty('--preview-bg', cardBg);
-            previewBox.style.setProperty('--preview-radius', document.getElementById('borderRadius').value + 'px');
-            previewButton.style.background = primary;
-            previewButton.style.borderRadius = buttonRadius;
-        }
-
-        async function saveDesignSettings() {
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            loadingOverlay.style.display = 'flex';
-            
-            const settings = {
+        function getCurrentSettings() {
+            return {
                 colors: {
                     primary: document.getElementById('primaryColor').value,
                     secondary: document.getElementById('secondaryColor').value,
@@ -463,54 +739,199 @@
                 backgroundImage: document.getElementById('bgImage').value,
                 updated_at: new Date().toISOString()
             };
+        }
+
+        function updateAllValues() {
+            document.getElementById('borderRadiusValue').textContent = document.getElementById('borderRadius').value + 'px';
+            document.getElementById('buttonRadiusValue').textContent = document.getElementById('buttonRadius').value + 'px';
+            document.getElementById('spacingValue').textContent = document.getElementById('spacing').value + 'px';
+            document.getElementById('h1SizeValue').textContent = document.getElementById('h1Size').value + 'px';
+            document.getElementById('h2SizeValue').textContent = document.getElementById('h2Size').value + 'px';
+            document.getElementById('bodySizeValue').textContent = document.getElementById('bodySize').value + 'px';
+        }
+
+        function updatePreview() {
+            const previewBox = document.getElementById('previewBox');
+            const primary = document.getElementById('primaryColor').value;
+            const secondary = document.getElementById('secondaryColor').value;
+            const buttonRadius = document.getElementById('buttonRadius').value + 'px';
+            const cardBg = document.getElementById('cardBgColor').value;
+            const borderRadius = document.getElementById('borderRadius').value + 'px';
+            const textColor = document.getElementById('textColor').value;
+            const h2Size = document.getElementById('h2Size').value + 'px';
+            const bodySize = document.getElementById('bodySize').value + 'px';
             
-            // Save to Supabase
-            const { error } = await supabaseClient
-                .from('design_settings')
-                .upsert({ id: 1, settings: settings, updated_at: new Date().toISOString() });
+            previewBox.style.setProperty('--preview-bg', cardBg);
+            previewBox.style.setProperty('--preview-radius', borderRadius);
+            previewBox.style.setProperty('--preview-primary', primary);
+            previewBox.style.setProperty('--preview-secondary', secondary);
+            previewBox.style.setProperty('--preview-button-radius', buttonRadius);
+            previewBox.style.setProperty('--preview-text', textColor);
+            previewBox.style.setProperty('--preview-h2', h2Size);
+            previewBox.style.setProperty('--preview-body', bodySize);
+            previewBox.style.setProperty('--preview-border', '#e2e8f0');
             
-            loadingOverlay.style.display = 'none';
+            // Update preview heading
+            const previewHeading = document.getElementById('previewHeading');
+            if (previewHeading) {
+                previewHeading.style.fontSize = h2Size;
+                previewHeading.style.color = textColor;
+            }
             
-            if (error) {
-                console.error('Error saving to Supabase:', error);
-                const errorMsg = document.getElementById('errorMsg');
+            // Update preview text
+            const previewText = document.getElementById('previewText');
+            if (previewText) {
+                previewText.style.fontSize = bodySize;
+                previewText.style.color = textColor;
+            }
+        }
+
+        function markUnsaved() {
+            hasUnsavedChanges = true;
+        }
+
+        async function saveDesignSettings() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const saveBtn = document.getElementById('saveBtn');
+            const successMsg = document.getElementById('successMsg');
+            const errorMsg = document.getElementById('errorMsg');
+            
+            loadingOverlay.style.display = 'flex';
+            saveBtn.disabled = true;
+            saveBtn.textContent = '⏳ Saving...';
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+            
+            const settings = getCurrentSettings();
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('design_settings')
+                    .upsert({ 
+                        id: 1, 
+                        settings: settings, 
+                        updated_at: new Date().toISOString() 
+                    });
+                
+                if (error) {
+                    throw error;
+                }
+                
+                // Save to localStorage as backup
+                localStorage.setItem('designSettings', JSON.stringify(settings));
+                
+                hasUnsavedChanges = false;
+                successMsg.style.display = 'block';
+                setTimeout(() => successMsg.style.display = 'none', 4000);
+            } catch (err) {
+                console.error('Error saving to Supabase:', err);
+                errorMsg.textContent = '✗ Error saving: ' + (err.message || 'Unknown error');
                 errorMsg.style.display = 'block';
-                setTimeout(() => errorMsg.style.display = 'none', 3000);
+                setTimeout(() => errorMsg.style.display = 'none', 5000);
                 
                 // Fallback to localStorage
                 localStorage.setItem('designSettings', JSON.stringify(settings));
-                return;
+            } finally {
+                loadingOverlay.style.display = 'none';
+                saveBtn.disabled = false;
+                saveBtn.textContent = '💾 Save All Changes';
             }
-            
-            // Also save to localStorage as backup
-            localStorage.setItem('designSettings', JSON.stringify(settings));
-            
-            const successMsg = document.getElementById('successMsg');
-            successMsg.style.display = 'block';
-            setTimeout(() => successMsg.style.display = 'none', 3000);
         }
 
-        // Add event listeners to all inputs for live preview
-        const inputs = ['primaryColor', 'secondaryColor', 'bgColor', 'textColor', 'cardBgColor', 'darkBgColor', 'darkCardColor', 'darkTextColor', 'darkBorderColor', 'borderRadius', 'buttonRadius', 'spacing', 'h1Size', 'h2Size', 'bodySize', 'heroHeight'];
-        inputs.forEach(id => {
-            const element = document.getElementById(id);
-            if(element) {
-                element.addEventListener('input', () => {
-                    updateAllValues();
-                    updatePreview();
-                });
+        function resetToDefaults() {
+            if (!confirm('Reset all design settings to default values? This will not save until you click "Save All Changes".')) return;
+            
+            applySettingsToForm(defaultSettings);
+            updateAllValues();
+            updatePreview();
+            markActivePreset();
+            markUnsaved();
+            
+            const successMsg = document.getElementById('successMsg');
+            successMsg.textContent = '✓ Settings reset to defaults. Click "Save All Changes" to apply.';
+            successMsg.style.display = 'block';
+            setTimeout(() => successMsg.style.display = 'none', 4000);
+        }
+
+        // Color preset handling
+        function markActivePreset() {
+            const primary = document.getElementById('primaryColor').value;
+            const secondary = document.getElementById('secondaryColor').value;
+            
+            document.querySelectorAll('.color-preset').forEach(preset => {
+                preset.classList.remove('active');
+                const presetName = preset.dataset.preset;
+                if (colorPresets[presetName]) {
+                    if (colorPresets[presetName].primary === primary && 
+                        colorPresets[presetName].secondary === secondary) {
+                        preset.classList.add('active');
+                    }
+                }
+            });
+        }
+
+        function applyColorPreset(presetName) {
+            const preset = colorPresets[presetName];
+            if (!preset) return;
+            
+            document.getElementById('primaryColor').value = preset.primary;
+            document.getElementById('secondaryColor').value = preset.secondary;
+            
+            // Dispatch change events to update preview
+            document.getElementById('primaryColor').dispatchEvent(new Event('input'));
+            document.getElementById('secondaryColor').dispatchEvent(new Event('input'));
+            
+            markActivePreset();
+            markUnsaved();
+        }
+
+        // Setup color preset click handlers
+        document.querySelectorAll('.color-preset').forEach(preset => {
+            preset.addEventListener('click', function() {
+                applyColorPreset(this.dataset.preset);
+            });
+        });
+
+        // Add event listeners to all inputs for live preview and unsaved changes tracking
+        const allInputs = document.querySelectorAll('input, select');
+        allInputs.forEach(element => {
+            element.addEventListener('input', () => {
+                updateAllValues();
+                updatePreview();
+                markActivePreset();
+                markUnsaved();
+            });
+            element.addEventListener('change', () => {
+                updateAllValues();
+                updatePreview();
+                markActivePreset();
+                markUnsaved();
+            });
+        });
+
+        // Warn before leaving with unsaved changes
+        window.addEventListener('beforeunload', function(e) {
+            if (hasUnsavedChanges) {
+                e.preventDefault();
+                e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+                return e.returnValue;
             }
         });
-        
-        document.getElementById('borderRadius')?.addEventListener('input', () => updatePreview());
-        document.getElementById('buttonRadius')?.addEventListener('input', () => updatePreview());
-        document.getElementById('cardBgColor')?.addEventListener('input', () => updatePreview());
-        document.getElementById('primaryColor')?.addEventListener('input', () => updatePreview());
+
+        // Keyboard shortcut to save (Ctrl+S / Cmd+S)
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                saveDesignSettings();
+            }
+        });
 
         // ========== INITIALIZE ==========
-        function initialize() {
-            const isAuthenticated = checkAuth();
+        async function initialize() {
+            const isAuthenticated = await checkAuth();
             if (!isAuthenticated) return;
+            
+            displayUserInfo();
             
             // Add logout button handler
             const logoutBtn = document.getElementById('logoutBtn');
@@ -518,7 +939,10 @@
                 logoutBtn.onclick = logout;
             }
             
-            loadSettings();
+            await loadSettings();
+            markActivePreset();
+            
+            console.log('Design Editor ready');
         }
         
         initialize();
