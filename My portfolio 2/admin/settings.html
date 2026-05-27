@@ -571,43 +571,72 @@
         let testimonials = [];
         let faqs = [];
 
-        // ========== AUTHENTICATION CHECK (CONSISTENT WITH projects.html) ==========
-        function checkAuth() {
+        // ========== AUTHENTICATION CHECK (WITH SESSION SETUP - FIXES RLS ERROR) ==========
+        async function checkAuth() {
             const token = localStorage.getItem('supabase_token');
+            const refreshToken = localStorage.getItem('supabase_refresh_token');
+            
             if (!token) {
                 console.log('No auth token found, redirecting to login...');
                 window.location.href = 'login.html';
                 return false;
             }
-            // Initialize Supabase client
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            console.log('Supabase client initialized - user authenticated');
+            
+            // Initialize Supabase client with auth configuration
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                auth: {
+                    autoRefreshToken: true,
+                    persistSession: true,
+                    detectSessionInUrl: false
+                }
+            });
+            
+            // CRITICAL: Set the session using the stored tokens
+            // This is what enables RLS policies to work correctly
+            const { data, error } = await supabaseClient.auth.setSession({
+                access_token: token,
+                refresh_token: refreshToken || ''
+            });
+            
+            if (error) {
+                console.error('Error setting session:', error);
+                // Token might be expired or invalid
+                localStorage.removeItem('supabase_token');
+                localStorage.removeItem('supabase_refresh_token');
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            console.log('Supabase client initialized with valid session');
+            console.log('Authenticated user:', data.session?.user?.email);
             return true;
         }
 
-        function logout() {
+        async function logout() {
+            // Sign out from Supabase
+            if (supabaseClient) {
+                await supabaseClient.auth.signOut().catch(console.error);
+            }
+            // Clear local storage
             localStorage.removeItem('supabase_token');
             localStorage.removeItem('supabase_refresh_token');
             console.log('Logged out, redirecting to login...');
             window.location.href = 'login.html';
         }
 
-        // Display user email if available
+        // Display user email from the Supabase session
         function displayUserInfo() {
             const userEmailDisplay = document.getElementById('userEmailDisplay');
-            if (userEmailDisplay) {
-                // Try to decode the token to get user email
-                const token = localStorage.getItem('supabase_token');
-                if (token) {
-                    try {
-                        const payload = JSON.parse(atob(token.split('.')[1]));
-                        if (payload.email) {
-                            userEmailDisplay.textContent = '👤 ' + payload.email;
-                        }
-                    } catch (e) {
+            if (userEmailDisplay && supabaseClient) {
+                supabaseClient.auth.getUser().then(({ data }) => {
+                    if (data?.user?.email) {
+                        userEmailDisplay.textContent = '👤 ' + data.user.email;
+                    } else {
                         userEmailDisplay.textContent = '👤 Logged in';
                     }
-                }
+                }).catch(() => {
+                    userEmailDisplay.textContent = '👤 Logged in';
+                });
             }
         }
 
@@ -881,12 +910,6 @@
         }
 
         function exportLeads() {
-            const token = localStorage.getItem('supabase_token');
-            if (!token) {
-                alert('Please log in first');
-                return;
-            }
-            
             // Create CSV content from the table
             const table = document.getElementById('leadsTable');
             if (!table) return;
@@ -1138,8 +1161,8 @@
         }
 
         // ========== INITIALIZE ==========
-        function initialize() {
-            const isAuthenticated = checkAuth();
+        async function initialize() {
+            const isAuthenticated = await checkAuth();
             if (!isAuthenticated) return;
             
             displayUserInfo();
