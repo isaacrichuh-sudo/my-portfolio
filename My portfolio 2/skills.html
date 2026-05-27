@@ -402,13 +402,8 @@
             border-top: 1px solid var(--border);
         }
 
-        /* Chat Agent Styles */
-        .chat-agent {
-            position: fixed;
-            bottom: 110px;
-            right: 30px;
-            z-index: 1001;
-        }
+        /* Chat Agent Styles (condensed – same as before) */
+        .chat-agent { position: fixed; bottom: 110px; right: 30px; z-index: 1001; }
         .chat-agent-toggle { width: 70px; height: 70px; background: linear-gradient(135deg, #818cf8, #6366f1); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: all 0.3s; cursor: pointer; animation: agentPulse 2s infinite; position: relative; overflow: hidden; border: 3px solid white; }
         .chat-agent-toggle:hover { transform: scale(1.1); }
         .agent-avatar { width: 100%; height: 100%; object-fit: cover; }
@@ -472,9 +467,9 @@
         @media (max-width: 900px) { .services-grid { grid-template-columns: repeat(2, 1fr); } .skills-container { grid-template-columns: 1fr; } }
         @media (max-width: 768px) {
             .container { padding-left: 20px; padding-right: 20px; }
-            .hero-content { max-width: 100%; text-align: center; }
+            .hero-content { max-width: 100%; text-align: left; }  /* kept left-aligned for consistency with index.html; change to center if desired */
             .hero-title { font-size: 36px; }
-            .hero-description { font-size: 16px; margin-left: auto; margin-right: auto; }
+            .hero-description { font-size: 16px; margin-left: 0; margin-right: auto; }
             .services-grid { grid-template-columns: 1fr; }
             .chat-main-btn, .chat-agent-toggle { width: 55px; height: 55px; }
             .chat-agent-window { width: calc(100vw - 40px); right: -10px; height: 500px; }
@@ -555,7 +550,7 @@
         </div>
     </section>
 
-    <!-- CTA SECTION - Single Button -->
+    <!-- CTA SECTION -->
     <section class="cta-section">
         <div class="container">
             <h2 class="cta-title">Ready to engage us?</h2>
@@ -727,6 +722,7 @@
         supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         console.log('Supabase initialized');
         await loadSkillsFromSupabase();
+        await loadPersonalInfoFromSupabase();   // ← NEW: robust name loading
         applyDesignSettings();
         loadChatOptions();
         renderSkills();
@@ -746,13 +742,36 @@
         }
     }
     
-    function loadPersonalInfo() {
-        const personalInfo = JSON.parse(localStorage.getItem('personalInfo') || '{}');
-        const firstName = (personalInfo.name || 'Qreative').split(' ')[0];
+    // ========== ROBUST NAME LOADING (Supabase → localStorage → brand default) ==========
+    async function loadPersonalInfoFromSupabase() {
+        let personalInfo = {};
+        
+        // Try Supabase first
+        const { data: supabaseData } = await supabaseClient
+            .from('personal_info')
+            .select('*')
+            .limit(1);
+        
+        if (supabaseData && supabaseData[0] && supabaseData[0].name && supabaseData[0].name.trim() !== '') {
+            personalInfo = supabaseData[0];
+        } else {
+            // Fallback to localStorage
+            const localData = JSON.parse(localStorage.getItem('personalInfo') || '{}');
+            if (localData.name && localData.name.trim() !== '') {
+                personalInfo = localData;
+            } else {
+                // Brand default
+                personalInfo = { name: 'Qreative Content', title: 'SaaS Copywriter' };
+            }
+        }
+        
+        // Update the page
+        const firstName = personalInfo.name.split(' ')[0];
         const logoElement = document.getElementById('logoText');
         if(logoElement) logoElement.innerHTML = `✍️ ${firstName}`;
+        
         const footerElement = document.getElementById('footerText');
-        if(footerElement) footerElement.innerHTML = `© 2026 ${personalInfo.name || 'Qreative Content'} | ${personalInfo.title || 'SaaS Copywriter'}`;
+        if(footerElement) footerElement.innerHTML = `© 2026 ${personalInfo.name} | ${personalInfo.title || 'SaaS Copywriter'}`;
     }
     
     function renderSkills() {
@@ -1121,7 +1140,6 @@
     // ========== INITIALIZE EVERYTHING ==========
     trackPageView();
     window.addEventListener('scroll', () => requestAnimationFrame(trackScrollDepth));
-    loadPersonalInfo();
     initSupabase();
     initChatbot();
 </script>
