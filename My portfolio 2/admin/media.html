@@ -25,6 +25,7 @@
             background: #1e293b;
             padding: 30px 20px;
             overflow-y: auto;
+            z-index: 100;
         }
         .sidebar h2 { font-size: 20px; margin-bottom: 30px; color: #818cf8; }
         .sidebar nav a {
@@ -50,15 +51,28 @@
             margin-bottom: 30px;
             padding-bottom: 20px;
             border-bottom: 1px solid #334155;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .user-info {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-right: 10px;
         }
         .logout-btn {
             background: #ef4444;
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 10px 18px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 600;
             transition: all 0.3s;
         }
         .logout-btn:hover {
@@ -74,30 +88,131 @@
             background: #1e293b;
             cursor: pointer;
             transition: all 0.3s;
+            position: relative;
         }
         .upload-area:hover {
             border-color: #6366f1;
-            background: #334155;
+            background: #1e293b;
         }
         .upload-area.drag-over {
             border-color: #10b981;
-            background: #2d5a3b;
+            background: rgba(16, 185, 129, 0.08);
+            transform: scale(1.01);
+        }
+        .upload-icon {
+            font-size: 56px;
+            margin-bottom: 15px;
+            transition: transform 0.3s;
+        }
+        .upload-area.drag-over .upload-icon {
+            transform: scale(1.2);
+        }
+        .upload-text {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .upload-subtext {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        .upload-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .upload-stat {
+            text-align: center;
+        }
+        .upload-stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #818cf8;
+        }
+        .upload-stat-label {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+        .media-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .media-toolbar h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-info {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+        }
+        .search-box {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 8px 16px;
+            color: white;
+            font-size: 14px;
+            width: 250px;
+            transition: border-color 0.3s;
+        }
+        .search-box:focus {
+            outline: none;
+            border-color: #818cf8;
+        }
+        .toolbar-btn {
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        .toolbar-btn:hover {
+            background: #475569;
+            transform: translateY(-1px);
+        }
+        .toolbar-btn.active {
+            background: #6366f1;
         }
         .media-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
         }
         .media-item {
             background: #1e293b;
             border-radius: 12px;
             overflow: hidden;
             position: relative;
-            transition: transform 0.3s;
+            transition: all 0.3s;
+            border: 1px solid #334155;
+            cursor: pointer;
         }
         .media-item:hover {
             transform: translateY(-3px);
+            border-color: #6366f1;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .media-item.selected {
+            border-color: #10b981;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
         }
         .media-image-container {
             width: 100%;
@@ -107,59 +222,98 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
         .media-image {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        .media-item:hover .media-image {
+            transform: scale(1.05);
+        }
+        .media-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            gap: 8px;
+        }
+        .media-item:hover .media-overlay {
+            opacity: 1;
+        }
+        .overlay-btn {
+            background: white;
+            color: #0f172a;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .overlay-btn:hover {
+            background: #818cf8;
+            color: white;
+        }
+        .overlay-btn.danger {
+            background: #ef4444;
+            color: white;
+        }
+        .overlay-btn.danger:hover {
+            background: #dc2626;
         }
         .media-info {
             padding: 12px;
-            font-size: 12px;
-            word-break: break-all;
         }
         .media-name {
             font-weight: 600;
-            margin-bottom: 5px;
-            color: #cbd5e1;
+            margin-bottom: 4px;
+            color: #e2e8f0;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .media-meta {
             font-size: 11px;
-        }
-        .media-size {
-            font-size: 10px;
             color: #64748b;
-            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .delete-media {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            margin-right: 8px;
-        }
-        .copy-btn {
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
+        .media-format {
+            background: #334155;
+            color: #94a3b8;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
         }
         .success-msg {
-            background: #10b981;
-            color: white;
-            padding: 12px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid #10b981;
+            color: #6ee7b7;
+            padding: 12px 16px;
             border-radius: 8px;
             margin-bottom: 20px;
             display: none;
         }
         .error-msg {
-            background: #ef4444;
-            color: white;
-            padding: 12px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 12px 16px;
             border-radius: 8px;
             margin-bottom: 20px;
             display: none;
@@ -187,11 +341,13 @@
             background: #1e293b;
             border-radius: 12px;
             padding: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            border: 1px solid #334155;
         }
         .info-card h3 {
             margin-bottom: 15px;
-            color: #818cf8;
+            color: #f1f5f9;
+            font-size: 18px;
         }
         .info-card p {
             color: #94a3b8;
@@ -204,32 +360,71 @@
             border-radius: 6px;
             font-family: monospace;
             font-size: 13px;
+            color: #818cf8;
         }
         .steps {
             background: #0f172a;
-            padding: 15px;
+            padding: 15px 20px;
             border-radius: 8px;
-            margin-top: 15px;
+            list-style: none;
         }
         .steps li {
             margin-bottom: 10px;
-            margin-left: 20px;
+            padding-left: 5px;
         }
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        .steps li:last-child {
+            margin-bottom: 0;
         }
-        .filename-box {
-            background: #0f172a;
-            padding: 10px;
-            border-radius: 6px;
-            font-family: monospace;
-            word-break: break-all;
-            margin-top: 10px;
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: #94a3b8;
         }
-        button {
-            cursor: pointer;
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 15px;
+        }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #10b981;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            z-index: 2000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .toast.error-toast {
+            background: #ef4444;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #334155;
+            border-radius: 2px;
+            margin-top: 15px;
+            overflow: hidden;
+            display: none;
+        }
+        .progress-bar.show {
+            display: block;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #10b981;
+            border-radius: 2px;
+            transition: width 0.3s;
+            width: 0%;
         }
         @media (max-width: 768px) {
             .sidebar {
@@ -239,18 +434,44 @@
             }
             .main-content {
                 margin-left: 0;
+                padding: 20px;
             }
-            .grid-2 {
-                grid-template-columns: 1fr;
+            .media-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 15px;
+            }
+            .upload-area {
+                padding: 30px 20px;
+            }
+            .header-bar {
+                flex-direction: column;
+                text-align: center;
+            }
+            .header-right {
+                justify-content: center;
+            }
+            .media-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-box {
+                width: 100%;
+            }
+            .upload-stats {
+                gap: 15px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner">
             <div style="font-size: 40px; margin-bottom: 10px;">⏳</div>
-            <div>Uploading to Supabase Storage...</div>
+            <div id="loadingText">Uploading to Supabase Storage...</div>
         </div>
     </div>
 
@@ -264,10 +485,14 @@
             <a href="settings.html">⚙️ Settings</a>
         </nav>
     </div>
+
     <div class="main-content">
         <div class="header-bar">
             <h1>🖼️ Media Manager</h1>
-            <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+            <div class="header-right">
+                <span class="user-info" id="userEmailDisplay"></span>
+                <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+            </div>
         </div>
 
         <div class="success-msg" id="successMsg">✓ File uploaded to Supabase Storage!</div>
@@ -276,26 +501,53 @@
         <!-- Info Card -->
         <div class="info-card">
             <h3>📁 Supabase Storage Integration</h3>
-            <p>Images are now stored in <strong>Supabase Storage</strong>. This means:</p>
+            <p>Images are stored in <strong>Supabase Storage</strong> — cloud-based, secure, and accessible from anywhere.</p>
             <ul class="steps">
                 <li>✅ Images are stored in the cloud, accessible from anywhere</li>
                 <li>✅ No storage limits on your local computer</li>
                 <li>✅ Images are backed up and secure</li>
-                <li>✅ You can upload directly from this page</li>
+                <li>✅ Upload directly from this page via drag & drop</li>
             </ul>
         </div>
 
         <!-- Upload Area -->
         <div class="upload-area" id="uploadArea">
-            <div style="font-size: 48px; margin-bottom: 15px;">📸</div>
-            <p>Drag & Drop images here to upload to Supabase Storage</p>
-            <p style="color: #94a3b8; font-size: 14px; margin-top: 10px;">PNG, JPG, GIF, WEBP (Max 5MB each)</p>
+            <div class="upload-icon">📸</div>
+            <div class="upload-text">Drag & Drop images here</div>
+            <div class="upload-subtext">or click to browse — PNG, JPG, GIF, WEBP (Max 5MB each)</div>
+            <div class="progress-bar" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="upload-stats">
+                <div class="upload-stat">
+                    <div class="upload-stat-number" id="totalFiles">0</div>
+                    <div class="upload-stat-label">Total Files</div>
+                </div>
+                <div class="upload-stat">
+                    <div class="upload-stat-number" id="totalSize">0 KB</div>
+                    <div class="upload-stat-label">Total Size</div>
+                </div>
+            </div>
             <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
         </div>
 
-        <h3>📋 Your Media Files (<span id="fileCount">0</span>)</h3>
+        <!-- Media Toolbar -->
+        <div class="media-toolbar">
+            <h3>📋 Media Files <span class="badge badge-info" id="fileCount">0</span></h3>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search files...">
+                <button class="toolbar-btn" onclick="refreshMedia()" title="Refresh">🔄 Refresh</button>
+                <button class="toolbar-btn" id="gridViewBtn" onclick="setViewMode('grid')" title="Grid View">⊞ Grid</button>
+                <button class="toolbar-btn" id="listViewBtn" onclick="setViewMode('list')" title="List View">☰ List</button>
+            </div>
+        </div>
+
+        <!-- Media Grid -->
         <div id="mediaGrid" class="media-grid">
-            <p style="grid-column: 1/-1; text-align: center; padding: 40px;">Loading images from Supabase...</p>
+            <div class="empty-state">
+                <div class="empty-state-icon">📂</div>
+                <p>Loading images from Supabase...</p>
+            </div>
         </div>
     </div>
 
@@ -306,49 +558,84 @@
         
         let supabaseClient;
         let mediaFiles = [];
+        let allMediaFiles = [];
+        let selectedFiles = new Set();
+        let viewMode = 'grid';
 
-        // ========== AUTHENTICATION CHECK (USES LOCALSTORAGE TOKEN) ==========
-        function checkAuth() {
+        // ========== AUTHENTICATION CHECK (CONSISTENT PATTERN) ==========
+        async function checkAuth() {
             const token = localStorage.getItem('supabase_token');
+            const refreshToken = localStorage.getItem('supabase_refresh_token');
+            
             if (!token) {
+                console.log('No auth token found, redirecting to login...');
                 window.location.href = 'login.html';
                 return false;
             }
-            // Initialize Supabase client
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            console.log('Supabase client initialized');
+            
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                auth: {
+                    autoRefreshToken: true,
+                    persistSession: true,
+                    detectSessionInUrl: false
+                }
+            });
+            
+            const { data, error } = await supabaseClient.auth.setSession({
+                access_token: token,
+                refresh_token: refreshToken || ''
+            });
+            
+            if (error) {
+                console.error('Error setting session:', error);
+                localStorage.removeItem('supabase_token');
+                localStorage.removeItem('supabase_refresh_token');
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            console.log('Media Manager: Supabase session established');
             return true;
         }
 
-        function logout() {
+        async function logout() {
+            if (supabaseClient) {
+                await supabaseClient.auth.signOut().catch(console.error);
+            }
+            
             localStorage.removeItem('supabase_token');
             localStorage.removeItem('supabase_refresh_token');
             window.location.href = 'login.html';
         }
 
-        // ========== SUPABASE STORAGE FUNCTIONS ==========
-        
-        // Create bucket if not exists (run this once in Supabase SQL)
-        // Run this SQL in Supabase SQL Editor first:
-        /*
-        -- Create storage bucket for images
-        INSERT INTO storage.buckets (id, name, public) 
-        VALUES ('project-images', 'project-images', true)
-        ON CONFLICT (id) DO NOTHING;
-        
-        -- Allow public access to images
-        CREATE POLICY "Public Access" ON storage.objects
-            FOR SELECT USING (bucket_id = 'project-images');
-        
-        -- Allow authenticated uploads
-        CREATE POLICY "Auth Upload" ON storage.objects
-            FOR INSERT WITH CHECK (bucket_id = 'project-images' AND auth.role() = 'authenticated');
-        
-        -- Allow authenticated deletes
-        CREATE POLICY "Auth Delete" ON storage.objects
-            FOR DELETE USING (bucket_id = 'project-images' AND auth.role() = 'authenticated');
-        */
+        function displayUserInfo() {
+            const userEmailDisplay = document.getElementById('userEmailDisplay');
+            if (userEmailDisplay && supabaseClient) {
+                supabaseClient.auth.getUser().then(({ data }) => {
+                    if (data?.user?.email) {
+                        userEmailDisplay.textContent = '👤 ' + data.user.email;
+                    } else {
+                        userEmailDisplay.textContent = '👤 Logged in';
+                    }
+                }).catch(() => {
+                    userEmailDisplay.textContent = '👤 Logged in';
+                });
+            }
+        }
 
+        // ========== TOAST NOTIFICATIONS ==========
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + (isError ? 'error-toast' : '');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ========== MEDIA FUNCTIONS ==========
+        
         async function loadMediaFiles() {
             const { data, error } = await supabaseClient
                 .storage
@@ -360,118 +647,272 @@
             
             if (error) {
                 console.error('Error loading media:', error);
-                document.getElementById('mediaGrid').innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px;">Error loading images. Make sure the storage bucket is created.</p>';
+                document.getElementById('mediaGrid').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⚠️</div>
+                        <p>Error loading images. Make sure the storage bucket is created.</p>
+                        <p style="font-size: 13px; margin-top: 10px;">Run the SQL setup in Supabase SQL Editor first.</p>
+                    </div>`;
                 return;
             }
             
-            mediaFiles = data || [];
-            document.getElementById('fileCount').innerText = mediaFiles.length;
+            allMediaFiles = data || [];
+            mediaFiles = [...allMediaFiles];
+            
+            updateStats();
             renderMediaGrid();
+        }
+
+        function updateStats() {
+            document.getElementById('fileCount').textContent = allMediaFiles.length;
+            document.getElementById('totalFiles').textContent = allMediaFiles.length;
+            
+            const totalBytes = allMediaFiles.reduce((sum, file) => sum + (file.metadata?.size || 0), 0);
+            const totalSize = totalBytes > 1048576 
+                ? (totalBytes / 1048576).toFixed(1) + ' MB'
+                : (totalBytes / 1024).toFixed(1) + ' KB';
+            document.getElementById('totalSize').textContent = totalSize;
         }
 
         function renderMediaGrid() {
             const grid = document.getElementById('mediaGrid');
-            if(mediaFiles.length === 0) {
-                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px;">No files uploaded yet. Drag and drop images above!</p>';
+            
+            if (mediaFiles.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📂</div>
+                        <p>No files uploaded yet</p>
+                        <p style="font-size: 14px; margin-top: 8px;">Drag and drop images above to get started!</p>
+                    </div>`;
                 return;
             }
             
-            const supabaseUrl = SUPABASE_URL;
+            if (viewMode === 'grid') {
+                renderGridView(grid);
+            } else {
+                renderListView(grid);
+            }
+        }
+
+        function renderGridView(grid) {
+            grid.className = 'media-grid';
             
-            grid.innerHTML = mediaFiles.map((file, index) => {
-                const publicUrl = `${supabaseUrl}/storage/v1/object/public/project-images/${file.name}`;
+            grid.innerHTML = mediaFiles.map((file) => {
+                const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/project-images/${file.name}`;
                 const fileSize = file.metadata?.size || 0;
                 const sizeKB = (fileSize / 1024).toFixed(1);
+                const sizeMB = (fileSize / 1048576).toFixed(1);
+                const displaySize = fileSize > 1048576 ? sizeMB + ' MB' : sizeKB + ' KB';
+                const extension = file.name.split('.').pop().toUpperCase();
+                const isSelected = selectedFiles.has(file.name);
                 
                 return `
-                    <div class="media-item">
+                    <div class="media-item ${isSelected ? 'selected' : ''}" data-filename="${escapeAttr(file.name)}">
                         <div class="media-image-container">
-                            <img src="${publicUrl}" class="media-image" alt="${file.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27200%27 height=%27200%27 viewBox=%270 0 200 200%27%3E%3Crect width=%27200%27 height=%27200%27 fill=%27%23334155%27/%3E%3Ctext x=%2750%25%27 y=%2750%25%27 text-anchor=%27middle%27 dy=%27.3em%27 fill=%27white%27%3E📷%3C/text%3E%3C/svg%3E'">
+                            <img src="${publicUrl}" class="media-image" alt="${escapeAttr(file.name)}" 
+                                 loading="lazy"
+                                 onerror="this.parentElement.innerHTML='<div style=color:#64748b;font-size:48px;>📷</div>'">
+                            <div class="media-overlay">
+                                <button class="overlay-btn" onclick="event.stopPropagation(); copyFileUrl('${escapeAttr(file.name)}')" title="Copy URL">📋 Copy URL</button>
+                                <button class="overlay-btn" onclick="event.stopPropagation(); copyFilename('${escapeAttr(file.name)}')" title="Copy Filename">📝 Copy Name</button>
+                                <button class="overlay-btn danger" onclick="event.stopPropagation(); deleteMedia('${escapeAttr(file.name)}')" title="Delete">🗑️</button>
+                            </div>
                         </div>
                         <div class="media-info">
-                            <div class="media-name">📷 ${file.name}</div>
-                            <div class="media-size">${sizeKB} KB</div>
-                            <button class="delete-media" onclick="deleteMedia('${file.name}')">🗑️ Delete</button>
-                            <button class="copy-btn" onclick="copyFilename('${file.name}')">📋 Copy URL</button>
+                            <div class="media-name" title="${escapeAttr(file.name)}">${escapeHtml(file.name)}</div>
+                            <div class="media-meta">
+                                <span>${displaySize}</span>
+                                <span class="media-format">${extension}</span>
+                            </div>
                         </div>
                     </div>
                 `;
             }).join('');
         }
 
+        function renderListView(grid) {
+            grid.className = '';
+            grid.style.display = 'flex';
+            grid.style.flexDirection = 'column';
+            grid.style.gap = '8px';
+            
+            grid.innerHTML = `
+                <div style="display: grid; grid-template-columns: 50px 1fr 100px 80px 120px; gap: 12px; align-items: center; padding: 10px 15px; background: #1e293b; border-radius: 8px; font-weight: 600; font-size: 12px; color: #94a3b8;">
+                    <span></span>
+                    <span>Filename</span>
+                    <span>Size</span>
+                    <span>Format</span>
+                    <span>Actions</span>
+                </div>
+            ` + mediaFiles.map((file) => {
+                const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/project-images/${file.name}`;
+                const fileSize = file.metadata?.size || 0;
+                const sizeKB = (fileSize / 1024).toFixed(1);
+                const sizeMB = (fileSize / 1048576).toFixed(1);
+                const displaySize = fileSize > 1048576 ? sizeMB + ' MB' : sizeKB + ' KB';
+                const extension = file.name.split('.').pop().toUpperCase();
+                const isSelected = selectedFiles.has(file.name);
+                
+                return `
+                    <div style="display: grid; grid-template-columns: 50px 1fr 100px 80px 120px; gap: 12px; align-items: center; padding: 10px 15px; background: ${isSelected ? '#1a3a2a' : '#1e293b'}; border-radius: 8px; border: 1px solid ${isSelected ? '#10b981' : '#334155'}; cursor: pointer; transition: all 0.3s;" 
+                         onclick="toggleSelect('${escapeAttr(file.name)}')"
+                         data-filename="${escapeAttr(file.name)}">
+                        <div style="width: 40px; height: 40px; border-radius: 6px; overflow: hidden; background: #0f172a;">
+                            <img src="${publicUrl}" style="width: 100%; height: 100%; object-fit: cover;" 
+                                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=display:flex;align-items:center;justify-content:center;height:100%;font-size:20px;>📷</div>'">
+                        </div>
+                        <div style="font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapeAttr(file.name)}">${escapeHtml(file.name)}</div>
+                        <div style="font-size: 12px; color: #94a3b8;">${displaySize}</div>
+                        <div><span class="media-format">${extension}</span></div>
+                        <div style="display: flex; gap: 6px;">
+                            <button class="toolbar-btn" onclick="event.stopPropagation(); copyFileUrl('${escapeAttr(file.name)}')" style="font-size: 11px; padding: 4px 8px;" title="Copy URL">📋</button>
+                            <button class="toolbar-btn" onclick="event.stopPropagation(); copyFilename('${escapeAttr(file.name)}')" style="font-size: 11px; padding: 4px 8px;" title="Copy Name">📝</button>
+                            <button class="toolbar-btn" onclick="event.stopPropagation(); deleteMedia('${escapeAttr(file.name)}')" style="font-size: 11px; padding: 4px 8px; background: #ef4444;" title="Delete">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            if (mediaFiles.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📂</div>
+                        <p>No files uploaded yet</p>
+                    </div>`;
+            }
+        }
+
+        function setViewMode(mode) {
+            viewMode = mode;
+            document.getElementById('gridViewBtn').classList.toggle('active', mode === 'grid');
+            document.getElementById('listViewBtn').classList.toggle('active', mode === 'list');
+            renderMediaGrid();
+        }
+
+        function toggleSelect(filename) {
+            if (selectedFiles.has(filename)) {
+                selectedFiles.delete(filename);
+            } else {
+                selectedFiles.add(filename);
+            }
+            renderMediaGrid();
+        }
+
+        function filterMedia() {
+            const query = document.getElementById('searchBox').value.toLowerCase();
+            if (!query) {
+                mediaFiles = [...allMediaFiles];
+            } else {
+                mediaFiles = allMediaFiles.filter(file => 
+                    file.name.toLowerCase().includes(query)
+                );
+            }
+            renderMediaGrid();
+        }
+
         async function uploadFile(file) {
             // Check file size (max 5MB)
-            if(file.size > 5 * 1024 * 1024) {
-                const errorMsg = document.getElementById('errorMsg');
-                errorMsg.innerHTML = '✗ File too large! Maximum size is 5MB.';
-                errorMsg.style.display = 'block';
-                setTimeout(() => errorMsg.style.display = 'none', 3000);
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('File too large! Maximum size is 5MB.', true);
                 return false;
             }
             
             // Check file type
-            if(!file.type.startsWith('image/')) {
-                const errorMsg = document.getElementById('errorMsg');
-                errorMsg.innerHTML = '✗ Please upload an image file (PNG, JPG, GIF, WEBP)';
-                errorMsg.style.display = 'block';
-                setTimeout(() => errorMsg.style.display = 'none', 3000);
+            if (!file.type.startsWith('image/')) {
+                showToast('Please upload an image file (PNG, JPG, GIF, WEBP)', true);
                 return false;
             }
             
-            // Sanitize filename (remove spaces, special characters)
+            // Sanitize filename
             const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_').toLowerCase();
             
             const loadingOverlay = document.getElementById('loadingOverlay');
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            
             loadingOverlay.style.display = 'flex';
+            document.getElementById('loadingText').textContent = `Uploading ${file.name}...`;
+            progressBar.classList.add('show');
+            progressFill.style.width = '30%';
             
-            const { data, error } = await supabaseClient
-                .storage
-                .from('project-images')
-                .upload(sanitizedName, file, {
-                    cacheControl: '3600',
-                    upsert: true
-                });
-            
-            loadingOverlay.style.display = 'none';
-            
-            if (error) {
-                console.error('Upload error:', error);
-                const errorMsg = document.getElementById('errorMsg');
-                errorMsg.innerHTML = '✗ Upload failed: ' + error.message;
-                errorMsg.style.display = 'block';
-                setTimeout(() => errorMsg.style.display = 'none', 3000);
+            try {
+                const { data, error } = await supabaseClient
+                    .storage
+                    .from('project-images')
+                    .upload(sanitizedName, file, {
+                        cacheControl: '3600',
+                        upsert: true
+                    });
+                
+                progressFill.style.width = '100%';
+                
+                if (error) {
+                    throw error;
+                }
+                
+                showToast('✓ File uploaded successfully!');
+                
+                await loadMediaFiles();
+                return true;
+            } catch (err) {
+                console.error('Upload error:', err);
+                showToast('Upload failed: ' + (err.message || 'Unknown error'), true);
                 return false;
+            } finally {
+                setTimeout(() => {
+                    loadingOverlay.style.display = 'none';
+                    progressBar.classList.remove('show');
+                    progressFill.style.width = '0%';
+                }, 500);
             }
-            
-            const successMsg = document.getElementById('successMsg');
-            successMsg.style.display = 'block';
-            setTimeout(() => successMsg.style.display = 'none', 3000);
-            
-            await loadMediaFiles();
-            return true;
         }
 
         async function deleteMedia(filename) {
-            if(confirm(`Delete "${filename}" permanently? This will remove it from all projects using it.`)) {
+            if (!confirm(`Delete "${filename}" permanently?\n\nThis will remove it from all projects using it. This cannot be undone.`)) return;
+            
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex';
+            document.getElementById('loadingText').textContent = 'Deleting...';
+            
+            try {
                 const { error } = await supabaseClient
                     .storage
                     .from('project-images')
                     .remove([filename]);
                 
-                if (error) {
-                    alert('Error deleting: ' + error.message);
-                    return;
-                }
+                if (error) throw error;
                 
+                selectedFiles.delete(filename);
+                showToast('✓ File deleted successfully');
                 await loadMediaFiles();
-                alert('✅ File deleted successfully');
+            } catch (err) {
+                console.error('Delete error:', err);
+                showToast('Delete failed: ' + (err.message || 'Unknown error'), true);
+            } finally {
+                loadingOverlay.style.display = 'none';
             }
         }
 
-        function copyFilename(filename) {
+        function copyFileUrl(filename) {
             const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/project-images/${filename}`;
-            navigator.clipboard.writeText(publicUrl);
-            alert('✅ URL copied: ' + publicUrl + '\n\nUse this URL in your projects, or just use the filename: ' + filename);
+            navigator.clipboard.writeText(publicUrl).then(() => {
+                showToast('✓ Full URL copied to clipboard!');
+            }).catch(() => {
+                prompt('Copy this URL:', publicUrl);
+            });
+        }
+
+        function copyFilename(filename) {
+            navigator.clipboard.writeText(filename).then(() => {
+                showToast('✓ Filename copied: ' + filename);
+            }).catch(() => {
+                prompt('Copy this filename:', filename);
+            });
+        }
+
+        function refreshMedia() {
+            loadMediaFiles();
+            showToast('🔄 Media list refreshed');
         }
 
         // ========== DRAG & DROP HANDLERS ==========
@@ -490,10 +931,14 @@
             e.preventDefault();
             uploadArea.classList.remove('drag-over');
             const files = Array.from(e.dataTransfer.files);
+            
+            if (files.length === 0) return;
+            
             for (const file of files) {
                 await uploadFile(file);
             }
         });
+        
         fileInput.addEventListener('change', async (e) => {
             const files = Array.from(e.target.files);
             for (const file of files) {
@@ -502,10 +947,53 @@
             fileInput.value = '';
         });
 
+        // Search functionality
+        document.getElementById('searchBox').addEventListener('input', filterMedia);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+A to select all
+            if ((e.ctrlKey || e.metaKey) && e.key === 'a' && document.activeElement !== document.getElementById('searchBox')) {
+                e.preventDefault();
+                mediaFiles.forEach(f => selectedFiles.add(f.name));
+                renderMediaGrid();
+                showToast(`${selectedFiles.size} files selected`);
+            }
+            // Delete key to delete selected
+            if (e.key === 'Delete' && selectedFiles.size > 0 && document.activeElement !== document.getElementById('searchBox')) {
+                e.preventDefault();
+                if (confirm(`Delete ${selectedFiles.size} selected file(s)?`)) {
+                    const filesToDelete = [...selectedFiles];
+                    filesToDelete.forEach(filename => deleteMedia(filename));
+                    selectedFiles.clear();
+                }
+            }
+            // Escape to clear selection
+            if (e.key === 'Escape') {
+                selectedFiles.clear();
+                renderMediaGrid();
+            }
+        });
+
+        // ========== HELPER FUNCTIONS ==========
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function escapeAttr(text) {
+            if (!text) return '';
+            return text.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
         // ========== INITIALIZE ==========
-        function initialize() {
-            const isAuthenticated = checkAuth();
+        async function initialize() {
+            const isAuthenticated = await checkAuth();
             if (!isAuthenticated) return;
+            
+            displayUserInfo();
             
             // Add logout button handler
             const logoutBtn = document.getElementById('logoutBtn');
@@ -513,7 +1001,12 @@
                 logoutBtn.onclick = logout;
             }
             
-            loadMediaFiles();
+            // Set default view mode
+            setViewMode('grid');
+            
+            await loadMediaFiles();
+            
+            console.log('Media Manager ready');
         }
         
         initialize();
