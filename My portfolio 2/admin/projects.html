@@ -25,6 +25,7 @@
             background: #1e293b;
             padding: 30px 20px;
             overflow-y: auto;
+            z-index: 100;
         }
         .sidebar h2 { font-size: 20px; margin-bottom: 30px; color: #818cf8; }
         .sidebar nav a {
@@ -50,15 +51,28 @@
             margin-bottom: 30px;
             padding-bottom: 20px;
             border-bottom: 1px solid #334155;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .user-info {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-right: 10px;
         }
         .logout-btn {
             background: #ef4444;
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 10px 18px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 600;
             transition: all 0.3s;
         }
         .logout-btn:hover {
@@ -69,29 +83,49 @@
             background: #1e293b;
             border-radius: 12px;
             padding: 25px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            border: 1px solid #334155;
+        }
+        .form-card h3 {
+            margin-bottom: 20px;
+            color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
         label {
             display: block;
             margin-bottom: 8px;
             font-size: 14px;
             color: #94a3b8;
+            font-weight: 500;
         }
         input, textarea, select {
             width: 100%;
-            padding: 10px;
+            padding: 10px 12px;
             background: #0f172a;
             border: 1px solid #334155;
             border-radius: 6px;
             color: white;
             font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #818cf8;
         }
         textarea {
             resize: vertical;
             min-height: 100px;
+        }
+        .small-text {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 5px;
         }
         button {
             background: #6366f1;
@@ -101,10 +135,16 @@
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s;
+            font-weight: 600;
         }
         button:hover {
             background: #4f46e5;
             transform: translateY(-1px);
+        }
+        button:disabled {
+            background: #475569;
+            cursor: not-allowed;
+            transform: none;
         }
         .delete-btn {
             background: #ef4444;
@@ -112,49 +152,145 @@
         .delete-btn:hover {
             background: #dc2626;
         }
+        .cancel-btn {
+            background: #64748b;
+        }
+        .cancel-btn:hover {
+            background: #475569;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+            text-transform: uppercase;
+        }
+        .badge-landing { background: rgba(99, 102, 241, 0.2); color: #a5b4fc; }
+        .badge-email { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+        .badge-blog { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
+        .badge-case-study { background: rgba(236, 72, 153, 0.2); color: #f9a8d4; }
+        .project-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .project-toolbar h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .badge-info {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+        }
+        .search-box {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 8px 16px;
+            color: white;
+            font-size: 14px;
+            width: 250px;
+            transition: border-color 0.3s;
+        }
+        .search-box:focus {
+            outline: none;
+            border-color: #818cf8;
+        }
+        .filter-select {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .filter-select:focus {
+            outline: none;
+            border-color: #818cf8;
+        }
         .project-list {
-            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
         .project-item {
             background: #1e293b;
             border-radius: 12px;
             padding: 20px;
-            margin-bottom: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 15px;
+            border: 1px solid #334155;
+            transition: all 0.3s;
+        }
+        .project-item:hover {
+            border-color: #6366f1;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         .project-info {
             flex: 1;
+            min-width: 250px;
         }
         .project-title {
             font-weight: 600;
             font-size: 18px;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             color: #f1f5f9;
+        }
+        .project-description {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            line-height: 1.5;
         }
         .project-meta {
             font-size: 12px;
-            color: #94a3b8;
+            color: #64748b;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .project-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .project-image-thumb {
+            width: 80px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #0f172a;
+            border: 1px solid #334155;
         }
         .project-actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
         .success-msg {
-            background: #10b981;
-            color: white;
-            padding: 12px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid #10b981;
+            color: #6ee7b7;
+            padding: 12px 16px;
             border-radius: 8px;
             margin-bottom: 20px;
             display: none;
         }
         .error-msg {
-            background: #ef4444;
-            color: white;
-            padding: 12px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 12px 16px;
             border-radius: 8px;
             margin-bottom: 20px;
             display: none;
@@ -164,10 +300,19 @@
             grid-template-columns: 1fr 1fr;
             gap: 15px;
         }
-        .loading {
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+        .empty-state {
             text-align: center;
-            padding: 40px;
+            padding: 50px 20px;
             color: #94a3b8;
+        }
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 15px;
         }
         .loading-overlay {
             position: fixed;
@@ -188,6 +333,28 @@
             border-radius: 12px;
             text-align: center;
         }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #10b981;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            z-index: 2000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .toast.error-toast {
+            background: #ef4444;
+        }
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
@@ -196,25 +363,45 @@
             }
             .main-content {
                 margin-left: 0;
+                padding: 20px;
             }
-            .grid-2 {
+            .grid-2, .grid-3 {
                 grid-template-columns: 1fr;
             }
             .project-item {
                 flex-direction: column;
-                text-align: center;
+                align-items: flex-start;
             }
             .project-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .header-bar {
+                flex-direction: column;
+                text-align: center;
+            }
+            .header-right {
                 justify-content: center;
+            }
+            .project-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-box {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner">
             <div style="font-size: 40px; margin-bottom: 10px;">⏳</div>
-            <div>Saving to Supabase...</div>
+            <div id="loadingText">Saving to Supabase...</div>
         </div>
     </div>
 
@@ -228,18 +415,22 @@
             <a href="settings.html">⚙️ Settings</a>
         </nav>
     </div>
+
     <div class="main-content">
         <div class="header-bar">
             <h1>📂 Project Manager</h1>
-            <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+            <div class="header-right">
+                <span class="user-info" id="userEmailDisplay"></span>
+                <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+            </div>
         </div>
 
         <div class="success-msg" id="successMsg">✓ Project saved to Supabase successfully!</div>
         <div class="error-msg" id="errorMsg">✗ Error saving to Supabase. Check console for details.</div>
 
         <!-- Add/Edit Project Form -->
-        <div class="form-card">
-            <h3 style="margin-bottom: 20px;">➕ Add New Project</h3>
+        <div class="form-card" id="projectForm">
+            <h3 id="formTitle">➕ Add New Project</h3>
             <div class="grid-2">
                 <div class="form-group">
                     <label>Project Title *</label>
@@ -264,26 +455,46 @@
                 </div>
                 <div class="form-group">
                     <label>Year / Date</label>
-                    <input type="text" id="projectDate" placeholder="2024">
+                    <input type="text" id="projectDate" placeholder="e.g., 2024">
                 </div>
                 <div class="form-group">
                     <label>Project Image</label>
                     <input type="text" id="projectImage" placeholder="filename.jpg or full URL from Media Manager">
-                    <small style="color: #94a3b8;">💡 Tip: Upload image in Media Manager first, then copy the URL or filename</small>
+                    <p class="small-text">💡 Tip: Upload image in <a href="media.html" style="color: #818cf8;">Media Manager</a> first, then copy the URL or filename here</p>
                 </div>
             </div>
             <div class="form-group">
                 <label>Project Description *</label>
-                <textarea id="projectDescription" placeholder="Describe the project, your process, and the results..."></textarea>
+                <textarea id="projectDescription" rows="4" placeholder="Describe the project, your process, and the results..."></textarea>
             </div>
-            <button onclick="addProject()">➕ Add Project to Supabase</button>
-            <button onclick="resetForm()" style="background: #64748b; margin-left: 10px;">⟳ Reset Form</button>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button id="submitBtn" onclick="addProject()">➕ Add Project to Supabase</button>
+                <button class="cancel-btn" id="cancelBtn" onclick="resetForm()" style="display: none;">✕ Cancel Edit</button>
+                <button class="cancel-btn" onclick="clearForm()">⟳ Clear Form</button>
+            </div>
         </div>
 
-        <!-- Existing Projects List -->
-        <h3 style="margin: 30px 0 15px;">📋 Your Projects (from Supabase)</h3>
+        <!-- Projects List -->
+        <div class="project-toolbar">
+            <h3>📋 Your Projects <span class="badge badge-info" id="projectCount">0</span></h3>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <select class="filter-select" id="categoryFilter" onchange="filterProjects()">
+                    <option value="all">All Categories</option>
+                    <option value="landing">Landing Page</option>
+                    <option value="email">Email Campaign</option>
+                    <option value="blog">Blog Content</option>
+                    <option value="case-study">Case Study</option>
+                </select>
+                <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search projects...">
+                <button onclick="refreshProjects()" style="background: #334155; padding: 8px 14px; font-size: 13px;" title="Refresh">🔄 Refresh</button>
+            </div>
+        </div>
+
         <div id="projectsList" class="project-list">
-            <div class="loading">Loading projects from Supabase...</div>
+            <div class="empty-state">
+                <div class="empty-state-icon">⏳</div>
+                <p>Loading projects from Supabase...</p>
+            </div>
         </div>
     </div>
 
@@ -294,99 +505,237 @@
         
         let supabaseClient;
         let projects = [];
+        let filteredProjects = [];
         let editingProjectId = null;
 
-        // ========== AUTHENTICATION CHECK (USES LOCALSTORAGE TOKEN) ==========
-        function checkAuth() {
+        // ========== AUTHENTICATION CHECK (CONSISTENT PATTERN) ==========
+        async function checkAuth() {
             const token = localStorage.getItem('supabase_token');
+            const refreshToken = localStorage.getItem('supabase_refresh_token');
+            
             if (!token) {
+                console.log('No auth token found, redirecting to login...');
                 window.location.href = 'login.html';
                 return false;
             }
-            // Initialize Supabase client
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            console.log('Supabase client initialized');
+            
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                auth: {
+                    autoRefreshToken: true,
+                    persistSession: true,
+                    detectSessionInUrl: false
+                }
+            });
+            
+            const { data, error } = await supabaseClient.auth.setSession({
+                access_token: token,
+                refresh_token: refreshToken || ''
+            });
+            
+            if (error) {
+                console.error('Error setting session:', error);
+                localStorage.removeItem('supabase_token');
+                localStorage.removeItem('supabase_refresh_token');
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            console.log('Project Manager: Supabase session established');
             return true;
         }
 
-        function logout() {
+        async function logout() {
+            if (supabaseClient) {
+                await supabaseClient.auth.signOut().catch(console.error);
+            }
+            
             localStorage.removeItem('supabase_token');
             localStorage.removeItem('supabase_refresh_token');
             window.location.href = 'login.html';
         }
 
+        function displayUserInfo() {
+            const userEmailDisplay = document.getElementById('userEmailDisplay');
+            if (userEmailDisplay && supabaseClient) {
+                supabaseClient.auth.getUser().then(({ data }) => {
+                    if (data?.user?.email) {
+                        userEmailDisplay.textContent = '👤 ' + data.user.email;
+                    } else {
+                        userEmailDisplay.textContent = '👤 Logged in';
+                    }
+                }).catch(() => {
+                    userEmailDisplay.textContent = '👤 Logged in';
+                });
+            }
+        }
+
+        // ========== TOAST NOTIFICATIONS ==========
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + (isError ? 'error-toast' : '');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function showMessage(message, isError = false) {
+            const successMsg = document.getElementById('successMsg');
+            const errorMsg = document.getElementById('errorMsg');
+            
+            if (isError) {
+                errorMsg.textContent = '✗ ' + message;
+                errorMsg.style.display = 'block';
+                successMsg.style.display = 'none';
+                setTimeout(() => errorMsg.style.display = 'none', 4000);
+            } else {
+                successMsg.textContent = '✓ ' + message;
+                successMsg.style.display = 'block';
+                errorMsg.style.display = 'none';
+                setTimeout(() => successMsg.style.display = 'none', 4000);
+            }
+        }
+
         // ========== PROJECT MANAGEMENT FUNCTIONS ==========
 
-        // Load projects from Supabase
         async function loadProjects() {
             const container = document.getElementById('projectsList');
-            container.innerHTML = '<div class="loading">Loading projects from Supabase...</div>';
+            container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⏳</div><p>Loading projects from Supabase...</p></div>';
             
             const { data, error } = await supabaseClient
                 .from('projects')
                 .select('*')
                 .order('created_at', { ascending: false });
             
-            if(error) {
+            if (error) {
                 console.error('Error loading projects:', error);
-                container.innerHTML = '<p style="text-align: center; color: #ef4444;">Error loading projects. Make sure you are logged in.</p>';
+                container.innerHTML = '<div class="empty-state" style="color: #ef4444;"><p>⚠️ Error loading projects. Make sure you are logged in.</p></div>';
                 return;
             }
             
-            if(data && data.length > 0) {
-                projects = data;
-            } else {
-                projects = [];
+            projects = data || [];
+            applyFilters();
+        }
+
+        function getCategoryBadge(category) {
+            const badges = {
+                'landing': 'badge-landing',
+                'email': 'badge-email',
+                'blog': 'badge-blog',
+                'case-study': 'badge-case-study'
+            };
+            return badges[category] || 'badge-info';
+        }
+
+        function getCategoryLabel(category) {
+            const labels = {
+                'landing': 'Landing Page',
+                'email': 'Email Campaign',
+                'blog': 'Blog Content',
+                'case-study': 'Case Study'
+            };
+            return labels[category] || category;
+        }
+
+        function renderProjects() {
+            const container = document.getElementById('projectsList');
+            const countBadge = document.getElementById('projectCount');
+            
+            if (countBadge) countBadge.textContent = filteredProjects.length;
+            
+            if (filteredProjects.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📂</div>
+                        <p>No projects found</p>
+                        <p style="font-size: 14px; margin-top: 8px;">${projects.length === 0 ? 'Add your first project using the form above!' : 'Try adjusting your search or filter.'}</p>
+                    </div>`;
+                return;
             }
+            
+            container.innerHTML = filteredProjects.map(project => {
+                const imageUrl = project.image 
+                    ? (project.image.startsWith('http') ? project.image : `${SUPABASE_URL}/storage/v1/object/public/project-images/${project.image}`)
+                    : null;
+                
+                return `
+                    <div class="project-item">
+                        <div class="project-info">
+                            <div style="display: flex; align-items: flex-start; gap: 15px;">
+                                ${imageUrl ? `<img src="${imageUrl}" class="project-image-thumb" alt="${escapeHtml(project.title)}" onerror="this.style.display='none'">` : ''}
+                                <div style="flex: 1;">
+                                    <div class="project-title">
+                                        ${escapeHtml(project.title)}
+                                        <span class="badge ${getCategoryBadge(project.category)}">${getCategoryLabel(project.category)}</span>
+                                    </div>
+                                    <div class="project-description">${escapeHtml(project.description.substring(0, 150))}${project.description.length > 150 ? '...' : ''}</div>
+                                    <div class="project-meta">
+                                        ${project.client ? `<span>🏢 ${escapeHtml(project.client)}</span>` : ''}
+                                        ${project.results ? `<span>📈 ${escapeHtml(project.results)}</span>` : ''}
+                                        ${project.date ? `<span>📅 ${escapeHtml(project.date)}</span>` : ''}
+                                        <span style="font-size: 10px; color: #475569;">Created: ${new Date(project.created_at).toLocaleDateString()}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            <button onclick="editProject(${project.id})" title="Edit project">✏️ Edit</button>
+                            <button class="delete-btn" onclick="deleteProject(${project.id})" title="Delete project">🗑️ Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterProjects() {
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const searchQuery = document.getElementById('searchBox').value.toLowerCase();
+            
+            filteredProjects = projects.filter(project => {
+                const matchesCategory = categoryFilter === 'all' || project.category === categoryFilter;
+                const matchesSearch = !searchQuery || 
+                    project.title.toLowerCase().includes(searchQuery) ||
+                    (project.client && project.client.toLowerCase().includes(searchQuery)) ||
+                    project.description.toLowerCase().includes(searchQuery);
+                return matchesCategory && matchesSearch;
+            });
+            
             renderProjects();
         }
 
-        // Render projects list
-        function renderProjects() {
-            const container = document.getElementById('projectsList');
-            if(projects.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 40px;">📂 No projects yet. Add your first project above!</p>';
-                return;
-            }
-            
-            container.innerHTML = projects.map(project => `
-                <div class="project-item">
-                    <div class="project-info">
-                        <div class="project-title">${escapeHtml(project.title)}</div>
-                        <div class="project-meta">${project.category} | ${project.client || 'No client'} | ${project.results || 'No results'} | ${project.date || 'No date'}</div>
-                        <div class="project-meta" style="margin-top: 5px;">${escapeHtml(project.description.substring(0, 100))}${project.description.length > 100 ? '...' : ''}</div>
-                        ${project.image ? `<div class="project-meta">🖼️ Image: ${project.image.length > 50 ? project.image.substring(0, 50) + '...' : project.image}</div>` : ''}
-                        <div class="project-meta" style="font-size: 10px; color: #64748b; margin-top: 5px;">ID: ${project.id} | Created: ${new Date(project.created_at).toLocaleDateString()}</div>
-                    </div>
-                    <div class="project-actions">
-                        <button onclick="editProject(${project.id})">✏️ Edit</button>
-                        <button class="delete-btn" onclick="deleteProject(${project.id})">🗑️ Delete</button>
-                    </div>
-                </div>
-            `).join('');
+        function applyFilters() {
+            filterProjects();
         }
 
-        // Add new project to Supabase
+        function refreshProjects() {
+            loadProjects();
+            showToast('🔄 Projects refreshed');
+        }
+
         async function addProject() {
-            const title = document.getElementById('projectTitle').value;
-            const description = document.getElementById('projectDescription').value;
+            const title = document.getElementById('projectTitle').value.trim();
+            const description = document.getElementById('projectDescription').value.trim();
             
-            if(!title || !description) {
-                alert('Please fill in project title and description');
+            if (!title || !description) {
+                showMessage('Please fill in project title and description', true);
                 return;
             }
             
             const loadingOverlay = document.getElementById('loadingOverlay');
+            const submitBtn = document.getElementById('submitBtn');
+            
             loadingOverlay.style.display = 'flex';
+            document.getElementById('loadingText').textContent = 'Saving project to Supabase...';
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Saving...';
             
             const newProject = {
                 title: title,
                 category: document.getElementById('projectCategory').value,
                 description: description,
-                client: document.getElementById('projectClient').value,
-                results: document.getElementById('projectResults').value,
-                date: document.getElementById('projectDate').value,
-                image: document.getElementById('projectImage').value,
+                client: document.getElementById('projectClient').value.trim(),
+                results: document.getElementById('projectResults').value.trim(),
+                date: document.getElementById('projectDate').value.trim(),
+                image: document.getElementById('projectImage').value.trim(),
                 created_at: new Date().toISOString()
             };
             
@@ -396,67 +745,78 @@
                 .select();
             
             loadingOverlay.style.display = 'none';
+            submitBtn.disabled = false;
+            submitBtn.textContent = '➕ Add Project to Supabase';
             
-            if(error) {
+            if (error) {
                 console.error('Error adding project:', error);
-                document.getElementById('errorMsg').style.display = 'block';
-                setTimeout(() => document.getElementById('errorMsg').style.display = 'none', 3000);
+                showMessage('Error adding project: ' + error.message, true);
                 return;
             }
             
-            if(data && data[0]) {
+            if (data && data[0]) {
                 projects.unshift(data[0]);
-                renderProjects();
-                
-                // Clear form
-                resetForm();
-                
-                const msg = document.getElementById('successMsg');
-                msg.style.display = 'block';
-                setTimeout(() => msg.style.display = 'none', 3000);
+                applyFilters();
+                clearForm();
+                showMessage('Project added successfully!');
+                showToast('✓ Project added to Supabase!');
             }
         }
 
-        // Edit project - populate form for editing
-        async function editProject(id) {
+        function editProject(id) {
             const project = projects.find(p => p.id === id);
-            if(!project) return;
+            if (!project) return;
             
             editingProjectId = id;
             
             // Populate form
             document.getElementById('projectTitle').value = project.title;
-            document.getElementById('projectCategory').value = project.category;
+            document.getElementById('projectCategory').value = project.category || 'landing';
             document.getElementById('projectDescription').value = project.description;
             document.getElementById('projectClient').value = project.client || '';
             document.getElementById('projectResults').value = project.results || '';
             document.getElementById('projectDate').value = project.date || '';
             document.getElementById('projectImage').value = project.image || '';
             
-            // Change button to Update
-            const addBtn = document.querySelector('.form-card button');
-            addBtn.textContent = '✏️ Update Project';
-            addBtn.setAttribute('onclick', 'updateProject()');
+            // Update form UI
+            document.getElementById('formTitle').textContent = '✏️ Edit Project';
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.textContent = '✏️ Update Project';
+            submitBtn.setAttribute('onclick', 'updateProject()');
+            document.getElementById('cancelBtn').style.display = 'inline-block';
             
             // Scroll to form
-            document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('projectForm').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('projectTitle').focus();
         }
 
-        // Update project in Supabase
         async function updateProject() {
-            if(!editingProjectId) return;
+            if (!editingProjectId) return;
+            
+            const title = document.getElementById('projectTitle').value.trim();
+            const description = document.getElementById('projectDescription').value.trim();
+            
+            if (!title || !description) {
+                showMessage('Please fill in project title and description', true);
+                return;
+            }
             
             const loadingOverlay = document.getElementById('loadingOverlay');
+            const submitBtn = document.getElementById('submitBtn');
+            
             loadingOverlay.style.display = 'flex';
+            document.getElementById('loadingText').textContent = 'Updating project...';
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Updating...';
             
             const updatedProject = {
-                title: document.getElementById('projectTitle').value,
+                title: title,
                 category: document.getElementById('projectCategory').value,
-                description: document.getElementById('projectDescription').value,
-                client: document.getElementById('projectClient').value,
-                results: document.getElementById('projectResults').value,
-                date: document.getElementById('projectDate').value,
-                image: document.getElementById('projectImage').value,
+                description: description,
+                client: document.getElementById('projectClient').value.trim(),
+                results: document.getElementById('projectResults').value.trim(),
+                date: document.getElementById('projectDate').value.trim(),
+                image: document.getElementById('projectImage').value.trim(),
                 updated_at: new Date().toISOString()
             };
             
@@ -467,36 +827,27 @@
             
             loadingOverlay.style.display = 'none';
             
-            if(error) {
+            if (error) {
                 console.error('Error updating project:', error);
-                document.getElementById('errorMsg').style.display = 'block';
-                setTimeout(() => document.getElementById('errorMsg').style.display = 'none', 3000);
+                showMessage('Error updating project: ' + error.message, true);
+                submitBtn.disabled = false;
                 return;
             }
             
-            // Reset form button back to Add mode
-            const addBtn = document.querySelector('.form-card button');
-            addBtn.textContent = '➕ Add Project to Supabase';
-            addBtn.setAttribute('onclick', 'addProject()');
-            
             resetForm();
-            editingProjectId = null;
             
-            // Reload projects
+            // Reload projects to get updated data
             await loadProjects();
-            
-            const msg = document.getElementById('successMsg');
-            msg.innerHTML = '✓ Project updated in Supabase!';
-            msg.style.display = 'block';
-            setTimeout(() => msg.style.display = 'none', 3000);
+            showMessage('Project updated successfully!');
+            showToast('✓ Project updated in Supabase!');
         }
 
-        // Delete project from Supabase
         async function deleteProject(id) {
-            if(!confirm('Delete this project permanently? This cannot be undone.')) return;
+            if (!confirm('Delete this project permanently? This cannot be undone.')) return;
             
             const loadingOverlay = document.getElementById('loadingOverlay');
             loadingOverlay.style.display = 'flex';
+            document.getElementById('loadingText').textContent = 'Deleting project...';
             
             const { error } = await supabaseClient
                 .from('projects')
@@ -505,23 +856,37 @@
             
             loadingOverlay.style.display = 'none';
             
-            if(error) {
+            if (error) {
                 console.error('Error deleting project:', error);
-                alert('Error deleting project: ' + error.message);
+                showMessage('Error deleting project: ' + error.message, true);
                 return;
             }
             
-            projects = projects.filter(p => p.id !== id);
-            renderProjects();
+            // If we were editing this project, reset the form
+            if (editingProjectId === id) {
+                resetForm();
+            }
             
-            const msg = document.getElementById('successMsg');
-            msg.innerHTML = '✓ Project deleted from Supabase!';
-            msg.style.display = 'block';
-            setTimeout(() => msg.style.display = 'none', 3000);
+            projects = projects.filter(p => p.id !== id);
+            applyFilters();
+            showMessage('Project deleted successfully!');
+            showToast('✓ Project deleted from Supabase!');
         }
 
-        // Reset form (cancel edit)
         function resetForm() {
+            clearForm();
+            
+            // Reset form UI
+            document.getElementById('formTitle').textContent = '➕ Add New Project';
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.textContent = '➕ Add Project to Supabase';
+            submitBtn.setAttribute('onclick', 'addProject()');
+            submitBtn.disabled = false;
+            document.getElementById('cancelBtn').style.display = 'none';
+            editingProjectId = null;
+        }
+
+        function clearForm() {
             document.getElementById('projectTitle').value = '';
             document.getElementById('projectDescription').value = '';
             document.getElementById('projectClient').value = '';
@@ -529,24 +894,25 @@
             document.getElementById('projectDate').value = '';
             document.getElementById('projectImage').value = '';
             document.getElementById('projectCategory').value = 'landing';
-            
-            const addBtn = document.querySelector('.form-card button');
-            addBtn.textContent = '➕ Add Project to Supabase';
-            addBtn.setAttribute('onclick', 'addProject()');
-            editingProjectId = null;
         }
 
+        // Search and filter event listeners
+        document.getElementById('searchBox')?.addEventListener('input', filterProjects);
+
+        // ========== HELPER FUNCTIONS ==========
         function escapeHtml(text) {
-            if(!text) return '';
+            if (!text) return '';
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
 
         // ========== INITIALIZE ==========
-        function initialize() {
-            const isAuthenticated = checkAuth();
+        async function initialize() {
+            const isAuthenticated = await checkAuth();
             if (!isAuthenticated) return;
+            
+            displayUserInfo();
             
             // Add logout button handler
             const logoutBtn = document.getElementById('logoutBtn');
@@ -554,7 +920,14 @@
                 logoutBtn.onclick = logout;
             }
             
-            loadProjects();
+            // Initialize search and filter
+            if (document.getElementById('searchBox')) {
+                document.getElementById('searchBox').addEventListener('input', filterProjects);
+            }
+            
+            await loadProjects();
+            
+            console.log('Project Manager ready');
         }
         
         initialize();
