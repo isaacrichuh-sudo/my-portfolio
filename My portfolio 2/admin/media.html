@@ -267,7 +267,7 @@
     <div class="main-content">
         <div class="header-bar">
             <h1>🖼️ Media Manager</h1>
-            <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+            <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
         </div>
 
         <div class="success-msg" id="successMsg">✓ File uploaded to Supabase Storage!</div>
@@ -305,28 +305,24 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXJnaGd4amJ4cWdubWp3cGRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NzM1MzQsImV4cCI6MjA5NDU0OTUzNH0.7zkOuh4F8lkSIaDnMEm9-R8v3sepjxnz0P4BKOI-HaM';
         
         let supabaseClient;
-        let currentSession = null;
         let mediaFiles = [];
 
-        // ========== AUTHENTICATION CHECK ==========
-        async function checkAuth() {
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            
-            const { data: { session }, error } = await supabaseClient.auth.getSession();
-            
-            if (error || !session) {
+        // ========== AUTHENTICATION CHECK (USES LOCALSTORAGE TOKEN) ==========
+        function checkAuth() {
+            const token = localStorage.getItem('supabase_token');
+            if (!token) {
                 window.location.href = 'login.html';
                 return false;
             }
-            
-            currentSession = session;
-            console.log('Authenticated as:', session.user.email);
+            // Initialize Supabase client
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('Supabase client initialized');
             return true;
         }
 
-        async function logout() {
-            await supabaseClient.auth.signOut();
-            localStorage.removeItem('adminSession');
+        function logout() {
+            localStorage.removeItem('supabase_token');
+            localStorage.removeItem('supabase_refresh_token');
             window.location.href = 'login.html';
         }
 
@@ -507,11 +503,17 @@
         });
 
         // ========== INITIALIZE ==========
-        async function initialize() {
-            const isAuthenticated = await checkAuth();
+        function initialize() {
+            const isAuthenticated = checkAuth();
             if (!isAuthenticated) return;
             
-            await loadMediaFiles();
+            // Add logout button handler
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.onclick = logout;
+            }
+            
+            loadMediaFiles();
         }
         
         initialize();
