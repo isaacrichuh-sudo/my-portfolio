@@ -199,7 +199,7 @@
             <h1>🎨 Design Editor</h1>
             <div>
                 <button class="save-btn" onclick="saveDesignSettings()">💾 Save All Changes</button>
-                <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+                <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
             </div>
         </div>
 
@@ -329,27 +329,23 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXJnaGd4amJ4cWdubWp3cGRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NzM1MzQsImV4cCI6MjA5NDU0OTUzNH0.7zkOuh4F8lkSIaDnMEm9-R8v3sepjxnz0P4BKOI-HaM';
         
         let supabaseClient;
-        let currentSession = null;
 
-        // ========== AUTHENTICATION CHECK ==========
-        async function checkAuth() {
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            
-            const { data: { session }, error } = await supabaseClient.auth.getSession();
-            
-            if (error || !session) {
+        // ========== AUTHENTICATION CHECK (USES LOCALSTORAGE TOKEN) ==========
+        function checkAuth() {
+            const token = localStorage.getItem('supabase_token');
+            if (!token) {
                 window.location.href = 'login.html';
                 return false;
             }
-            
-            currentSession = session;
-            console.log('Authenticated as:', session.user.email);
+            // Initialize Supabase client
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('Supabase client initialized');
             return true;
         }
 
-        async function logout() {
-            await supabaseClient.auth.signOut();
-            localStorage.removeItem('adminSession');
+        function logout() {
+            localStorage.removeItem('supabase_token');
+            localStorage.removeItem('supabase_refresh_token');
             window.location.href = 'login.html';
         }
 
@@ -364,7 +360,6 @@
             
             if (error) {
                 console.error('Error loading design settings:', error);
-                // Fallback to localStorage
                 loadFromLocalStorage();
                 return;
             }
@@ -373,7 +368,6 @@
                 const settings = data[0].settings;
                 applySettingsToForm(settings);
             } else {
-                // No settings in Supabase, try localStorage
                 loadFromLocalStorage();
             }
             
@@ -513,22 +507,18 @@
         document.getElementById('cardBgColor')?.addEventListener('input', () => updatePreview());
         document.getElementById('primaryColor')?.addEventListener('input', () => updatePreview());
 
-        // ========== CREATE DESIGN_SETTINGS TABLE IF NOT EXISTS ==========
-        // Run this SQL in Supabase if the table doesn't exist:
-        /*
-        CREATE TABLE IF NOT EXISTS design_settings (
-            id INTEGER PRIMARY KEY DEFAULT 1,
-            settings JSONB,
-            updated_at TIMESTAMP DEFAULT NOW()
-        );
-        */
-
         // ========== INITIALIZE ==========
-        async function initialize() {
-            const isAuthenticated = await checkAuth();
+        function initialize() {
+            const isAuthenticated = checkAuth();
             if (!isAuthenticated) return;
             
-            await loadSettings();
+            // Add logout button handler
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.onclick = logout;
+            }
+            
+            loadSettings();
         }
         
         initialize();
