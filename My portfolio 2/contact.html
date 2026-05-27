@@ -548,9 +548,9 @@
         @media (max-width: 900px) { .contact-cards-grid { grid-template-columns: repeat(2, 1fr); } .form-container { grid-template-columns: 1fr; } }
         @media (max-width: 768px) {
             .container { padding-left: 20px; padding-right: 20px; }
-            .hero-content { max-width: 100%; text-align: center; }
+            .hero-content { max-width: 100%; text-align: left; }  /* left-aligned for consistency with other pages */
             .hero-title { font-size: 36px; }
-            .hero-description { font-size: 16px; margin-left: auto; margin-right: auto; }
+            .hero-description { font-size: 16px; margin-left: 0; margin-right: auto; }
             .contact-cards-grid { grid-template-columns: 1fr; }
             .welcome-title { font-size: 28px; }
             .faq-header h2 { font-size: 28px; }
@@ -603,25 +603,20 @@
         </div>
     </section>
 
-    <!-- Contact Cards Section - Clickable -->
+    <!-- Contact Cards Section -->
     <section class="contact-cards-section">
         <div class="container">
             <div class="contact-cards-grid">
-                <!-- WhatsApp Card -->
                 <a href="#" id="whatsappCardLink" class="contact-card whatsapp" target="_blank">
                     <div class="contact-card-icon">💚</div>
                     <h3 class="contact-card-title">WhatsApp</h3>
-                    <div class="contact-card-value" id="whatsappDisplay">Let's have a quick chat - 254796623670</div>
+                    <div class="contact-card-value" id="whatsappDisplay">Let's have a quick chat</div>
                 </a>
-                
-                <!-- Email Card -->
                 <a href="#" id="emailCardLink" class="contact-card email">
                     <div class="contact-card-icon">✉️</div>
                     <h3 class="contact-card-title">Email</h3>
-                    <div class="contact-card-value" id="emailDisplay">isaacrichuh@gmail.com</div>
+                    <div class="contact-card-value" id="emailDisplay">Loading...</div>
                 </a>
-                
-                <!-- Facebook Card -->
                 <a href="#" id="facebookCardLink" class="contact-card facebook" target="_blank">
                     <div class="contact-card-icon">💙</div>
                     <h3 class="contact-card-title">Facebook</h3>
@@ -821,93 +816,120 @@
     async function initSupabase() {
         supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         console.log('Supabase initialized');
-        await loadContactInfoFromSupabase();
-        await loadFAQsFromSupabase();
-        await updateLogoFromSupabase();
+        await loadAllData();
         applyDesignSettings();
         loadChatOptions();
     }
     
-    async function updateLogoFromSupabase() {
-        const { data: personalData } = await supabaseClient
-            .from('personal_info')
-            .select('name')
-            .limit(1);
-        
-        if(personalData && personalData[0] && personalData[0].name) {
-            const firstName = personalData[0].name.split(' ')[0];
-            const logoElement = document.getElementById('logoText');
-            if(logoElement) logoElement.innerHTML = `✍️ ${firstName}`;
-        } else {
-            const logoElement = document.getElementById('logoText');
-            if(logoElement) logoElement.innerHTML = `✍️ Qreative`;
-        }
-    }
-    
-    async function loadContactInfoFromSupabase() {
-        // Load personal info for email and footer
+    // ========== ROBUST DATA LOADING (Supabase → localStorage → brand default) ==========
+    async function loadAllData() {
+        // Load personal info
         const { data: personalData } = await supabaseClient
             .from('personal_info')
             .select('*')
             .limit(1);
         
-        if(personalData && personalData[0]) {
-            const personalInfo = personalData[0];
-            
-            // Update email card
-            const email = personalInfo.email || 'isaacrichuh@gmail.com';
-            const emailDisplay = document.getElementById('emailDisplay');
-            const emailCardLink = document.getElementById('emailCardLink');
-            if(emailDisplay) emailDisplay.innerHTML = email;
-            if(emailCardLink) emailCardLink.href = `mailto:${email}`;
-            
-            // Update footer
-            const footerElement = document.getElementById('footerText');
-            if(footerElement) footerElement.innerHTML = `© 2026 ${personalInfo.name || 'Qreative Content'} | ${personalInfo.title || 'SaaS Copywriter'}`;
-        }
-        
-        // Load chat settings for WhatsApp and Facebook
+        // Load chat settings
         const { data: chatData } = await supabaseClient
             .from('chat_settings')
             .select('*')
             .order('id', { ascending: true })
             .limit(1);
         
-        if(chatData && chatData[0]) {
-            const chatSettings = chatData[0];
-            
-            // Update WhatsApp card
-            let phoneNumber = chatSettings.whatsapp_number || '254796623670';
-            let cleanNumber = phoneNumber.replace(/\D/g, '');
-            if (cleanNumber.startsWith('0')) cleanNumber = '254' + cleanNumber.substring(1);
-            if (!cleanNumber.startsWith('254') && !cleanNumber.startsWith('+')) cleanNumber = '254' + cleanNumber;
-            
-            const defaultMessage = chatSettings.message_template || 'Hi, I saw your portfolio website and would like to discuss a potential project.';
-            const whatsappLink = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(defaultMessage)}`;
-            
-            const whatsappDisplay = document.getElementById('whatsappDisplay');
-            const whatsappCardLink = document.getElementById('whatsappCardLink');
-            if(whatsappDisplay) whatsappDisplay.innerHTML = `Chat on WhatsApp`;
-            if(whatsappCardLink) whatsappCardLink.href = whatsappLink;
-            
-            // Update Facebook card
-            const facebookPage = chatSettings.facebook_page || 'https://facebook.com/yourpage';
-            const facebookDisplay = document.getElementById('facebookDisplay');
-            const facebookCardLink = document.getElementById('facebookCardLink');
-            if(facebookDisplay) facebookDisplay.innerHTML = `Message on Facebook`;
-            if(facebookCardLink) facebookCardLink.href = facebookPage;
-        }
-    }
-    
-    async function loadFAQsFromSupabase() {
+        // Load FAQs
         const { data: faqsData } = await supabaseClient
             .from('faqs')
             .select('*')
             .order('display_order', { ascending: true });
         
+        // Fallback: localStorage
+        const localPersonal = JSON.parse(localStorage.getItem('personalInfo') || '{}');
+        const localChat = JSON.parse(localStorage.getItem('chatSettings') || '{}');
+        
+        // Determine personal info with fallback chain
+        let personalInfo;
+        if (personalData && personalData[0] && personalData[0].name && personalData[0].name.trim() !== '') {
+            personalInfo = personalData[0];
+        } else if (localPersonal.name && localPersonal.name.trim() !== '') {
+            personalInfo = localPersonal;
+        } else {
+            personalInfo = {
+                name: 'Qreative Content',
+                title: 'SaaS Copywriter',
+                email: 'hello@qreative.com'
+            };
+        }
+        
+        // Determine chat settings with fallback
+        let chatSettings;
+        if (chatData && chatData[0]) {
+            chatSettings = chatData[0];
+        } else if (Object.keys(localChat).length > 0) {
+            chatSettings = localChat;
+        } else {
+            chatSettings = {
+                whatsapp_number: '254700000000',
+                email: personalInfo.email || 'hello@qreative.com',
+                facebook_page: 'https://facebook.com/yourpage',
+                message_template: 'Hi, I saw your portfolio website and would like to discuss a potential project.'
+            };
+        }
+        
+        // Apply to page
+        updateLogo(personalInfo);
+        updateFooter(personalInfo);
+        updateContactCards(personalInfo, chatSettings);
+        loadFAQs(faqsData);
+    }
+    
+    function updateLogo(personalInfo) {
+        const firstName = (personalInfo.name || 'Qreative').split(' ')[0];
+        const logoElement = document.getElementById('logoText');
+        if(logoElement) logoElement.innerHTML = `✍️ ${firstName}`;
+    }
+    
+    function updateFooter(personalInfo) {
+        const footerElement = document.getElementById('footerText');
+        if(footerElement) {
+            footerElement.innerHTML = `© 2026 ${personalInfo.name || 'Qreative Content'} | ${personalInfo.title || 'SaaS Copywriter'}`;
+        }
+    }
+    
+    function updateContactCards(personalInfo, chatSettings) {
+        // Email card
+        const email = chatSettings.email || personalInfo.email || 'hello@qreative.com';
+        const emailDisplay = document.getElementById('emailDisplay');
+        const emailCardLink = document.getElementById('emailCardLink');
+        if(emailDisplay) emailDisplay.textContent = email;
+        if(emailCardLink) emailCardLink.href = `mailto:${email}`;
+        
+        // WhatsApp card
+        let phoneNumber = chatSettings.whatsapp_number || '254700000000';
+        let cleanNumber = phoneNumber.replace(/\D/g, '');
+        if (cleanNumber.startsWith('0')) cleanNumber = '254' + cleanNumber.substring(1);
+        if (!cleanNumber.startsWith('254') && !cleanNumber.startsWith('+')) cleanNumber = '254' + cleanNumber;
+        
+        const defaultMessage = chatSettings.message_template || 'Hi, I saw your portfolio website and would like to discuss a potential project.';
+        const whatsappLink = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(defaultMessage)}`;
+        
+        const whatsappDisplay = document.getElementById('whatsappDisplay');
+        const whatsappCardLink = document.getElementById('whatsappCardLink');
+        if(whatsappDisplay) whatsappDisplay.textContent = 'Chat on WhatsApp';
+        if(whatsappCardLink) whatsappCardLink.href = whatsappLink;
+        
+        // Facebook card
+        const facebookPage = chatSettings.facebook_page || 'https://facebook.com/yourpage';
+        const facebookDisplay = document.getElementById('facebookDisplay');
+        const facebookCardLink = document.getElementById('facebookCardLink');
+        if(facebookDisplay) facebookDisplay.textContent = 'Message on Facebook';
+        if(facebookCardLink) facebookCardLink.href = facebookPage;
+    }
+    
+    function loadFAQs(faqsData) {
         if(faqsData && faqsData.length > 0) {
             faqItems = faqsData;
         } else {
+            // Default FAQs
             faqItems = [
                 { question: "How quickly can you start working on my project?", answer: "I typically respond within 24 hours. Once we agree on the scope, I can start immediately or schedule according to your timeline." },
                 { question: "What is your typical turnaround time?", answer: "Turnaround time depends on project scope. A landing page usually takes 3-5 days, email sequences 5-7 days, and full website copy 7-14 days." },
@@ -1025,6 +1047,7 @@
                         formSuccess.style.display = "none";
                     }, 5000);
                 } else {
+                    // Fallback to localStorage
                     const leads = JSON.parse(localStorage.getItem('contactLeads') || '[]');
                     leads.push(leadData);
                     localStorage.setItem('contactLeads', JSON.stringify(leads));
@@ -1091,7 +1114,7 @@
         const whatsappOption = document.getElementById('whatsappOption');
         if (whatsappOption) whatsappOption.href = whatsappLink;
         
-        const email = chatSettings.email || personalInfo.email || 'your.email@example.com';
+        const email = chatSettings.email || personalInfo.email || 'hello@qreative.com';
         const emailSubject = encodeURIComponent(chatSettings.emailSubject || 'Inquiry from Portfolio Website');
         const emailBody = encodeURIComponent(chatSettings.emailBody || defaultMessage);
         const emailLink = `mailto:${email}?subject=${emailSubject}&body=${emailBody}`;
