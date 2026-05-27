@@ -832,7 +832,7 @@
         const chatSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
         const personalInfo = JSON.parse(localStorage.getItem('personalInfo') || '{}');
         
-        let phoneNumber = chatSettings.whatsappNumber || chatSettings.phoneNumber || '254700000000';
+        let phoneNumber = chatSettings.whatsappNumber || chatSettings.phoneNumber || '254796623670';
         const name = chatSettings.name || personalInfo.name || 'Copywriter';
         const defaultMessage = chatSettings.messageTemplate || `Hi ${name}, I saw your portfolio website and would like to discuss a potential project.`;
         
@@ -844,7 +844,7 @@
         const whatsappOption = document.getElementById('whatsappOption');
         if (whatsappOption) whatsappOption.href = whatsappLink;
         
-        const email = chatSettings.email || personalInfo.email || 'your.email@example.com';
+        const email = chatSettings.email || personalInfo.email || 'isaacrichuh@gmail.com';
         const emailSubject = encodeURIComponent(chatSettings.emailSubject || 'Inquiry from Portfolio Website');
         const emailBody = encodeURIComponent(chatSettings.emailBody || defaultMessage);
         const emailLink = `mailto:${email}?subject=${emailSubject}&body=${emailBody}`;
@@ -1021,7 +1021,7 @@
     
     function addChatbotWhatsAppButton() {
         const chatSettings = JSON.parse(localStorage.getItem('chatSettings') || '{}');
-        let phoneNumber = chatSettings.whatsappNumber || chatSettings.phoneNumber || '254700000000';
+        let phoneNumber = chatSettings.whatsappNumber || chatSettings.phoneNumber || '254796623670';
         let cleanNumber = phoneNumber.replace(/\D/g, '');
         if (cleanNumber.startsWith('0')) cleanNumber = '254' + cleanNumber.substring(1);
         const whatsappLink = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(`Hi! I was chatting with Sarah on your website and would love to discuss my project.`)}`;
