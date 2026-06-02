@@ -4,19 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Work | Qreative Content - SaaS Copywriter Portfolio</title>
-    <meta name="description" content="Explore real SaaS copywriting projects – landing pages, case studies, email campaigns, blog content, and free PDF guides. See measurable results.">
+    <meta name="description" content="Explore real SaaS copywriting projects – landing pages, case studies, email campaigns, blog content, and free PDF guides. See measurable results from actual client work.">
+    <meta name="keywords" content="SaaS copywriter, landing page copywriter, email marketing, case studies, B2B content, conversion optimization">
+    <meta property="og:title" content="Our Work | Qreative Content">
+    <meta property="og:description" content="Real SaaS copywriting projects with measurable results. Landing pages, case studies, email campaigns, and more.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
         "name": "Our Work | Qreative Content",
-        "description": "Portfolio of SaaS copywriting projects with measurable results.",
-        "hasPart": []
+        "description": "Portfolio of SaaS copywriting projects with measurable results including landing pages, case studies, email campaigns, and blog content.",
+        "provider": {
+            "@type": "Organization",
+            "name": "Qreative Content",
+            "description": "SaaS Copywriter & Content Strategist"
+        }
     }
     </script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s ease, color 0.3s ease; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
 
         :root {
             --bg-primary: #f8fafc;
@@ -28,16 +42,20 @@
             --accent: #818cf8;
             --accent-hover: #6366f1;
             --accent-gold: #fbbf24;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
             --border: #e2e8f0;
             --shadow: 0 10px 40px rgba(0,0,0,0.08);
             --shadow-lg: 0 20px 50px rgba(0,0,0,0.12);
+            --shadow-glow: 0 0 30px rgba(129, 140, 248, 0.15);
             --btn-primary-bg: #fbbf24;
             --btn-primary-color: #0f172a;
             --btn-primary-hover: #f59e0b;
             --btn-secondary-bg: #818cf8;
             --btn-secondary-color: #ffffff;
             --btn-secondary-hover: #6366f1;
-            --metric-bg: #eef2ff;
+            --glass-bg: rgba(255,255,255,0.1);
+            --glass-border: rgba(255,255,255,0.2);
         }
 
         body.dark {
@@ -50,431 +68,1325 @@
             --accent: #a5b4fc;
             --accent-hover: #c7d2fe;
             --accent-gold: #fcd34d;
+            --accent-green: #34d399;
+            --accent-red: #f87171;
             --border: #334155;
             --shadow: 0 10px 40px rgba(0,0,0,0.3);
             --shadow-lg: 0 20px 50px rgba(0,0,0,0.4);
+            --shadow-glow: 0 0 30px rgba(165, 180, 252, 0.15);
             --btn-primary-bg: #fcd34d;
             --btn-primary-color: #0f172a;
             --btn-primary-hover: #fbbf24;
             --btn-secondary-bg: #a5b4fc;
             --btn-secondary-color: #0f172a;
             --btn-secondary-hover: #c7d2fe;
-            --metric-bg: #1e293b;
+            --glass-bg: rgba(255,255,255,0.05);
+            --glass-border: rgba(255,255,255,0.1);
         }
 
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
         .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 40px; }
 
-        header { position: sticky; top: 0; background: var(--bg-secondary); backdrop-filter: blur(10px); box-shadow: 0 1px 3px rgba(0,0,0,0.1); z-index: 100; }
-        .nav-container { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; flex-wrap: wrap; gap: 15px; }
-        .logo { font-size: 28px; font-weight: 700; background: linear-gradient(135deg, var(--accent), #c084fc); -webkit-background-clip: text; background-clip: text; color: transparent; text-decoration: none; }
+        /* ========== HEADER ========== */
+        header {
+            position: sticky;
+            top: 0;
+            background: var(--bg-secondary);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+        }
         .nav-links { display: flex; gap: 30px; flex-wrap: wrap; align-items: center; }
-        .nav-links a { text-decoration: none; color: var(--text-secondary); font-weight: 500; transition: color 0.3s; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
         .nav-links a:hover, .nav-links a.active { color: var(--accent); }
-        .theme-toggle { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 50px; padding: 8px 16px; cursor: pointer; font-size: 14px; font-weight: 500; color: var(--text-primary); }
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 1px;
+        }
+        .theme-toggle {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: all 0.3s;
+        }
         .theme-toggle:hover { transform: scale(1.05); background: var(--accent); color: white; }
 
-        .hero-section { min-height: 55vh; display: flex; align-items: center; position: relative; background-size: cover; background-position: center; }
-        .hero-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(0,0,0,0.65), rgba(0,0,0,0.2)); }
-        .hero-content { position: relative; z-index: 2; max-width: 55%; text-align: left; }
-        .hero-title { font-size: 52px; font-weight: 800; margin-bottom: 20px; color: white; line-height: 1.2; }
-        .hero-title-highlight { color: var(--accent-gold); border-bottom: 3px solid var(--accent-gold); display: inline-block; }
-        .hero-description { font-size: 18px; color: rgba(255,255,255,0.95); margin-bottom: 30px; max-width: 550px; }
+        /* ========== HERO SECTION ========== */
+        .hero-section {
+            min-height: 55vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 60%);
+            z-index: 1;
+        }
+        .hero-content { position: relative; z-index: 2; max-width: 55%; }
+        .hero-title {
+            font-size: 52px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: white;
+            line-height: 1.2;
+        }
+        .hero-title-highlight {
+            color: var(--accent-gold);
+            border-bottom: 3px solid var(--accent-gold);
+            display: inline-block;
+        }
+        .hero-description {
+            font-size: 18px;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 25px;
+            max-width: 500px;
+        }
 
-        .filter-toolbar { padding: 30px 0; background: var(--bg-alt); border-bottom: 1px solid var(--border); }
-        .tabs { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-        .tab-btn { padding: 10px 24px; border-radius: 40px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); font-weight: 500; cursor: pointer; transition: all 0.3s; font-size: 14px; }
-        .tab-btn.active, .tab-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+        /* ========== VALUE PROPOSITION BUTTONS ========== */
+        .value-section {
+            padding: 30px 0;
+            background: var(--bg-alt);
+            border-bottom: 1px solid var(--border);
+        }
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+        .value-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .value-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-gold));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        .value-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent);
+        }
+        .value-card:hover::before { transform: scaleX(1); }
+        .value-icon { font-size: 42px; margin-bottom: 15px; }
+        .value-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+        .value-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+        .value-card:nth-child(1) .value-icon { color: var(--accent); }
+        .value-card:nth-child(2) .value-icon { color: var(--accent-gold); }
+        .value-card:nth-child(3) .value-icon { color: var(--accent-green); }
 
-        .projects-section { padding: 40px 0 60px; background: var(--bg-primary); }
-        .grid { display: grid; gap: 30px; }
+        /* ========== PROCESS STRIP ========== */
+        .process-section {
+            padding: 50px 0;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+        }
+        .process-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .process-header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .process-header p {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            position: relative;
+        }
+        .process-steps::before {
+            content: '';
+            position: absolute;
+            top: 35px;
+            left: 15%;
+            right: 15%;
+            height: 2px;
+            background: var(--border);
+            z-index: 0;
+        }
+        .process-step {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .step-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 3px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 28px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .process-step:hover .step-circle {
+            border-color: var(--accent);
+            transform: scale(1.1);
+            box-shadow: var(--shadow-glow);
+        }
+        .step-number {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--accent);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .step-title { font-weight: 700; font-size: 16px; margin-bottom: 5px; }
+        .step-desc { font-size: 13px; color: var(--text-secondary); }
 
-        /* Default grid for all */
-        .grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+        /* ========== FEATURED PROJECT SPOTLIGHT ========== */
+        .featured-section {
+            padding: 50px 0 20px;
+            background: var(--bg-primary);
+        }
+        .featured-card {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-alt));
+            border-radius: 24px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+        }
+        .featured-image {
+            min-height: 350px;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .featured-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        .featured-card:hover .featured-image img { transform: scale(1.05); }
+        .featured-content {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .featured-badge {
+            display: inline-block;
+            background: var(--accent-gold);
+            color: #0f172a;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            width: fit-content;
+        }
+        .featured-title { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+        .featured-desc { color: var(--text-secondary); font-size: 15px; line-height: 1.6; margin-bottom: 20px; }
+        .featured-meta { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+        .featured-meta-item { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+        .btn-featured {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-featured:hover { background: var(--accent-hover); transform: translateY(-2px); }
 
-        /* Category-specific card styles */
-        .card { background: var(--bg-card); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; transition: transform 0.3s; border: 1px solid var(--border); }
-        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+        /* ========== FILTER TOOLBAR ========== */
+        .filter-toolbar {
+            padding: 25px 0;
+            background: var(--bg-alt);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 80px;
+            z-index: 50;
+            backdrop-filter: blur(10px);
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .tab-btn {
+            padding: 10px 22px;
+            border-radius: 40px;
+            border: 2px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 13px;
+            position: relative;
+            overflow: hidden;
+        }
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent);
+            transition: left 0.3s;
+            z-index: 0;
+        }
+        .tab-btn:hover::before, .tab-btn.active::before { left: 0; }
+        .tab-btn:hover, .tab-btn.active {
+            color: white;
+            border-color: var(--accent);
+        }
+        .tab-btn span { position: relative; z-index: 1; }
 
-        /* LANDING PAGE CARD */
-        .card-landing .card-image { height: 220px; background: #0f172a; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .card-landing .card-image img { width: 100%; height: 100%; object-fit: cover; }
-        .card-landing .card-body { padding: 20px; }
-        .card-landing .metrics { display: flex; gap: 15px; margin-top: 10px; }
-        .metric { background: var(--metric-bg); padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; color: var(--accent); }
+        /* ========== PROJECTS GRID ========== */
+        .projects-section { padding: 50px 0 70px; background: var(--bg-primary); }
+        .section-divider {
+            grid-column: 1 / -1;
+            padding: 30px 0;
+        }
+        .testimonial-pull {
+            background: linear-gradient(135deg, var(--accent), #c084fc);
+            border-radius: 20px;
+            padding: 30px;
+            color: white;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        .testimonial-pull-quote {
+            font-size: 18px;
+            font-style: italic;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        .testimonial-pull-author {
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .testimonial-pull-stars { color: var(--accent-gold); font-size: 18px; margin-top: 8px; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 30px;
+        }
+        .card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border);
+            opacity: 0;
+            transform: translateY(40px);
+            position: relative;
+        }
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .card:hover {
+            transform: translateY(-8px) !important;
+            box-shadow: var(--shadow-glow);
+            border-color: var(--accent);
+        }
+        .card-image { height: 220px; background: #0f172a; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .card:hover .card-image img { transform: scale(1.08); }
+        .card-body { padding: 22px; }
+        .card-category {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+        .cat-landing { background: rgba(129,140,248,0.15); color: var(--accent); }
+        .cat-case { background: rgba(16,185,129,0.15); color: var(--accent-green); }
+        .cat-email { background: rgba(245,158,11,0.15); color: var(--accent-gold); }
+        .cat-blog { background: rgba(236,72,153,0.15); color: #ec4899; }
+        .card-title { font-size: 19px; font-weight: 700; margin-bottom: 10px; line-height: 1.3; }
+        .card-desc { color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin-bottom: 15px; }
 
-        /* CASE STUDY CARD */
-        .card-case .card-body { padding: 20px; }
-        .case-challenge, .case-solution, .case-results { margin-bottom: 12px; }
-        .case-label { font-weight: 700; font-size: 13px; color: var(--accent); }
-        .result-bar { height: 6px; background: var(--border); border-radius: 3px; margin: 5px 0; overflow: hidden; }
-        .result-fill { height: 100%; background: var(--accent); border-radius: 3px; }
+        /* Case Study specific */
+        .case-section { margin-bottom: 12px; }
+        .case-label { font-weight: 700; font-size: 12px; color: var(--accent); margin-bottom: 3px; }
+        .result-bar { height: 8px; background: var(--border); border-radius: 4px; margin-top: 8px; overflow: hidden; }
+        .result-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-green)); border-radius: 4px; transition: width 1.5s ease-out; }
 
-        /* EMAIL CAMPAIGN CARD */
-        .card-email { display: flex; flex-direction: column; }
+        /* Email card */
         .email-split { display: flex; }
-        .email-before, .email-after { flex: 1; padding: 15px; text-align: center; }
-        .email-before { background: rgba(239,68,68,0.05); border-right: 1px solid var(--border); }
-        .email-after { background: rgba(16,185,129,0.05); }
-        .email-label { font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
-        .email-metric { font-size: 22px; font-weight: 700; margin: 10px 0; }
-        .email-change { font-size: 12px; font-weight: 600; }
+        .email-half { flex: 1; padding: 15px; text-align: center; }
+        .email-before { background: rgba(239,68,68,0.04); }
+        .email-after { background: rgba(16,185,129,0.04); }
+        .email-label-sm { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 5px; }
+        .email-metric { font-size: 28px; font-weight: 800; }
+        .email-change { font-size: 11px; font-weight: 700; margin-top: 4px; }
 
-        /* BLOG CARD */
-        .card-blog .card-body { padding: 20px; }
-        .blog-meta { font-size: 12px; color: var(--text-secondary); margin-bottom: 10px; }
-        .blog-snippet { font-style: italic; color: var(--text-secondary); border-left: 3px solid var(--accent); padding-left: 12px; margin: 10px 0; }
-        .seo-stats { display: flex; gap: 15px; font-size: 12px; color: var(--accent); font-weight: 600; }
+        /* Blog card */
+        .blog-snippet {
+            border-left: 3px solid var(--accent);
+            padding-left: 15px;
+            font-style: italic;
+            color: var(--text-secondary);
+            margin: 12px 0;
+            font-size: 13px;
+        }
+        .seo-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+        .seo-tag { font-size: 11px; color: var(--accent); font-weight: 600; }
 
-        /* PDF GUIDE CARD */
-        .card-guide { background: linear-gradient(135deg, var(--accent), #c084fc); color: white; }
-        .card-guide .card-body { padding: 20px; }
-        .guide-cover { font-size: 48px; margin-bottom: 10px; }
-        .guide-features { list-style: none; margin: 15px 0; }
-        .guide-features li { margin-bottom: 6px; font-size: 13px; }
-        .btn-get-guide { background: white; color: var(--accent); border: none; padding: 10px 20px; border-radius: 30px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
-        .btn-get-guide:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        /* Guide card */
+        .card-guide {
+            background: linear-gradient(135deg, var(--accent) 0%, #c084fc 100%);
+            color: white;
+            border: none;
+        }
+        .card-guide .card-body { color: white; }
+        .guide-icon { font-size: 52px; margin-bottom: 10px; }
+        .guide-list { list-style: none; margin: 15px 0; }
+        .guide-list li { margin-bottom: 8px; font-size: 13px; }
+        .btn-guide {
+            background: white;
+            color: var(--accent);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+        }
+        .btn-guide:hover { transform: scale(1.03); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
 
-        /* Modal */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; z-index: 2000; }
-        .modal.active { display: flex; }
-        .modal-content { background: var(--bg-card); padding: 30px; border-radius: 16px; max-width: 420px; width: 90%; text-align: center; }
-        .modal-input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin: 15px 0; background: var(--bg-primary); color: var(--text-primary); }
-        .btn-submit { background: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; }
-        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: var(--text-secondary); }
-
-        .cta-section { padding: 60px 0; background: var(--bg-alt); text-align: center; }
-        .cta-buttons { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 20px; }
-        .btn-explore, .btn-specific { padding: 14px 36px; border-radius: 40px; text-decoration: none; font-weight: 600; }
-        .btn-explore { background: var(--btn-primary-bg); color: var(--btn-primary-color); }
+        /* ========== CTA SECTION ========== */
+        .cta-section {
+            padding: 70px 0;
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-alt));
+            text-align: center;
+        }
+        .cta-buttons { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 25px; }
+        .btn-explore, .btn-specific {
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .btn-explore {
+            background: var(--btn-primary-bg);
+            color: var(--btn-primary-color);
+            animation: btnPulse 2s infinite;
+        }
+        .btn-explore:hover { background: var(--btn-primary-hover); transform: translateY(-3px); }
         .btn-specific { background: var(--btn-secondary-bg); color: var(--btn-secondary-color); }
+        .btn-specific:hover { background: var(--btn-secondary-hover); transform: translateY(-3px); }
+        @keyframes btnPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(251,191,36,0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(251,191,36,0); }
+        }
 
-        footer { background: var(--bg-secondary); padding: 30px 0; text-align: center; border-top: 1px solid var(--border); }
+        /* ========== MODAL ========== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            background: none;
+            border: none;
+        }
+        .modal-close:hover { color: var(--accent-red); }
+        .modal-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            margin: 15px 0;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 15px;
+        }
+        .modal-input:focus { outline: none; border-color: var(--accent); }
+        .btn-submit {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            font-size: 15px;
+        }
+        .btn-submit:hover { background: var(--accent-hover); transform: translateY(-2px); }
 
-        /* Chatbot/float styles (same as before, condensed) */
+        /* ========== EXIT INTENT POPUP ========== */
+        .exit-popup {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+        .exit-popup.active { display: flex; }
+        .exit-content {
+            background: linear-gradient(135deg, var(--accent), #c084fc);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            color: white;
+            box-shadow: var(--shadow-lg);
+            animation: popIn 0.4s ease-out;
+            position: relative;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .exit-title { font-size: 24px; font-weight: 800; margin-bottom: 10px; }
+        .exit-subtitle { font-size: 14px; opacity: 0.9; margin-bottom: 20px; }
+        .exit-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+        .exit-input::placeholder { color: rgba(255,255,255,0.6); }
+        .exit-input:focus { outline: none; border-color: white; }
+        .btn-exit-submit {
+            background: white;
+            color: var(--accent);
+            border: none;
+            padding: 14px 30px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .btn-exit-submit:hover { transform: scale(1.03); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .exit-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .exit-close:hover { background: rgba(255,255,255,0.3); }
+
+        /* ========== FOOTER ========== */
+        footer {
+            background: var(--bg-secondary);
+            padding: 30px 0;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ========== CHATBOT & FLOAT ========== */
         .chat-agent { position: fixed; bottom: 110px; right: 30px; z-index: 1001; }
-        .chat-agent-toggle { width: 70px; height: 70px; background: linear-gradient(135deg, #818cf8, #6366f1); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); cursor: pointer; animation: agentPulse 2s infinite; border: 3px solid white; }
+        .chat-agent-toggle { width: 70px; height: 70px; background: linear-gradient(135deg, #818cf8, #6366f1); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); cursor: pointer; animation: agentPulse 2s infinite; position: relative; overflow: hidden; border: 3px solid white; transition: transform 0.3s; }
+        .chat-agent-toggle:hover { transform: scale(1.1); }
         .agent-avatar { width: 100%; height: 100%; object-fit: cover; }
         @keyframes agentPulse { 0% { box-shadow: 0 0 0 0 rgba(99,102,241,0.4); } 70% { box-shadow: 0 0 0 15px rgba(99,102,241,0); } 100% { box-shadow: 0 0 0 0 rgba(99,102,241,0); } }
         .agent-status { position: absolute; bottom: 5px; right: 5px; width: 16px; height: 16px; background: #10b981; border-radius: 50%; border: 2px solid white; }
-        .chat-agent-window { position: absolute; bottom: 85px; right: 0; width: 400px; height: 600px; background: var(--bg-card); border-radius: 24px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; overflow: hidden; opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s; border: 1px solid var(--border); }
-        .chat-agent-window.active { opacity: 1; visibility: visible; transform: translateY(0); }
+        .chat-agent-window { position: absolute; bottom: 85px; right: 0; width: 400px; height: 600px; background: var(--bg-card); border-radius: 24px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; overflow: hidden; opacity: 0; visibility: hidden; transform: translateY(20px) scale(0.95); transition: all 0.3s ease; border: 1px solid var(--border); }
+        .chat-agent-window.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
         .chat-header { background: linear-gradient(135deg, #818cf8, #6366f1); padding: 16px 20px; color: white; display: flex; align-items: center; gap: 12px; }
-        .chat-header-avatar { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; border: 2px solid white; }
+        .chat-header-avatar { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; border: 2px solid white; background: white; }
         .chat-header-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .chat-header-info h4 { font-size: 16px; margin-bottom: 2px; }
+        .chat-header-info h4 { font-size: 16px; margin-bottom: 2px; font-weight: 600; }
+        .chat-header-info p { font-size: 11px; opacity: 0.9; display: flex; align-items: center; gap: 5px; }
         .online-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; animation: onlinePulse 1.5s infinite; }
         @keyframes onlinePulse { 0%,100%{ opacity:1; } 50%{ opacity:0.5; } }
-        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; background: var(--bg-primary); }
+        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: var(--bg-primary); }
         .message { display: flex; gap: 10px; max-width: 85%; }
         .message.bot { align-self: flex-start; }
         .message.user { align-self: flex-end; flex-direction: row-reverse; }
-        .message-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #818cf8, #6366f1); display: flex; align-items: center; justify-content: center; }
-        .message-content { padding: 12px 16px; border-radius: 18px; font-size: 14px; background: var(--bg-card); color: var(--text-primary); }
-        .message.user .message-content { background: var(--accent); color: white; }
+        .message-avatar { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: linear-gradient(135deg, #818cf8, #6366f1); display: flex; align-items: center; justify-content: center; }
+        .message-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .message.user .message-avatar { background: var(--accent-gold); }
+        .message-content { background: var(--bg-card); padding: 12px 16px; border-radius: 18px; font-size: 14px; line-height: 1.5; color: var(--text-primary); box-shadow: var(--shadow); }
+        .message.bot .message-content { border-bottom-left-radius: 4px; }
+        .message.user .message-content { background: var(--accent); color: white; border-bottom-right-radius: 4px; }
+        .typing-indicator { display: flex; align-items: center; gap: 6px; padding: 12px 18px; background: var(--bg-card); border-radius: 20px; width: fit-content; }
+        .typing-dots { display: flex; gap: 4px; }
+        .typing-dots span { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: typingBounce 1.4s infinite ease-in-out; }
+        .typing-dots span:nth-child(1) { animation-delay: 0s; }
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingBounce { 0%,60%,100%{ transform:translateY(0); opacity:0.4; } 30%{ transform:translateY(-8px); opacity:1; } }
+        .typing-text { font-size: 12px; color: var(--text-secondary); margin-left: 8px; }
         .quick-replies { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-        .quick-reply-btn { background: var(--bg-alt); border: 1px solid var(--border); padding: 8px 16px; border-radius: 30px; font-size: 12px; cursor: pointer; }
+        .quick-reply-btn { background: var(--bg-alt); border: 1px solid var(--border); padding: 8px 16px; border-radius: 30px; font-size: 12px; cursor: pointer; transition: all 0.2s; color: var(--text-primary); }
         .quick-reply-btn:hover { background: var(--accent); color: white; }
         .chat-input-area { padding: 15px; border-top: 1px solid var(--border); display: flex; gap: 10px; background: var(--bg-card); }
-        .chat-input { flex: 1; padding: 12px 16px; border: 1px solid var(--border); border-radius: 30px; background: var(--bg-primary); color: var(--text-primary); }
-        .chat-send-btn { width: 44px; height: 44px; background: var(--accent); border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .chat-input { flex: 1; padding: 12px 16px; border: 1px solid var(--border); border-radius: 30px; font-family: inherit; font-size: 14px; background: var(--bg-primary); color: var(--text-primary); }
+        .chat-input:focus { outline: none; border-color: var(--accent); }
+        .chat-send-btn { width: 44px; height: 44px; background: var(--accent); border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .chat-send-btn:hover { background: var(--accent-hover); transform: scale(1.05); }
         .chat-send-icon { font-size: 18px; color: white; }
-        .whatsapp-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 30px; background: #25D366; color: white; text-decoration: none; margin-top: 10px; }
+        .whatsapp-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-size: 14px; font-weight: 500; margin-top: 10px; background: #25D366; color: white; }
+        .whatsapp-btn:hover { background: #128C7E; transform: scale(1.02); }
+
         .chat-float { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
-        .chat-main-btn { width: 65px; height: 65px; background: linear-gradient(135deg, #25D366, #128C7E); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); cursor: pointer; animation: chatPulse 1.5s infinite; }
+        .chat-main-btn { width: 65px; height: 65px; background: linear-gradient(135deg, #25D366, #128C7E); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: all 0.3s; cursor: pointer; animation: chatPulse 1.5s infinite; }
+        .chat-main-btn:hover { transform: scale(1.1); }
         .chat-main-icon { font-size: 36px; color: white; }
         @keyframes chatPulse { 0% { box-shadow: 0 0 0 0 rgba(37,211,102,0.7); } 70% { box-shadow: 0 0 0 15px rgba(37,211,102,0); } 100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); } }
-        .chat-options { position: absolute; bottom: 80px; right: 0; background: var(--bg-card); border-radius: 16px; box-shadow: var(--shadow); width: 260px; overflow: hidden; opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s; border: 1px solid var(--border); }
+        .chat-options { position: absolute; bottom: 80px; right: 0; background: var(--bg-card); border-radius: 16px; box-shadow: var(--shadow); width: 260px; overflow: hidden; opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s ease; border: 1px solid var(--border); }
         .chat-options.active { opacity: 1; visibility: visible; transform: translateY(0); }
-        .chat-option { display: flex; align-items: center; gap: 15px; padding: 15px 20px; cursor: pointer; text-decoration: none; color: var(--text-primary); }
+        .chat-option { display: flex; align-items: center; gap: 15px; padding: 15px 20px; cursor: pointer; transition: background 0.3s; text-decoration: none; color: var(--text-primary); }
         .chat-option:hover { background: var(--bg-primary); }
+        .chat-option-icon { font-size: 24px; width: 36px; text-align: center; }
+        .chat-option-text { flex: 1; }
+        .chat-option-title { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+        .chat-option-desc { font-size: 11px; color: var(--text-secondary); }
         .chat-close { text-align: center; padding: 10px; border-top: 1px solid var(--border); cursor: pointer; font-size: 12px; color: var(--text-secondary); }
+        .chat-close:hover { background: var(--bg-primary); }
 
-        @media (max-width: 768px) {
-            .container { padding: 0 20px; }
-            .hero-content { max-width: 100%; text-align: left; }
-            .hero-title { font-size: 36px; }
+        /* Toast */
+        .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--accent-green); color: white; padding: 12px 24px; border-radius: 12px; font-weight: 600; z-index: 4000; opacity: 0; transition: all 0.3s; pointer-events: none; font-size: 14px; }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        @media (max-width: 900px) {
+            .value-grid { grid-template-columns: 1fr; }
+            .process-steps { grid-template-columns: repeat(2, 1fr); }
+            .process-steps::before { display: none; }
+            .featured-card { grid-template-columns: 1fr; }
+            .featured-image { min-height: 250px; }
             .grid { grid-template-columns: 1fr; }
             .email-split { flex-direction: column; }
+        }
+        @media (max-width: 768px) {
+            .container { padding: 0 20px; }
+            .hero-content { max-width: 100%; }
+            .hero-title { font-size: 36px; }
+            .hero-description { font-size: 16px; }
+            .value-grid { grid-template-columns: 1fr; }
+            .process-steps { grid-template-columns: 1fr 1fr; gap: 25px; }
+            .process-steps::before { display: none; }
+            .filter-toolbar { top: 60px; }
+            .tabs { gap: 6px; }
+            .tab-btn { padding: 8px 14px; font-size: 11px; }
             .chat-main-btn, .chat-agent-toggle { width: 55px; height: 55px; }
             .chat-agent-window { width: calc(100vw - 40px); right: -10px; height: 500px; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .featured-content { padding: 25px; }
+            .featured-title { font-size: 22px; }
         }
     </style>
 </head>
 <body>
-    <header>
+
+<header>
+    <div class="container">
+        <div class="nav-container">
+            <a href="index.html" class="logo" id="logoText">✍️ Qreative Content</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="work.html" class="active">Work</a>
+                <a href="skills.html">Skills</a>
+                <a href="contact.html">Contact</a>
+                <button class="theme-toggle" id="themeToggle">Dark mode</button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    <!-- Hero Section -->
+    <section class="hero-section" style="background-image: url('images/Product.png');">
+        <div class="hero-overlay"></div>
         <div class="container">
-            <div class="nav-container">
-                <a href="index.html" class="logo" id="logoText">✍️ Qreative Content</a>
-                <div class="nav-links">
-                    <a href="index.html">Home</a>
-                    <a href="work.html" class="active">Work</a>
-                    <a href="skills.html">Skills</a>
-                    <a href="contact.html">Contact</a>
-                    <button class="theme-toggle" id="themeToggle">Dark mode</button>
+            <div class="hero-content">
+                <h1 class="hero-title">Projects <span class="hero-title-highlight">Designed</span> for Impact</h1>
+                <p class="hero-description">Every project tells a story of transformation. See how we turn digital presence into measurable revenue through strategic copywriting and content design.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Proposition Buttons -->
+    <section class="value-section">
+        <div class="container">
+            <div class="value-grid">
+                <div class="value-card" onclick="document.querySelector('[data-filter=landing]').click(); window.scrollTo({top: document.getElementById('filterToolbar').offsetTop - 100, behavior: 'smooth'});">
+                    <div class="value-icon">📈</div>
+                    <div class="value-title">Scale Your Revenue</div>
+                    <div class="value-desc">Conversion-optimized landing pages and email sequences that turn visitors into paying customers</div>
+                </div>
+                <div class="value-card" onclick="document.querySelector('[data-filter=case-study]').click(); window.scrollTo({top: document.getElementById('filterToolbar').offsetTop - 100, behavior: 'smooth'});">
+                    <div class="value-icon">✍️</div>
+                    <div class="value-title">Expert Copywriting</div>
+                    <div class="value-desc">SaaS-specialized writing talent with proven experience across fintech, logistics, and healthcare tech</div>
+                </div>
+                <div class="value-card" onclick="document.querySelector('[data-filter=all]').click(); window.scrollTo({top: document.getElementById('filterToolbar').offsetTop - 100, behavior: 'smooth'});">
+                    <div class="value-icon">🎯</div>
+                    <div class="value-title">Proven Results</div>
+                    <div class="value-desc">Measurable growth you can count on — average 30%+ conversion improvement across all projects</div>
                 </div>
             </div>
         </div>
-    </header>
+    </section>
 
-    <main>
-        <section class="hero-section" style="background-image: url('images/Product.png');">
-            <div class="hero-overlay"></div>
-            <div class="container">
-                <div class="hero-content">
-                    <h1 class="hero-title">Projects <span class="hero-title-highlight">Designed</span> for Impact</h1>
-                    <p class="hero-description">Every project tells a story of transformation. See how we turn digital presence into revenue.</p>
-                </div>
+    <!-- Process Strip -->
+    <section class="process-section">
+        <div class="container">
+            <div class="process-header">
+                <h2>How We Deliver Results</h2>
+                <p>A proven process refined across 50+ successful projects</p>
             </div>
-        </section>
-
-        <div class="filter-toolbar">
-            <div class="container">
-                <div class="tabs" id="filterTabs">
-                    <button class="tab-btn active" data-filter="all">All Work</button>
-                    <button class="tab-btn" data-filter="landing">Landing Pages</button>
-                    <button class="tab-btn" data-filter="case-study">Case Studies</button>
-                    <button class="tab-btn" data-filter="email">Email Campaigns</button>
-                    <button class="tab-btn" data-filter="blog">Blog Content</button>
-                    <button class="tab-btn" data-filter="guide">Free Guides</button>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-circle">
+                        🔍
+                        <span class="step-number">1</span>
+                    </div>
+                    <div class="step-title">Discovery</div>
+                    <div class="step-desc">Deep dive into your business goals, audience, and competitive landscape</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-circle">
+                        📝
+                        <span class="step-number">2</span>
+                    </div>
+                    <div class="step-title">Strategy</div>
+                    <div class="step-desc">Build a custom content roadmap aligned with your revenue targets</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-circle">
+                        ✍️
+                        <span class="step-number">3</span>
+                    </div>
+                    <div class="step-title">Creation</div>
+                    <div class="step-desc">Write compelling copy that speaks your customers' language and drives action</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-circle">
+                        📈
+                        <span class="step-number">4</span>
+                    </div>
+                    <div class="step-title">Optimization</div>
+                    <div class="step-desc">Measure performance and refine for continuous improvement and growth</div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <section class="projects-section">
-            <div class="container">
-                <div class="grid" id="projectsGrid"></div>
-            </div>
-        </section>
-
-        <section class="cta-section">
-            <div class="container">
-                <h2 style="margin-bottom: 15px;">Ready to create your own success story?</h2>
-                <div class="cta-buttons">
-                    <a href="skills.html" class="btn-explore">Explore Expertise</a>
-                    <a href="contact.html" class="btn-specific">Need Something Specific?</a>
+    <!-- Featured Project Spotlight -->
+    <section class="featured-section" id="featuredSection">
+        <div class="container">
+            <div class="featured-card" id="featuredCard">
+                <div class="featured-image" id="featuredImage">
+                    <span style="font-size:64px;">⭐</span>
+                </div>
+                <div class="featured-content" id="featuredContent">
+                    <span class="featured-badge">⭐ Featured Project</span>
+                    <h2 class="featured-title">Loading featured project...</h2>
+                    <p class="featured-desc">Selecting a standout project to showcase.</p>
+                    <div class="featured-meta">
+                        <span class="featured-meta-item">📂 Loading...</span>
+                    </div>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
-    <footer>
-        <div class="container"><p id="footerText">© 2026 Qreative Content | SaaS Copywriter</p></div>
-    </footer>
-
-    <!-- Guide Email Modal -->
-    <div class="modal" id="guideModal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeGuideModal()">&times;</span>
-            <h3>📚 Get Your Free Guide</h3>
-            <p id="guideTitle" style="margin-bottom:15px;"></p>
-            <input type="email" class="modal-input" id="guideEmail" placeholder="Your email address" required>
-            <button class="btn-submit" onclick="submitGuideRequest()">Send Me the Guide</button>
-            <p style="font-size:11px; margin-top:10px; color:var(--text-secondary);">We'll email you the PDF instantly. No spam.</p>
+    <!-- Filter Toolbar -->
+    <div class="filter-toolbar" id="filterToolbar">
+        <div class="container">
+            <div class="tabs">
+                <button class="tab-btn active" data-filter="all"><span>📋 All Work</span></button>
+                <button class="tab-btn" data-filter="landing"><span>📄 Landing Pages</span></button>
+                <button class="tab-btn" data-filter="case-study"><span>📊 Case Studies</span></button>
+                <button class="tab-btn" data-filter="email"><span>✉️ Email Campaigns</span></button>
+                <button class="tab-btn" data-filter="blog"><span>📝 Blog Content</span></button>
+                <button class="tab-btn" data-filter="guide"><span>📚 Free Guides</span></button>
+            </div>
         </div>
     </div>
 
-    <div class="chat-float"> <!-- same as other pages --> </div>
-    <div class="chat-agent"> <!-- same as other pages --> </div>
-
-    <script>
-        const SUPABASE_URL = 'https://ooarghgxjbxqgnmjwpdj.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXJnaGd4amJ4cWdubWp3cGRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NzM1MzQsImV4cCI6MjA5NDU0OTUzNH0.7zkOuh4F8lkSIaDnMEm9-R8v3sepjxnz0P4BKOI-HaM';
-        let supabaseClient;
-        let allProjects = [];
-        let currentFilter = 'all';
-
-        // Analytics (same as before)
-        function trackPageView() { /* ... */ }
-        function trackButtonClick(name, loc) { /* ... */ }
-        function trackScrollDepth() { /* ... */ }
-        window.addEventListener('scroll', () => requestAnimationFrame(trackScrollDepth));
-        trackPageView();
-
-        // Supabase init
-        async function initSupabase() {
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            await loadProjects();
-            await loadPersonalInfoAndApply();
-            applyDesignSettings();
-            loadChatOptions();
-        }
-
-        async function loadProjects() {
-            const { data, error } = await supabaseClient.from('projects').select('*').order('created_at', { ascending: false });
-            if (!error && data) allProjects = data;
-            else allProjects = JSON.parse(localStorage.getItem('portfolioProjects') || '[]');
-            applyFilter();
-        }
-
-        function applyFilter() {
-            const filtered = currentFilter === 'all' ? allProjects : allProjects.filter(p => p.category === currentFilter);
-            renderProjects(filtered);
-        }
-
-        function getImageUrl(project) {
-            if (!project.image) return null;
-            return project.image.startsWith('http') ? project.image : `${SUPABASE_URL}/storage/v1/object/public/project-images/${project.image}`;
-        }
-
-        function renderProjects(projects) {
-            const grid = document.getElementById('projectsGrid');
-            if (!projects.length) {
-                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px;">No projects in this category yet.</div>`;
-                return;
-            }
-
-            let html = '';
-            projects.forEach(p => {
-                const img = getImageUrl(p);
-                switch (p.category) {
-                    case 'landing':
-                        html += renderLandingCard(p, img); break;
-                    case 'case-study':
-                        html += renderCaseCard(p); break;
-                    case 'email':
-                        html += renderEmailCard(p); break;
-                    case 'blog':
-                        html += renderBlogCard(p); break;
-                    default:
-                        html += renderLandingCard(p, img); // fallback
-                }
-            });
-
-            // Add guide cards (they aren't from projects table, use static or settings)
-            if (currentFilter === 'all' || currentFilter === 'guide') {
-                html += renderGuideCards();
-            }
-            grid.innerHTML = html;
-        }
-
-        function renderLandingCard(p, img) {
-            return `<div class="card card-landing">
-                <div class="card-image">${img ? `<img src="${img}" alt="${escapeHtml(p.title)}" loading="lazy">` : '📄'}</div>
-                <div class="card-body">
-                    <h3>${escapeHtml(p.title)}</h3>
-                    <p style="color:var(--text-secondary); font-size:14px;">${escapeHtml(p.description?.substring(0,100))}…</p>
-                    ${p.client ? `<div>👤 ${escapeHtml(p.client)}</div>` : ''}
-                    ${p.results ? `<div class="metrics"><span class="metric">📈 ${escapeHtml(p.results)}</span></div>` : ''}
+    <!-- Projects Grid with Inline Testimonials -->
+    <section class="projects-section">
+        <div class="container">
+            <div class="grid" id="projectsGrid">
+                <div style="grid-column:1/-1; text-align:center; padding:60px; color:var(--text-secondary);">
+                    <p>Loading projects...</p>
                 </div>
-            </div>`;
-        }
+            </div>
+        </div>
+    </section>
 
-        function renderCaseCard(p) {
-            return `<div class="card card-case">
-                <div class="card-body">
-                    <h3>${escapeHtml(p.title)}</h3>
-                    <div class="case-challenge"><span class="case-label">Challenge:</span> ${escapeHtml(p.description?.substring(0,80))}…</div>
-                    <div class="case-solution"><span class="case-label">Solution:</span> ${escapeHtml(p.client || 'Tailored strategy')}</div>
-                    <div class="case-results"><span class="case-label">Results:</span> ${escapeHtml(p.results || 'Measurable growth')}
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 style="font-size:32px; font-weight:700; margin-bottom:10px;">Ready to Create Your Success Story?</h2>
+            <p style="color:var(--text-secondary); max-width:500px; margin:0 auto;">Let's discuss how we can transform your digital presence into a revenue-generating machine.</p>
+            <div class="cta-buttons">
+                <a href="skills.html" class="btn-explore" id="ctaExplore">🚀 Explore Expertise</a>
+                <a href="contact.html" class="btn-specific" id="ctaSpecific">💬 Start a Conversation</a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="container">
+        <p id="footerText">© 2026 Qreative Content | SaaS Copywriter</p>
+    </div>
+</footer>
+
+<!-- Guide Email Modal -->
+<div class="modal-overlay" id="guideModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeGuideModal()">&times;</button>
+        <div style="font-size:48px; margin-bottom:10px;">📚</div>
+        <h3>Get Your Free Guide</h3>
+        <p style="color:var(--text-secondary); margin:10px 0;" id="guideTitle"></p>
+        <input type="email" class="modal-input" id="guideEmail" placeholder="Enter your email address" required>
+        <button class="btn-submit" onclick="submitGuideRequest()">📩 Send Me the Free Guide</button>
+        <p style="font-size:11px; color:var(--text-secondary); margin-top:12px;">We'll send the PDF instantly. Unsubscribe anytime.</p>
+    </div>
+</div>
+
+<!-- Exit Intent Popup -->
+<div class="exit-popup" id="exitPopup">
+    <div class="exit-content">
+        <button class="exit-close" onclick="closeExitPopup()">&times;</button>
+        <div style="font-size:48px; margin-bottom:10px;">📚</div>
+        <h2 class="exit-title">Wait! Before You Go...</h2>
+        <p class="exit-subtitle">Get our <strong>"SaaS Content Strategy Blueprint"</strong> FREE. Discover the framework that helped SaaS founders scale their revenue.</p>
+        <input type="email" class="exit-input" id="exitEmail" placeholder="Your email address">
+        <button class="btn-exit-submit" onclick="submitExitRequest()">Send My Free Guide →</button>
+        <p style="font-size:11px; margin-top:10px; opacity:0.7;">No spam. Unsubscribe anytime.</p>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Multi-float WhatsApp Button -->
+<div class="chat-float">
+    <div class="chat-main-btn" id="chatMainBtn"><span class="chat-main-icon">💬</span></div>
+    <div class="chat-options" id="chatOptions">
+        <a href="#" id="whatsappOption" class="chat-option" target="_blank">
+            <div class="chat-option-icon">💚</div>
+            <div class="chat-option-text">
+                <div class="chat-option-title">WhatsApp</div>
+                <div class="chat-option-desc">Quick replies via WhatsApp</div>
+            </div>
+        </a>
+        <a href="#" id="emailOption" class="chat-option">
+            <div class="chat-option-icon">✉️</div>
+            <div class="chat-option-text">
+                <div class="chat-option-title">Email</div>
+                <div class="chat-option-desc">For detailed inquiries</div>
+            </div>
+        </a>
+        <a href="#" id="facebookOption" class="chat-option" target="_blank">
+            <div class="chat-option-icon">💙</div>
+            <div class="chat-option-text">
+                <div class="chat-option-title">Facebook</div>
+                <div class="chat-option-desc">Message on Facebook</div>
+            </div>
+        </a>
+        <div class="chat-close" id="chatCloseBtn">Close</div>
+    </div>
+</div>
+
+<!-- Chatbot -->
+<div class="chat-agent">
+    <div class="chat-agent-toggle" id="chatAgentToggle">
+        <img src="chat bot sarah.png" alt="Sarah" class="agent-avatar" id="agentAvatarImage" onerror="this.src='https://ui-avatars.com/api/?background=818cf8&color=fff&rounded=true&size=70&name=SA'">
+        <span class="agent-status"></span>
+    </div>
+    <div class="chat-agent-window" id="chatAgentWindow">
+        <div class="chat-header">
+            <div class="chat-header-avatar">
+                <img src="chat bot sarah.png" alt="Sarah" id="headerAvatarImage" onerror="this.src='https://ui-avatars.com/api/?background=818cf8&color=fff&rounded=true&size=48&name=SA'">
+            </div>
+            <div class="chat-header-info">
+                <h4>Sarah</h4>
+                <p><span class="online-dot"></span> Online · Usually replies in minutes</p>
+            </div>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-area">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Type your question..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <button class="chat-send-btn" onclick="sendMessage()"><span class="chat-send-icon">➤</span></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ========== SUPABASE CONFIG ==========
+    const SUPABASE_URL = 'https://ooarghgxjbxqgnmjwpdj.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXJnaGd4amJ4cWdubWp3cGRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NzM1MzQsImV4cCI6MjA5NDU0OTUzNH0.7zkOuh4F8lkSIaDnMEm9-R8v3sepjxnz0P4BKOI-HaM';
+    let supabaseClient, allProjects = [], allTestimonials = [], currentFilter = 'all', exitPopupShown = false;
+
+    // ========== ANALYTICS ==========
+    function trackPageView() {
+        const views = JSON.parse(localStorage.getItem('pageViews') || '[]');
+        views.push({ page: location.pathname, time: new Date().toISOString() });
+        localStorage.setItem('pageViews', JSON.stringify(views));
+    }
+    function trackClick(name, loc) {
+        const clicks = JSON.parse(localStorage.getItem('buttonClicks') || '[]');
+        clicks.push({ name, location: loc, time: new Date().toISOString() });
+        localStorage.setItem('buttonClicks', JSON.stringify(clicks));
+    }
+
+    // ========== SUPABASE INIT ==========
+    async function initSupabase() {
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        await Promise.all([loadProjects(), loadTestimonials(), loadPersonalInfoAndApply()]);
+        applyDesignSettings();
+        loadChatOptions();
+        applyFilter();
+    }
+
+    async function loadProjects() {
+        const { data, error } = await supabaseClient.from('projects').select('*').order('created_at', { ascending: false });
+        allProjects = (!error && data) ? data : JSON.parse(localStorage.getItem('portfolioProjects') || '[]');
+        if (allProjects.length > 0) updateFeaturedProject(allProjects[0]);
+    }
+
+    async function loadTestimonials() {
+        const { data } = await supabaseClient.from('testimonials').select('*').order('created_at', { ascending: false });
+        allTestimonials = (data && data.length > 0) ? data : JSON.parse(localStorage.getItem('testimonials') || '[]');
+    }
+
+    // ========== FEATURED PROJECT ==========
+    function updateFeaturedProject(project) {
+        const img = getImgUrl(project);
+        document.getElementById('featuredImage').innerHTML = img ? `<img src="${img}" alt="${escapeHtml(project.title)}">` : '<span style="font-size:64px;">📂</span>';
+        document.getElementById('featuredContent').innerHTML = `
+            <span class="featured-badge">⭐ Featured Project</span>
+            <h2 class="featured-title">${escapeHtml(project.title)}</h2>
+            <p class="featured-desc">${escapeHtml(project.description?.substring(0, 200))}${project.description?.length > 200 ? '...' : ''}</p>
+            <div class="featured-meta">
+                ${project.client ? `<span class="featured-meta-item">👤 ${escapeHtml(project.client)}</span>` : ''}
+                ${project.category ? `<span class="featured-meta-item">📂 ${escapeHtml(project.category.replace('-', ' '))}</span>` : ''}
+                ${project.results ? `<span class="featured-meta-item">📈 ${escapeHtml(project.results)}</span>` : ''}
+            </div>
+            <button class="btn-featured" onclick="document.querySelector('[data-filter=\\'${project.category}\\']').click(); window.scrollTo({top: document.getElementById('filterToolbar').offsetTop - 100, behavior: 'smooth'});">View Similar Projects →</button>
+        `;
+    }
+
+    // ========== FILTER & RENDER ==========
+    function applyFilter() {
+        let filtered = currentFilter === 'all' ? allProjects : allProjects.filter(p => p.category === currentFilter);
+        renderProjects(filtered);
+    }
+
+    function renderProjects(projects) {
+        const grid = document.getElementById('projectsGrid');
+        if (!projects.length && currentFilter !== 'guide') {
+            grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:60px; color:var(--text-secondary);">No projects in this category yet. <a href="contact.html" style="color:var(--accent);">Request this service →</a></div>`;
+            return;
+        }
+        
+        let html = '';
+        projects.forEach((p, i) => {
+            html += renderCard(p);
+            // Insert testimonial every 3 cards
+            if ((i + 1) % 3 === 0 && allTestimonials.length > 0) {
+                const t = allTestimonials[Math.floor(Math.random() * allTestimonials.length)];
+                html += `<div class="section-divider"><div class="testimonial-pull">
+                    <p class="testimonial-pull-quote">"${escapeHtml(t.testimonial?.substring(0, 150))}${t.testimonial?.length > 150 ? '...' : ''}"</p>
+                    <p class="testimonial-pull-author">— ${escapeHtml(t.name)}, ${escapeHtml(t.company || 'Client')}</p>
+                    <div class="testimonial-pull-stars">${'★'.repeat(t.rating || 5)}${'☆'.repeat(5 - (t.rating || 5))}</div>
+                </div></div>`;
+            }
+        });
+        
+        if (currentFilter === 'all' || currentFilter === 'guide') html += renderGuideCards();
+        grid.innerHTML = html;
+        observeCards();
+    }
+
+    function getImgUrl(p) {
+        if (!p.image) return null;
+        return p.image.startsWith('http') ? p.image : `${SUPABASE_URL}/storage/v1/object/public/project-images/${p.image}`;
+    }
+
+    function renderCard(p) {
+        const img = getImgUrl(p);
+        const catClass = { 'landing': 'cat-landing', 'case-study': 'cat-case', 'email': 'cat-email', 'blog': 'cat-blog' }[p.category] || 'cat-landing';
+        const catName = { 'landing': 'Landing Page', 'case-study': 'Case Study', 'email': 'Email Campaign', 'blog': 'Blog Content' }[p.category] || 'Project';
+
+        switch (p.category) {
+            case 'case-study':
+                return `<div class="card"><div class="card-body">
+                    <span class="card-category ${catClass}">${catName}</span>
+                    <h3 class="card-title">${escapeHtml(p.title)}</h3>
+                    <div class="case-section"><span class="case-label">Challenge:</span> ${escapeHtml(p.description?.substring(0,80))}…</div>
+                    <div class="case-section"><span class="case-label">Solution:</span> ${escapeHtml(p.client || 'Tailored strategy')}</div>
+                    <div class="case-section"><span class="case-label">Results:</span> ${escapeHtml(p.results || 'Measurable growth')}
                         <div class="result-bar"><div class="result-fill" style="width:${parseInt(p.results) || 85}%"></div></div>
                     </div>
-                </div>
-            </div>`;
-        }
-
-        function renderEmailCard(p) {
-            return `<div class="card card-email">
-                <div class="email-split">
-                    <div class="email-before"><div class="email-label">Before</div><div class="email-metric">12%</div><div>Open Rate</div></div>
-                    <div class="email-after"><div class="email-label">After</div><div class="email-metric">34%</div><div>Open Rate</div></div>
-                </div>
-                <div class="card-body" style="padding:15px;">
-                    <h3>${escapeHtml(p.title)}</h3>
-                    <p style="font-size:13px;">${escapeHtml(p.results || 'Significant improvement')}</p>
+                </div></div>`;
+            case 'email':
+                return `<div class="card"><div class="email-split">
+                    <div class="email-half email-before"><div class="email-label-sm">Before</div><div class="email-metric" style="color:#ef4444;">12%</div><div style="font-size:11px;">Open Rate</div></div>
+                    <div class="email-half email-after"><div class="email-label-sm">After</div><div class="email-metric" style="color:#10b981;">34%</div><div style="font-size:11px;">Open Rate</div></div>
+                </div><div class="card-body">
+                    <span class="card-category ${catClass}">${catName}</span>
+                    <h3 class="card-title">${escapeHtml(p.title)}</h3>
+                    <p class="card-desc">${escapeHtml(p.results || 'Significant improvement in engagement')}</p>
                     <div class="email-change" style="color:#10b981;">↑ 183% increase</div>
-                </div>
-            </div>`;
-        }
-
-        function renderBlogCard(p) {
-            return `<div class="card card-blog">
-                <div class="card-body">
-                    <h3>${escapeHtml(p.title)}</h3>
+                </div></div>`;
+            case 'blog':
+                return `<div class="card"><div class="card-body">
+                    <span class="card-category ${catClass}">${catName}</span>
+                    <h3 class="card-title">${escapeHtml(p.title)}</h3>
                     <div class="blog-snippet">"${escapeHtml(p.description?.substring(0,120))}…"</div>
-                    <div class="seo-stats"><span>🔑 Top 10 keywords</span><span>📈 12k visits/mo</span></div>
-                    ${p.date ? `<div class="blog-meta">📅 ${escapeHtml(p.date)}</div>` : ''}
-                </div>
-            </div>`;
-        }
-
-        function renderGuideCards() {
-            // Static guides (or could load from settings)
-            const guides = [
-                { title: 'SaaS Content Strategy Blueprint', desc: 'Chapter 1-4', file: 'guides/saas-content-strategy.pdf' },
-                { title: 'Email Marketing Playbook', desc: 'Templates & sequences', file: 'guides/email-playbook.pdf' }
-            ];
-            return guides.map(g => `
-                <div class="card card-guide">
+                    <div class="seo-tags"><span class="seo-tag">🔑 Ranking Keywords</span><span class="seo-tag">📈 Organic Traffic</span></div>
+                    ${p.date ? `<p style="font-size:11px; color:var(--text-secondary); margin-top:10px;">📅 ${escapeHtml(p.date)}</p>` : ''}
+                </div></div>`;
+            default: // landing
+                return `<div class="card">
+                    <div class="card-image">${img ? `<img src="${img}" alt="${escapeHtml(p.title)}" loading="lazy">` : '<span style="font-size:48px;">📄</span>'}</div>
                     <div class="card-body">
-                        <div class="guide-cover">📚</div>
-                        <h3>${g.title}</h3>
-                        <p>${g.desc}</p>
-                        <ul class="guide-features"><li>✓ Actionable frameworks</li><li>✓ Real examples</li></ul>
-                        <button class="btn-get-guide" onclick="openGuideModal('${g.title}', '${g.file}')">Get Free Guide</button>
+                        <span class="card-category ${catClass}">${catName}</span>
+                        <h3 class="card-title">${escapeHtml(p.title)}</h3>
+                        <p class="card-desc">${escapeHtml(p.description?.substring(0,100))}…</p>
+                        ${p.client ? `<p style="font-size:12px; color:var(--text-secondary);">👤 ${escapeHtml(p.client)}</p>` : ''}
+                        ${p.results ? `<p style="color:var(--accent); font-weight:600; font-size:13px;">📈 ${escapeHtml(p.results)}</p>` : ''}
                     </div>
-                </div>
-            `).join('');
+                </div>`;
         }
+    }
 
-        // PDF guide email capture
-        let currentGuideFile = '';
-        function openGuideModal(title, file) {
-            document.getElementById('guideTitle').textContent = title;
-            currentGuideFile = file;
-            document.getElementById('guideModal').classList.add('active');
-        }
-        function closeGuideModal() {
-            document.getElementById('guideModal').classList.remove('active');
-        }
-        async function submitGuideRequest() {
-            const email = document.getElementById('guideEmail').value.trim();
-            if (!email || !email.includes('@')) return alert('Valid email required');
-            const lead = { name: 'Guide Download', email, company: '', message: `Requested: ${document.getElementById('guideTitle').textContent}`, status: 'guide_download', created_at: new Date().toISOString() };
-            await supabaseClient.from('contact_leads').insert([lead]);
-            // Open PDF in new tab
-            window.open(currentGuideFile, '_blank');
-            closeGuideModal();
-            document.getElementById('guideEmail').value = '';
-        }
+    function renderGuideCards() {
+        const guides = [
+            { title: 'SaaS Content Strategy Blueprint', desc: '4 chapters covering market analysis, content frameworks, distribution, and ROI measurement.', file: 'guides/saas-content-strategy.pdf' },
+            { title: 'Email Marketing Playbook', desc: 'Proven templates and sequences that increase open rates by 180%+.', file: 'guides/email-playbook.pdf' }
+        ];
+        return guides.map(g => `
+            <div class="card card-guide"><div class="card-body">
+                <div class="guide-icon">📚</div>
+                <h3 style="margin-bottom:8px;">${g.title}</h3>
+                <p style="opacity:0.9; font-size:13px;">${g.desc}</p>
+                <ul class="guide-list"><li>✓ Actionable frameworks</li><li>✓ Real-world examples</li><li>✓ Ready-to-use templates</li></ul>
+                <button class="btn-guide" onclick="openGuideModal('${g.title}', '${g.file}')">📩 Get Free Guide</button>
+            </div></div>
+        `).join('');
+    }
 
-        // Filter tabs
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentFilter = btn.dataset.filter;
-                applyFilter();
+    function observeCards() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => entry.target.classList.add('visible'), i * 80);
+                    observer.unobserve(entry.target);
+                }
             });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.card').forEach(card => observer.observe(card));
+    }
+
+    // ========== GUIDE MODAL ==========
+    let currentGuideFile = '';
+    function openGuideModal(title, file) {
+        document.getElementById('guideTitle').textContent = title;
+        currentGuideFile = file;
+        document.getElementById('guideModal').classList.add('active');
+        trackClick('Open Guide Modal', title);
+    }
+    function closeGuideModal() { document.getElementById('guideModal').classList.remove('active'); }
+    async function submitGuideRequest() {
+        const email = document.getElementById('guideEmail').value.trim();
+        if (!email || !email.includes('@')) return showToast('Please enter a valid email', true);
+        await supabaseClient.from('contact_leads').insert([{ name: 'Guide Download', email, message: `Requested: ${document.getElementById('guideTitle').textContent}`, status: 'guide_download', created_at: new Date().toISOString() }]);
+        window.open(currentGuideFile, '_blank');
+        closeGuideModal();
+        document.getElementById('guideEmail').value = '';
+        showToast('Guide sent! Check your email.');
+        trackClick('Submit Guide Request', document.getElementById('guideTitle').textContent);
+    }
+
+    // ========== EXIT POPUP ==========
+    function showExitPopup() { if (exitPopupShown) return; exitPopupShown = true; document.getElementById('exitPopup').classList.add('active'); }
+    function closeExitPopup() { document.getElementById('exitPopup').classList.remove('active'); }
+    async function submitExitRequest() {
+        const email = document.getElementById('exitEmail').value.trim();
+        if (!email || !email.includes('@')) return showToast('Please enter a valid email', true);
+        await supabaseClient.from('contact_leads').insert([{ name: 'Exit Popup', email, message: 'Requested SaaS Content Strategy Blueprint via exit popup', status: 'guide_download', created_at: new Date().toISOString() }]);
+        closeExitPopup();
+        document.getElementById('exitEmail').value = '';
+        showToast('Guide on its way! Check your inbox.');
+        trackClick('Exit Popup Submit', 'Exit Intent');
+    }
+    document.addEventListener('mouseleave', (e) => { if (e.clientY <= 0) showExitPopup(); });
+
+    // ========== PERSONAL INFO (3-tier fallback) ==========
+    async function loadPersonalInfoAndApply() {
+        const { data } = await supabaseClient.from('personal_info').select('*').limit(1);
+        let info = {};
+        if (data && data[0] && data[0].name) info = data[0];
+        else {
+            const local = JSON.parse(localStorage.getItem('personalInfo') || '{}');
+            info = local.name ? local : { name: 'Qreative Content', title: 'SaaS Copywriter' };
+        }
+        document.getElementById('logoText').innerHTML = `✍️ ${info.name.split(' ')[0]}`;
+        document.getElementById('footerText').innerHTML = `© 2026 ${info.name} | ${info.title || 'SaaS Copywriter'}`;
+    }
+
+    function applyDesignSettings() {
+        const ds = JSON.parse(localStorage.getItem('designSettings') || '{}');
+        if (ds.colors) {
+            document.documentElement.style.setProperty('--accent', ds.colors.primary || '#818cf8');
+            document.documentElement.style.setProperty('--accent-hover', ds.colors.secondary || '#6366f1');
+        }
+    }
+
+    // ========== CHAT OPTIONS ==========
+    function loadChatOptions() {
+        const cs = JSON.parse(localStorage.getItem('chatSettings') || '{}');
+        const pi = JSON.parse(localStorage.getItem('personalInfo') || '{}');
+        let phone = (cs.whatsappNumber || '254700000000').replace(/\D/g, '');
+        if (phone.startsWith('0')) phone = '254' + phone.substring(1);
+        if (!phone.startsWith('254')) phone = '254' + phone;
+        const msg = encodeURIComponent(cs.messageTemplate || `Hi, I saw your portfolio and would like to discuss a project.`);
+        document.getElementById('whatsappOption').href = `https://wa.me/${phone}?text=${msg}`;
+        document.getElementById('emailOption').href = `mailto:${cs.email || pi.email || 'hello@qreative.com'}?subject=${encodeURIComponent(cs.emailSubject || 'Inquiry')}`;
+        document.getElementById('facebookOption').href = cs.facebookPage || '#';
+    }
+
+    // ========== FLOAT TOGGLE ==========
+    let isOpen = false;
+    document.getElementById('chatMainBtn').addEventListener('click', (e) => {
+        e.stopPropagation(); isOpen = !isOpen;
+        document.getElementById('chatOptions').classList.toggle('active', isOpen);
+    });
+    document.getElementById('chatCloseBtn').addEventListener('click', () => { isOpen = false; document.getElementById('chatOptions').classList.remove('active'); });
+    document.addEventListener('click', (e) => { if (!e.target.closest('.chat-float') && isOpen) { isOpen = false; document.getElementById('chatOptions').classList.remove('active'); } });
+
+    // ========== FILTER TABS ==========
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.dataset.filter;
+            applyFilter();
+            trackClick('Filter', currentFilter);
         });
+    });
 
-        // Personal info fallback (Supabase -> localStorage -> default)
-        async function loadPersonalInfoAndApply() {
-            const { data, error } = await supabaseClient.from('personal_info').select('*').limit(1);
-            let info = {};
-            if (data && data[0] && data[0].name) info = data[0];
-            else {
-                const local = JSON.parse(localStorage.getItem('personalInfo') || '{}');
-                info = local.name ? local : { name: 'Qreative Content', title: 'SaaS Copywriter' };
-            }
-            document.getElementById('logoText').innerHTML = `✍️ ${info.name.split(' ')[0]}`;
-            document.getElementById('footerText').innerHTML = `© 2026 ${info.name} | ${info.title || 'SaaS Copywriter'}`;
+    // ========== CHATBOT ==========
+    const AGENT_NAME = "Sarah", AGENT_AVATAR = "chat bot sarah.png";
+    document.getElementById('agentAvatarImage').src = AGENT_AVATAR;
+    document.getElementById('headerAvatarImage').src = AGENT_AVATAR;
+    const kb = [
+        { p: ["services","offer","do you do"], r: "I offer: 📝 Website Copy & Design, 📝 Email Marketing, 📝 SEO Blog Content, 📝 Landing Pages, 📝 SEO Content Strategy. What interests you?" },
+        { p: ["price","cost","pricing","how much"], r: "Projects range $200-$3000. Landing pages from $200, full website copy $800-$3000. Want a custom quote?" },
+        { p: ["how long","timeline","turnaround","days"], r: "Landing pages: 3-5 days, Emails: 5-7 days, Full website: 7-14 days." },
+        { p: ["experience","background","years","clients"], r: "4+ years in B2B SaaS, 50+ clients across fintech, logistics, healthcare, e-commerce." },
+        { p: ["contact","reach","email","whatsapp"], r: "Reach me via WhatsApp, Email, or Facebook buttons on this page. I reply within 24hrs!" },
+        { p: ["hello","hi","hey"], r: "Hey! How can I help you today?" },
+        { p: ["thanks","thank you"], r: "You're welcome! Anything else?" },
+        { p: ["bye","goodbye"], r: "Take care! Come back anytime." }
+    ];
+    let chatMessages = [];
+    function findMatch(msg) {
+        const lm = msg.toLowerCase(); let best = null, score = 0;
+        for (const item of kb) { let s = 0; for (const pat of item.p) { if (lm.includes(pat)) s += 10; } if (s > score) { score = s; best = item; } }
+        return score > 2 ? best : null;
+    }
+    function addMsg(type, text) { chatMessages.push({ type, text }); renderChat(); }
+    function renderChat() {
+        const c = document.getElementById('chatMessages');
+        c.innerHTML = chatMessages.map(m => `<div class="message ${m.type}"><div class="message-avatar">${m.type==='bot'?`<img src="${AGENT_AVATAR}">`:'👤'}</div><div class="message-content">${m.text}</div></div>`).join('');
+        c.scrollTop = c.scrollHeight;
+    }
+    function showTyping() {
+        const d = document.createElement('div'); d.className = 'message bot'; d.id = 'typing';
+        d.innerHTML = `<div class="message-avatar"><img src="${AGENT_AVATAR}"></div><div class="typing-indicator"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+        document.getElementById('chatMessages').appendChild(d);
+    }
+    function hideTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
+    async function process(msg) {
+        addMsg('user', msg); const match = findMatch(msg);
+        showTyping(); await new Promise(r => setTimeout(r, 1500)); hideTyping();
+        if (match) addMsg('bot', match.r);
+        else {
+            addMsg('bot', 'Great question! Let\'s connect on WhatsApp for a detailed discussion. 💚');
+            const cs = JSON.parse(localStorage.getItem('chatSettings') || '{}');
+            let phone = (cs.whatsappNumber || '254700000000').replace(/\D/g, '');
+            if (phone.startsWith('0')) phone = '254' + phone.substring(1);
+            const w = document.createElement('a'); w.href = `https://wa.me/${phone}`; w.className = 'whatsapp-btn'; w.textContent = '💚 Chat on WhatsApp'; w.target = '_blank';
+            document.getElementById('chatMessages').appendChild(w);
         }
+    }
+    window.sendMessage = function() {
+        const input = document.getElementById('chatInput');
+        if (!input.value.trim()) return;
+        process(input.value.trim()); input.value = '';
+    };
+    function initChatbot() {
+        const tog = document.getElementById('chatAgentToggle'), win = document.getElementById('chatAgentWindow');
+        tog.addEventListener('click', (e) => {
+            e.stopPropagation(); win.classList.toggle('active');
+            if (chatMessages.length === 0) { showTyping(); setTimeout(() => { hideTyping(); addMsg('bot', `Hi! I'm ${AGENT_NAME}. How can I help you today?`); }, 1200); }
+        });
+        document.addEventListener('click', (e) => { if (!e.target.closest('.chat-agent') && win.classList.contains('active')) win.classList.remove('active'); });
+    }
 
-        function applyDesignSettings() {
-            const ds = JSON.parse(localStorage.getItem('designSettings') || '{}');
-            if (ds.colors) {
-                document.documentElement.style.setProperty('--accent', ds.colors.primary || '#818cf8');
-                document.documentElement.style.setProperty('--accent-hover', ds.colors.secondary || '#6366f1');
-            }
-        }
+    // ========== DARK MODE ==========
+    const themeToggle = document.getElementById('themeToggle'), body = document.body;
+    if (localStorage.getItem('darkMode') === 'enabled') { body.classList.add('dark'); themeToggle.textContent = 'Light mode'; }
+    else themeToggle.textContent = 'Dark mode';
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark');
+        const isDark = body.classList.contains('dark');
+        localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+        themeToggle.textContent = isDark ? 'Light mode' : 'Dark mode';
+    });
 
-        // Chat options, dark mode, chatbot - same as other pages (omitted for brevity but included in final code)
-        // ... (I'll include the full implementations as in the provided version)
+    // ========== HELPERS ==========
+    function escapeHtml(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+    function showToast(msg, err) {
+        const t = document.getElementById('toast');
+        t.textContent = msg; t.style.background = err ? 'var(--accent-red)' : 'var(--accent-green)';
+        t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500);
+    }
+    document.getElementById('ctaExplore').addEventListener('click', () => trackClick('CTA', 'Explore Expertise'));
+    document.getElementById('ctaSpecific').addEventListener('click', () => trackClick('CTA', 'Start Conversation'));
 
-        // Initialize
-        initSupabase();
-    </script>
+    // ========== INIT ==========
+    trackPageView();
+    initSupabase();
+    initChatbot();
+</script>
 </body>
 </html>
