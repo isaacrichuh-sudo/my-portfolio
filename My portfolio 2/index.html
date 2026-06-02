@@ -73,7 +73,7 @@
         .rating { color: #fbbf24; margin-bottom: 10px; }
         footer { background: var(--bg-secondary); padding: 30px 0; text-align: center; border-top: 1px solid var(--border); }
 
-        /* Exit Intent Popup */
+        /* ========== EXIT INTENT POPUP ========== */
         .exit-popup { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 3000; align-items: center; justify-content: center; }
         .exit-popup.active { display: flex; }
         .exit-content { background: linear-gradient(135deg, var(--accent), #c084fc); border-radius: 24px; padding: 40px; max-width: 450px; width: 90%; text-align: center; color: white; box-shadow: var(--shadow); animation: popIn 0.4s ease-out; position: relative; }
@@ -88,43 +88,65 @@
         .exit-close { position: absolute; top: 10px; right: 15px; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 22px; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .exit-close:hover { background: rgba(255,255,255,0.3); }
 
-        /* Chatbot & Float */
+        /* ========== CORRECTED CHATBOT STYLES ========== */
         .chat-agent { position: fixed; bottom: 110px; right: 30px; z-index: 1001; }
-        .chat-agent-toggle { width: 70px; height: 70px; background: linear-gradient(135deg, #818cf8, #6366f1); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); cursor: pointer; animation: agentPulse 2s infinite; border: 3px solid white; transition: transform 0.3s; }
+        .chat-agent-toggle { width: 65px; height: 65px; background: linear-gradient(135deg, #818cf8, #6366f1); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); cursor: pointer; animation: agentPulse 2s infinite; border: 3px solid white; transition: transform 0.3s; overflow: hidden; }
         .chat-agent-toggle:hover { transform: scale(1.1); }
-        .agent-avatar { width: 100%; height: 100%; object-fit: cover; }
+        .agent-avatar { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
         @keyframes agentPulse { 0% { box-shadow: 0 0 0 0 rgba(99,102,241,0.4); } 70% { box-shadow: 0 0 0 15px rgba(99,102,241,0); } 100% { box-shadow: 0 0 0 0 rgba(99,102,241,0); } }
-        .agent-status { position: absolute; bottom: 5px; right: 5px; width: 16px; height: 16px; background: #10b981; border-radius: 50%; border: 2px solid white; }
-        .chat-agent-window { position: absolute; bottom: 85px; right: 0; width: 400px; height: 600px; background: var(--bg-card); border-radius: 24px; box-shadow: var(--shadow); display: flex; flex-direction: column; overflow: hidden; opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s; border: 1px solid var(--border); }
-        .chat-agent-window.active { opacity: 1; visibility: visible; transform: translateY(0); }
-        .chat-header { background: linear-gradient(135deg, #818cf8, #6366f1); padding: 16px 20px; color: white; display: flex; align-items: center; gap: 12px; }
-        .chat-header-avatar { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; border: 2px solid white; }
-        .chat-header-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .chat-header-info h4 { font-size: 16px; margin-bottom: 2px; }
-        .online-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; animation: onlinePulse 1.5s infinite; }
+        .agent-status { position: absolute; bottom: 3px; right: 3px; width: 14px; height: 14px; background: #10b981; border-radius: 50%; border: 2px solid white; }
+        .chat-agent-window { position: absolute; bottom: 80px; right: 0; width: 380px; height: 520px; background: var(--bg-card); border-radius: 20px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; overflow: hidden; opacity: 0; visibility: hidden; transform: translateY(20px) scale(0.95); transition: all 0.3s ease; border: 1px solid var(--border); }
+        .chat-agent-window.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+        .chat-header { background: linear-gradient(135deg, #818cf8, #6366f1); padding: 14px 18px; color: white; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+        .chat-header-avatar { width: 42px; height: 42px; border-radius: 50%; overflow: hidden; border: 2px solid white; flex-shrink: 0; background: white; }
+        .chat-header-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .chat-header-info h4 { font-size: 15px; margin-bottom: 2px; font-weight: 600; }
+        .chat-header-info p { font-size: 11px; opacity: 0.9; display: flex; align-items: center; gap: 5px; }
+        .online-dot { width: 7px; height: 7px; background: #10b981; border-radius: 50%; display: inline-block; animation: onlinePulse 1.5s infinite; }
         @keyframes onlinePulse { 0%,100%{opacity:1} 50%{opacity:.5} }
-        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; background: var(--bg-primary); }
-        .message { display: flex; gap: 10px; max-width: 85%; }
-        .message.bot { align-self: flex-start; } .message.user { align-self: flex-end; flex-direction: row-reverse; }
-        .message-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #818cf8, #6366f1); display: flex; align-items: center; justify-content: center; }
-        .message-content { padding: 12px 16px; border-radius: 18px; font-size: 14px; background: var(--bg-card); color: var(--text-primary); }
-        .message.user .message-content { background: var(--accent); color: white; }
-        .quick-replies { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-        .quick-reply-btn { background: var(--bg-alt, #f1f5f9); border: 1px solid var(--border); padding: 8px 16px; border-radius: 30px; font-size: 12px; cursor: pointer; color: var(--text-primary); }
-        .quick-reply-btn:hover { background: var(--accent); color: white; }
-        .chat-input-area { padding: 15px; border-top: 1px solid var(--border); display: flex; gap: 10px; background: var(--bg-card); }
-        .chat-input { flex: 1; padding: 12px 16px; border: 1px solid var(--border); border-radius: 30px; background: var(--bg-primary); color: var(--text-primary); }
-        .chat-send-btn { width: 44px; height: 44px; background: var(--accent); border: none; border-radius: 50%; cursor: pointer; }
-        .chat-send-icon { font-size: 18px; color: white; }
-        .whatsapp-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 30px; background: #25D366; color: white; text-decoration: none; margin-top: 10px; }
+        .chat-messages { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: var(--bg-primary); max-height: 320px; }
+        .message { display: flex; gap: 8px; max-width: 88%; }
+        .message.bot { align-self: flex-start; }
+        .message.user { align-self: flex-end; flex-direction: row-reverse; }
+        .message-avatar { width: 30px; height: 30px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: linear-gradient(135deg, #818cf8, #6366f1); display: flex; align-items: center; justify-content: center; }
+        .message-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .message.user .message-avatar { background: var(--accent-gold, #fbbf24); }
+        .message-content { padding: 10px 14px; border-radius: 16px; font-size: 13px; line-height: 1.5; background: var(--bg-card); color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .message.bot .message-content { border-bottom-left-radius: 4px; }
+        .message.user .message-content { background: var(--accent); color: white; border-bottom-right-radius: 4px; }
+        .typing-indicator { display: flex; align-items: center; gap: 5px; padding: 10px 16px; background: var(--bg-card); border-radius: 16px; width: fit-content; }
+        .typing-dots { display: flex; gap: 3px; }
+        .typing-dots span { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; animation: typingBounce 1.4s infinite ease-in-out; }
+        .typing-dots span:nth-child(1) { animation-delay: 0s; }
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingBounce { 0%,60%,100%{transform:translateY(0);opacity:0.4} 30%{transform:translateY(-6px);opacity:1} }
+        .quick-replies { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px; }
+        .quick-reply-btn { background: var(--bg-alt, #f1f5f9); border: 1px solid var(--border, #e2e8f0); padding: 8px 10px; border-radius: 20px; font-size: 11px; cursor: pointer; transition: all 0.2s; color: var(--text-primary); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .quick-reply-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+        .chat-input-area { padding: 12px; border-top: 1px solid var(--border); display: flex; gap: 8px; background: var(--bg-card); flex-shrink: 0; }
+        .chat-input { flex: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: 25px; font-family: inherit; font-size: 13px; background: var(--bg-primary); color: var(--text-primary); }
+        .chat-input:focus { outline: none; border-color: var(--accent); }
+        .chat-send-btn { width: 38px; height: 38px; background: var(--accent); border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
+        .chat-send-btn:hover { background: var(--accent-hover); transform: scale(1.05); }
+        .chat-send-icon { font-size: 16px; color: white; }
+        .whatsapp-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 25px; text-decoration: none; font-size: 12px; font-weight: 500; margin-top: 8px; background: #25D366; color: white; transition: all 0.2s; }
+        .whatsapp-btn:hover { background: #128C7E; transform: scale(1.02); }
+
+        /* ========== MULTI-FLOAT BUTTON ========== */
         .chat-float { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
         .chat-main-btn { width: 65px; height: 65px; background: linear-gradient(135deg, #25D366, #128C7E); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); cursor: pointer; animation: chatPulse 1.5s infinite; }
+        .chat-main-btn:hover { transform: scale(1.1); }
         .chat-main-icon { font-size: 36px; color: white; }
         @keyframes chatPulse { 0% { box-shadow: 0 0 0 0 rgba(37,211,102,0.7); } 70% { box-shadow: 0 0 0 15px rgba(37,211,102,0); } 100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); } }
         .chat-options { position: absolute; bottom: 80px; right: 0; background: var(--bg-card); border-radius: 16px; box-shadow: var(--shadow); width: 260px; overflow: hidden; opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s; border: 1px solid var(--border); }
         .chat-options.active { opacity: 1; visibility: visible; transform: translateY(0); }
         .chat-option { display: flex; align-items: center; gap: 15px; padding: 15px 20px; cursor: pointer; text-decoration: none; color: var(--text-primary); }
         .chat-option:hover { background: var(--bg-primary); }
+        .chat-option-icon { font-size: 24px; width: 36px; text-align: center; }
+        .chat-option-text { flex: 1; }
+        .chat-option-title { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+        .chat-option-desc { font-size: 11px; color: var(--text-secondary); }
         .chat-close { text-align: center; padding: 10px; border-top: 1px solid var(--border); cursor: pointer; font-size: 12px; color: var(--text-secondary); }
 
         @media (max-width: 768px) {
@@ -136,351 +158,204 @@
             .nav-container { flex-direction: column; align-items: flex-start; }
             .btn-primary, .btn-secondary { padding: 10px 24px; font-size: 14px; }
             .chat-main-btn, .chat-agent-toggle { width: 55px; height: 55px; }
-            .chat-agent-window { width: calc(100vw - 40px); right: -10px; height: 500px; }
+            .chat-agent-window { width: calc(100vw - 30px); right: 0; height: 460px; bottom: 75px; }
+            .chat-messages { max-height: 260px; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="container">
-        <div class="nav-container">
-            <a href="index.html" class="logo" id="logoText">✍️ Qreative</a>
-            <div class="nav-links">
-                <a href="index.html" class="active">Home</a>
-                <a href="work.html">Work</a>
-                <a href="skills.html">Skills</a>
-                <a href="contact.html">Contact</a>
-                <button class="theme-toggle" id="themeToggle">Dark mode</button>
-            </div>
+    <div class="container"><div class="nav-container">
+        <a href="index.html" class="logo" id="logoText">✍️ Qreative</a>
+        <div class="nav-links">
+            <a href="index.html" class="active">Home</a>
+            <a href="work.html">Work</a>
+            <a href="skills.html">Skills</a>
+            <a href="contact.html">Contact</a>
+            <button class="theme-toggle" id="themeToggle">Dark mode</button>
         </div>
-    </div>
+    </div></div>
 </header>
 
 <main>
     <section class="hero-section" style="background-image: url('images/content-strategy-hero-section.png');">
         <div class="hero-overlay"></div>
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title">Turn Your Website Into a Full Time <span class="hero-title-highlight">Revenue Generator</span></h1>
-                <div class="typed-text" id="typed-text"></div>
-                <p class="hero-bio" id="bioText">Scale Your Revenue With Content That Speaks The Language of Your Clients.</p>
-                <div style="display:flex; gap:15px; flex-wrap:wrap;">
-                    <a href="work.html" class="btn-primary" id="ctaWork">View Success Stories</a>
-                    <a href="contact.html" class="btn-secondary" id="ctaAudit">Request a Web Audit</a>
-                </div>
-                <div style="margin-top:40px; display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
-                    <span style="color:#fbbf24;">★★★★★</span> <span style="color:var(--text-secondary); font-size:13px;">5.0 Rating</span>
-                    <span style="color:var(--text-secondary); font-size:13px;">✓ 50+ Happy Clients</span>
-                    <span style="color:var(--text-secondary); font-size:13px;">⚡ 24hr Response</span>
-                </div>
+        <div class="container"><div class="hero-content">
+            <h1 class="hero-title">Turn Your Website Into a Full Time <span class="hero-title-highlight">Revenue Generator</span></h1>
+            <div class="typed-text" id="typed-text"></div>
+            <p class="hero-bio" id="bioText">Scale Your Revenue With Content That Speaks The Language of Your Clients.</p>
+            <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                <a href="work.html" class="btn-primary" id="ctaWork">View Success Stories</a>
+                <a href="contact.html" class="btn-secondary" id="ctaAudit">Request a Web Audit</a>
             </div>
-        </div>
+            <div style="margin-top:40px; display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+                <span style="color:#fbbf24;">★★★★★</span> <span style="color:var(--text-secondary); font-size:13px;">5.0 Rating</span>
+                <span style="color:var(--text-secondary); font-size:13px;">✓ 50+ Happy Clients</span>
+                <span style="color:var(--text-secondary); font-size:13px;">⚡ 24hr Response</span>
+            </div>
+        </div></div>
     </section>
 
-    <section class="preview-section" id="statsSection">
-        <div class="container">
-            <h2 class="section-title">Impact By Numbers</h2>
-            <div class="stats-grid">
-                <div class="stat-card"><div class="stat-number" id="years-counter">0</div><div class="stat-label">Years Experience</div></div>
-                <div class="stat-card"><div class="stat-number" id="projects-counter">0</div><div class="stat-label">SaaS Projects</div></div>
-                <div class="stat-card"><div class="stat-number" id="clients-counter">0</div><div class="stat-label">Happy Clients</div></div>
-                <div class="stat-card"><div class="stat-number" id="growth-counter">0</div><div class="stat-label">Avg. Conversion Growth</div></div>
-            </div>
+    <section class="preview-section"><div class="container">
+        <h2 class="section-title">Impact By Numbers</h2>
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-number" id="years-counter">0</div><div class="stat-label">Years Experience</div></div>
+            <div class="stat-card"><div class="stat-number" id="projects-counter">0</div><div class="stat-label">SaaS Projects</div></div>
+            <div class="stat-card"><div class="stat-number" id="clients-counter">0</div><div class="stat-label">Happy Clients</div></div>
+            <div class="stat-card"><div class="stat-number" id="growth-counter">0</div><div class="stat-label">Avg. Conversion Growth</div></div>
         </div>
-    </section>
+    </div></section>
 
-    <section class="testimonials-section" id="testimonialsSection">
-        <div class="container">
-            <h2 class="section-title">What Clients Say</h2>
-            <div class="testimonials-grid" id="testimonialsGrid"><div style="text-align:center; grid-column:1/-1;">Loading testimonials...</div></div>
-        </div>
-    </section>
+    <section class="testimonials-section"><div class="container">
+        <h2 class="section-title">What Clients Say</h2>
+        <div class="testimonials-grid" id="testimonialsGrid"><div style="text-align:center;grid-column:1/-1;">Loading testimonials...</div></div>
+    </div></section>
 
-    <section class="preview-section" id="solutionsSection">
-        <div class="container">
-            <h2 class="section-title">Solutions Designed for Impact</h2>
-            <div class="preview-grid">
-                <a href="work.html" class="preview-card" id="cardWork"><div class="preview-icon">📂</div><h3>Success Stories in Action</h3><p>See How I Turn Digital Presence Into Profit-Making Systems</p></a>
-                <a href="skills.html" class="preview-card" id="cardSkills"><div class="preview-icon">⚡</div><h3>Skills Built For Your Scale</h3><p>Leverage technical copywriting expertise that leaves your competition behind.</p></a>
-                <a href="contact.html" class="preview-card" id="cardContact"><div class="preview-icon">📧</div><h3>Request A Complimentary Web Audit</h3><p>Let's uncover the hidden bottlenecks killing your conversions.</p></a>
-            </div>
+    <section class="preview-section"><div class="container">
+        <h2 class="section-title">Solutions Designed for Impact</h2>
+        <div class="preview-grid">
+            <a href="work.html" class="preview-card"><div class="preview-icon">📂</div><h3>Success Stories in Action</h3><p>See How I Turn Digital Presence Into Profit-Making Systems</p></a>
+            <a href="skills.html" class="preview-card"><div class="preview-icon">⚡</div><h3>Skills Built For Your Scale</h3><p>Leverage technical copywriting expertise that leaves your competition behind.</p></a>
+            <a href="contact.html" class="preview-card"><div class="preview-icon">📧</div><h3>Request A Complimentary Web Audit</h3><p>Let's uncover the hidden bottlenecks killing your conversions.</p></a>
         </div>
-    </section>
+    </div></section>
 </main>
 
 <footer><div class="container"><p id="footerText">© 2026 Qreative Content | SaaS Copywriter</p></div></footer>
 
-<!-- Exit Intent Popup -->
+<!-- Exit Popup -->
 <div class="exit-popup" id="exitPopup">
     <div class="exit-content">
         <button class="exit-close" onclick="closeExitPopup()">&times;</button>
-        <div style="font-size:48px; margin-bottom:10px;">📚</div>
+        <div style="font-size:48px;">📚</div>
         <h2 class="exit-title">Wait! Before You Go...</h2>
-        <p class="exit-subtitle">Get our <strong>"SaaS Content Strategy Blueprint"</strong> FREE. Discover the framework that helped SaaS founders scale their revenue through strategic content.</p>
-        <input type="email" class="exit-input" id="exitEmail" placeholder="Your email address">
-        <button class="btn-exit-submit" onclick="submitExitRequest()">Send My Free Guide →</button>
-        <p style="font-size:11px; margin-top:10px; opacity:0.7;">No spam. Unsubscribe anytime.</p>
+        <p class="exit-subtitle">Get our <strong>"SaaS Content Strategy Blueprint"</strong> FREE.</p>
+        <input type="email" class="exit-input" id="exitEmail" placeholder="Your email"><button class="btn-exit-submit" onclick="submitExitRequest()">Send My Free Guide →</button>
     </div>
 </div>
 
-<!-- Float & Chatbot -->
+<!-- Float & Corrected Chatbot -->
 <div class="chat-float">
     <div class="chat-main-btn" id="chatMainBtn"><span class="chat-main-icon">💬</span></div>
     <div class="chat-options" id="chatOptions">
-        <a href="#" id="whatsappOption" class="chat-option" target="_blank"><div class="chat-option-icon">💚</div><div class="chat-option-text"><div class="chat-option-title">WhatsApp</div><div class="chat-option-desc">Quick replies via WhatsApp</div></div></a>
-        <a href="#" id="emailOption" class="chat-option"><div class="chat-option-icon">✉️</div><div class="chat-option-text"><div class="chat-option-title">Email</div><div class="chat-option-desc">For detailed inquiries</div></div></a>
-        <a href="#" id="facebookOption" class="chat-option" target="_blank"><div class="chat-option-icon">💙</div><div class="chat-option-text"><div class="chat-option-title">Facebook</div><div class="chat-option-desc">Message on Facebook</div></div></a>
+        <a href="#" id="whatsappOption" class="chat-option" target="_blank"><div class="chat-option-icon">💚</div><div class="chat-option-text"><div class="chat-option-title">WhatsApp</div><div class="chat-option-desc">Quick replies</div></div></a>
+        <a href="#" id="emailOption" class="chat-option"><div class="chat-option-icon">✉️</div><div class="chat-option-text"><div class="chat-option-title">Email</div><div class="chat-option-desc">Detailed inquiries</div></div></a>
+        <a href="#" id="facebookOption" class="chat-option" target="_blank"><div class="chat-option-icon">💙</div><div class="chat-option-text"><div class="chat-option-title">Facebook</div><div class="chat-option-desc">Message us</div></div></a>
         <div class="chat-close" id="chatCloseBtn">Close</div>
     </div>
 </div>
 <div class="chat-agent">
     <div class="chat-agent-toggle" id="chatAgentToggle"><img src="chat bot sarah.png" alt="Sarah" class="agent-avatar" id="agentAvatarImage" onerror="this.src='https://ui-avatars.com/api/?background=818cf8&color=fff&rounded=true&size=70&name=SA'"><span class="agent-status"></span></div>
     <div class="chat-agent-window" id="chatAgentWindow">
-        <div class="chat-header"><div class="chat-header-avatar"><img src="chat bot sarah.png" alt="Sarah" id="headerAvatarImage" onerror="this.src='https://ui-avatars.com/api/?background=818cf8&color=fff&rounded=true&size=48&name=SA'"></div><div class="chat-header-info"><h4>Sarah</h4><p><span class="online-dot"></span> Online · Usually replies in minutes</p></div></div>
+        <div class="chat-header"><div class="chat-header-avatar"><img src="chat bot sarah.png" id="headerAvatarImage" onerror="this.src='https://ui-avatars.com/api/?background=818cf8&color=fff&rounded=true&size=48&name=SA'"></div><div class="chat-header-info"><h4>Sarah</h4><p><span class="online-dot"></span> Online · Usually replies in minutes</p></div></div>
         <div class="chat-messages" id="chatMessages"></div>
-        <div class="chat-input-area"><input type="text" class="chat-input" id="chatInput" placeholder="Type your question..." onkeypress="if(event.key==='Enter') sendMessage()"><button class="chat-send-btn" onclick="sendMessage()"><span class="chat-send-icon">➤</span></button></div>
+        <div class="chat-input-area"><input type="text" class="chat-input" id="chatInput" placeholder="Type your question..." onkeypress="if(event.key==='Enter')sendMessage()"><button class="chat-send-btn" onclick="sendMessage()"><span class="chat-send-icon">➤</span></button></div>
     </div>
 </div>
 
 <script>
-    // ========== SUPABASE CONFIG ==========
     const SUPABASE_URL = 'https://ooarghgxjbxqgnmjwpdj.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXJnaGd4amJ4cWdubWp3cGRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NzM1MzQsImV4cCI6MjA5NDU0OTUzNH0.7zkOuh4F8lkSIaDnMEm9-R8v3sepjxnz0P4BKOI-HaM';
     let supabaseClient, siteData = { personalInfo: {}, statistics: {}, testimonials: [], heroPhrases: [] };
 
-    // ========== ENHANCED MARKETING ANALYTICS MODULE ==========
     const Analytics = {
         init() {
-            this.visitorId = this.getVisitorId();
-            this.sessionId = this.getSessionId();
-            this.pageEntered = Date.now();
-            this.pageName = location.pathname;
+            this.visitorId = this.getVisitorId(); this.sessionId = this.getSessionId();
+            this.pageEntered = Date.now(); this.pageName = location.pathname;
             this.deviceType = /mobile/i.test(navigator.userAgent) ? 'mobile' : /tablet|ipad/i.test(navigator.userAgent) ? 'tablet' : 'desktop';
-            this.trackPageView();
-            this.trackTimeOnPage();
-            this.trackExitClicks();
-            this.trackScroll();
-            this.trackEngagement();
+            this.trackPageView(); this.trackTimeOnPage(); this.trackExitClicks(); this.trackScroll(); this.trackEngagement();
         },
-        getVisitorId() {
-            let id = localStorage.getItem('visitorId');
-            if (!id) { id = 'v_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('visitorId', id); }
-            return id;
-        },
-        getSessionId() {
-            let id = sessionStorage.getItem('sessionId');
-            if (!id) { id = 's_' + Date.now(); sessionStorage.setItem('sessionId', id); sessionStorage.setItem('sessionStart', Date.now().toString()); sessionStorage.setItem('pagesInSession', '[]'); }
-            return id;
-        },
+        getVisitorId() { let id = localStorage.getItem('visitorId'); if (!id) { id = 'v_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('visitorId', id); } return id; },
+        getSessionId() { let id = sessionStorage.getItem('sessionId'); if (!id) { id = 's_' + Date.now(); sessionStorage.setItem('sessionId', id); sessionStorage.setItem('sessionStart', Date.now().toString()); sessionStorage.setItem('pagesInSession', '[]'); } return id; },
         trackPageView() {
-            const pages = JSON.parse(sessionStorage.getItem('pagesInSession') || '[]'); pages.push(this.pageName);
-            sessionStorage.setItem('pagesInSession', JSON.stringify(pages));
-            const views = JSON.parse(localStorage.getItem('pageViews') || '[]');
-            views.push({ page: this.pageName, referrer: document.referrer || 'direct', timestamp: new Date().toISOString(), device: this.deviceType, sessionId: this.sessionId, visitorId: this.visitorId });
-            localStorage.setItem('pageViews', JSON.stringify(views));
-            const info = JSON.parse(localStorage.getItem('visitorInfo') || '{}');
-            info.totalVisits = (info.totalVisits || 0) + 1; info.lastVisit = new Date().toISOString();
-            info.pagesVisited = info.pagesVisited || []; if (!info.pagesVisited.includes(this.pageName)) info.pagesVisited.push(this.pageName);
-            info.deviceTypes = info.deviceTypes || {}; info.deviceTypes[this.deviceType] = (info.deviceTypes[this.deviceType] || 0) + 1;
-            if (info.totalVisits > 1) info.returnVisits = (info.returnVisits || 0) + 1;
-            localStorage.setItem('visitorInfo', JSON.stringify(info));
+            const pages = JSON.parse(sessionStorage.getItem('pagesInSession') || '[]'); pages.push(this.pageName); sessionStorage.setItem('pagesInSession', JSON.stringify(pages));
+            const views = JSON.parse(localStorage.getItem('pageViews') || '[]'); views.push({ page: this.pageName, referrer: document.referrer || 'direct', timestamp: new Date().toISOString(), device: this.deviceType, sessionId: this.sessionId, visitorId: this.visitorId }); localStorage.setItem('pageViews', JSON.stringify(views));
+            const info = JSON.parse(localStorage.getItem('visitorInfo') || '{}'); info.totalVisits = (info.totalVisits || 0) + 1; info.lastVisit = new Date().toISOString(); info.pagesVisited = info.pagesVisited || []; if (!info.pagesVisited.includes(this.pageName)) info.pagesVisited.push(this.pageName); info.deviceTypes = info.deviceTypes || {}; info.deviceTypes[this.deviceType] = (info.deviceTypes[this.deviceType] || 0) + 1; if (info.totalVisits > 1) info.returnVisits = (info.returnVisits || 0) + 1; localStorage.setItem('visitorInfo', JSON.stringify(info));
         },
         trackTimeOnPage() {
-            window.addEventListener('beforeunload', () => {
-                const spent = Math.round((Date.now() - this.pageEntered) / 1000);
-                if (spent > 0) { const d = JSON.parse(localStorage.getItem('timeOnPage') || '[]'); d.push({ page: this.pageName, seconds: spent, timestamp: new Date().toISOString(), sessionId: this.sessionId }); localStorage.setItem('timeOnPage', JSON.stringify(d)); }
-                const start = parseInt(sessionStorage.getItem('sessionStart') || '0');
-                const pages = JSON.parse(sessionStorage.getItem('pagesInSession') || '[]');
-                const dur = Math.round((Date.now() - start) / 1000);
-                const sess = JSON.parse(localStorage.getItem('completedSessions') || '[]');
-                sess.push({ sessionId: this.sessionId, pages: pages.length, duration: dur, device: this.deviceType, timestamp: new Date().toISOString(), bounced: pages.length === 1 });
-                localStorage.setItem('completedSessions', JSON.stringify(sess));
-            });
+            window.addEventListener('beforeunload', () => { const spent = Math.round((Date.now() - this.pageEntered) / 1000); if (spent > 0) { const d = JSON.parse(localStorage.getItem('timeOnPage') || '[]'); d.push({ page: this.pageName, seconds: spent, timestamp: new Date().toISOString() }); localStorage.setItem('timeOnPage', JSON.stringify(d)); } const start = parseInt(sessionStorage.getItem('sessionStart') || '0'); const pages = JSON.parse(sessionStorage.getItem('pagesInSession') || '[]'); const dur = Math.round((Date.now() - start) / 1000); const sess = JSON.parse(localStorage.getItem('completedSessions') || '[]'); sess.push({ sessionId: this.sessionId, pages: pages.length, duration: dur, device: this.deviceType, timestamp: new Date().toISOString(), bounced: pages.length === 1 }); localStorage.setItem('completedSessions', JSON.stringify(sess)); });
         },
-        trackExitClicks() {
-            document.addEventListener('click', (e) => {
-                const link = e.target.closest('a');
-                if (link && link.href && !link.href.startsWith('javascript') && !link.href.startsWith('#') && link.href !== window.location.href) {
-                    const isExt = !link.href.startsWith(window.location.origin);
-                    const type = link.href.includes('wa.me') ? 'whatsapp' : link.href.startsWith('mailto') ? 'email' : link.href.includes('facebook.com') ? 'facebook' : isExt ? 'external' : 'internal';
-                    const exits = JSON.parse(localStorage.getItem('exitClicks') || '[]');
-                    exits.push({ from: this.pageName, to: link.href, text: link.textContent?.trim().substring(0,50) || 'link', type, timestamp: new Date().toISOString(), sessionId: this.sessionId });
-                    localStorage.setItem('exitClicks', JSON.stringify(exits));
-                }
-            });
-        },
-        trackScroll() {
-            let max = 0, last = 0;
-            window.addEventListener('scroll', () => {
-                const pct = Math.floor(((window.scrollY + window.innerHeight) / document.documentElement.scrollHeight) * 100);
-                if (pct > max) { max = pct; const iv = Math.floor(max / 25) * 25; if (iv > last && iv <= 100) { last = iv; const d = JSON.parse(localStorage.getItem('scrollDepth') || '[]'); d.push({ page: this.pageName, depth: iv, timestamp: new Date().toISOString() }); localStorage.setItem('scrollDepth', JSON.stringify(d)); } }
-            });
-        },
-        trackEngagement() {
-            // Track solution card clicks
-            document.querySelectorAll('.preview-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const title = card.querySelector('h3')?.textContent || 'Unknown';
-                    const interactions = JSON.parse(localStorage.getItem('homeInteractions') || '[]');
-                    interactions.push({ section: title, action: 'click', timestamp: new Date().toISOString() });
-                    localStorage.setItem('homeInteractions', JSON.stringify(interactions));
-                });
-            });
-            // Track CTA clicks
-            document.getElementById('ctaWork')?.addEventListener('click', () => this.trackClick('View Success Stories', 'Hero'));
-            document.getElementById('ctaAudit')?.addEventListener('click', () => this.trackClick('Request Web Audit', 'Hero'));
-        },
-        trackClick(name, loc) {
-            const clicks = JSON.parse(localStorage.getItem('buttonClicks') || '[]');
-            clicks.push({ name, location: loc, page: this.pageName, timestamp: new Date().toISOString(), sessionId: this.sessionId });
-            localStorage.setItem('buttonClicks', JSON.stringify(clicks));
-        }
+        trackExitClicks() { document.addEventListener('click', (e) => { const link = e.target.closest('a'); if (link && link.href && !link.href.startsWith('javascript') && !link.href.startsWith('#') && link.href !== window.location.href) { const isExt = !link.href.startsWith(window.location.origin); const type = link.href.includes('wa.me') ? 'whatsapp' : link.href.startsWith('mailto') ? 'email' : link.href.includes('facebook.com') ? 'facebook' : isExt ? 'external' : 'internal'; const exits = JSON.parse(localStorage.getItem('exitClicks') || '[]'); exits.push({ from: this.pageName, to: link.href, text: link.textContent?.trim().substring(0,50) || 'link', type, timestamp: new Date().toISOString() }); localStorage.setItem('exitClicks', JSON.stringify(exits)); } }); },
+        trackScroll() { let max = 0, last = 0; window.addEventListener('scroll', () => { const pct = Math.floor(((window.scrollY + window.innerHeight) / document.documentElement.scrollHeight) * 100); if (pct > max) { max = pct; const iv = Math.floor(max / 25) * 25; if (iv > last && iv <= 100) { last = iv; const d = JSON.parse(localStorage.getItem('scrollDepth') || '[]'); d.push({ page: this.pageName, depth: iv, timestamp: new Date().toISOString() }); localStorage.setItem('scrollDepth', JSON.stringify(d)); } } }); },
+        trackEngagement() { document.getElementById('ctaWork')?.addEventListener('click', () => this.trackClick('CTA Work', 'Home')); document.getElementById('ctaAudit')?.addEventListener('click', () => this.trackClick('CTA Audit', 'Home')); },
+        trackClick(name, loc) { const clicks = JSON.parse(localStorage.getItem('buttonClicks') || '[]'); clicks.push({ name, location: loc, page: this.pageName, timestamp: new Date().toISOString() }); localStorage.setItem('buttonClicks', JSON.stringify(clicks)); }
     };
     Analytics.init();
 
-    // ========== SUPABASE DATA LOADING ==========
-    async function initSupabase() {
-        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        await loadAllData();
-    }
-
+    async function initSupabase() { supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); await loadAllData(); }
     async function loadAllData() {
-        const [statsRes, personalRes, testimonialsRes] = await Promise.all([
-            supabaseClient.from('statistics').select('*').limit(1),
-            supabaseClient.from('personal_info').select('*').limit(1),
-            supabaseClient.from('testimonials').select('*').order('created_at', { ascending: false })
-        ]);
-        const localStats = JSON.parse(localStorage.getItem('statistics') || '{}');
-        const localPersonal = JSON.parse(localStorage.getItem('personalInfo') || '{}');
-        const localTestimonials = JSON.parse(localStorage.getItem('testimonials') || '[]');
-
-        siteData.statistics = (statsRes.data && statsRes.data[0]) ? statsRes.data[0] : localStats;
-        if (personalRes.data && personalRes.data[0] && personalRes.data[0].name && personalRes.data[0].name.trim()) siteData.personalInfo = personalRes.data[0];
-        else if (localPersonal.name && localPersonal.name.trim()) siteData.personalInfo = localPersonal;
-        else siteData.personalInfo = { name: 'Qreative Content', title: 'SaaS Copywriter', bio: 'Scale Your Revenue With Content That Speaks The Language of Your Clients.', hero_phrases: ['Insights.....', 'Strategy.......', 'Growth..', 'Words That Drive Results'] };
-        siteData.heroPhrases = siteData.personalInfo.hero_phrases || (localPersonal.heroPhrases || ['SaaS Copywriter', 'Conversion Expert']);
-        siteData.testimonials = (testimonialsRes.data && testimonialsRes.data.length > 0) ? testimonialsRes.data : localTestimonials;
-
-        applyDataToPage();
-        applyDesignSettings();
-        loadChatOptions();
+        const [statsRes, personalRes, testimonialsRes] = await Promise.all([supabaseClient.from('statistics').select('*').limit(1), supabaseClient.from('personal_info').select('*').limit(1), supabaseClient.from('testimonials').select('*').order('created_at', { ascending: false })]);
+        const ls = JSON.parse(localStorage.getItem('statistics') || '{}'), lp = JSON.parse(localStorage.getItem('personalInfo') || '{}'), lt = JSON.parse(localStorage.getItem('testimonials') || '[]');
+        siteData.statistics = (statsRes.data && statsRes.data[0]) ? statsRes.data[0] : ls;
+        if (personalRes.data && personalRes.data[0] && personalRes.data[0].name && personalRes.data[0].name.trim()) siteData.personalInfo = personalRes.data[0]; else if (lp.name && lp.name.trim()) siteData.personalInfo = lp; else siteData.personalInfo = { name: 'Qreative Content', title: 'SaaS Copywriter', bio: 'Scale Your Revenue With Content That Speaks The Language of Your Clients.', hero_phrases: ['Insights.....', 'Strategy.......', 'Growth..', 'Words That Drive Results'] };
+        siteData.heroPhrases = siteData.personalInfo.hero_phrases || (lp.heroPhrases || ['SaaS Copywriter', 'Conversion Expert']);
+        siteData.testimonials = (testimonialsRes.data && testimonialsRes.data.length > 0) ? testimonialsRes.data : lt;
+        applyData(); applyDesign(); loadChatOptions();
     }
-
-    function applyDesignSettings() {
-        const ds = JSON.parse(localStorage.getItem('designSettings') || '{}');
-        if (ds.colors) { document.documentElement.style.setProperty('--accent', ds.colors.primary || '#818cf8'); document.documentElement.style.setProperty('--accent-hover', ds.colors.secondary || '#6366f1'); }
+    function applyDesign() { const ds = JSON.parse(localStorage.getItem('designSettings') || '{}'); if (ds.colors) { document.documentElement.style.setProperty('--accent', ds.colors.primary || '#818cf8'); document.documentElement.style.setProperty('--accent-hover', ds.colors.secondary || '#6366f1'); } }
+    function applyData() {
+        document.getElementById('bioText').innerText = siteData.personalInfo.bio || ''; document.getElementById('footerText').innerHTML = `© 2026 ${siteData.personalInfo.name || 'Qreative Content'} | ${siteData.personalInfo.title || 'SaaS Copywriter'}`; document.getElementById('logoText').innerHTML = `✍️ ${(siteData.personalInfo.name || 'Qreative').split(' ')[0]}`;
+        document.getElementById('years-counter').innerText = siteData.statistics.years || 0; document.getElementById('projects-counter').innerText = siteData.statistics.projects || 0; document.getElementById('clients-counter').innerText = siteData.statistics.clients || 0; document.getElementById('growth-counter').innerHTML = (siteData.statistics.growth || 0) + '%';
+        renderTestimonials(); startTyping(); startCounters();
     }
+    function renderTestimonials() { const c = document.getElementById('testimonialsGrid'); c.innerHTML = siteData.testimonials.length ? siteData.testimonials.map(t => `<div class="testimonial-card"><div class="rating">${'★'.repeat(t.rating)}${'☆'.repeat(5-t.rating)}</div><div class="testimonial-text">"${escapeHtml(t.testimonial)}"</div><div class="testimonial-author">${escapeHtml(t.name)}</div><div class="testimonial-company">${escapeHtml(t.company)} | ${escapeHtml(t.role)}</div></div>`).join('') : '<div style="text-align:center;grid-column:1/-1;">No testimonials yet.</div>'; }
+    function startTyping() { let pi = 0, ci = 0, del = false; const el = document.getElementById('typed-text'); if (!el) return; function t() { const p = siteData.heroPhrases[pi]; el.textContent = del ? p.substring(0, ci-1) : p.substring(0, ci+1); ci += del ? -1 : 1; if (!del && ci === p.length) { del = true; setTimeout(t, 2000); return; } if (del && ci === 0) { del = false; pi = (pi+1) % siteData.heroPhrases.length; setTimeout(t, 500); return; } setTimeout(t, del ? 50 : 100); } t(); }
+    function startCounters() { const tg = [{ id: 'years-counter', val: parseInt(document.getElementById('years-counter')?.innerText) || 0 },{ id: 'projects-counter', val: parseInt(document.getElementById('projects-counter')?.innerText) || 0 },{ id: 'clients-counter', val: parseInt(document.getElementById('clients-counter')?.innerText) || 0 },{ id: 'growth-counter', val: parseInt(document.getElementById('growth-counter')?.innerText) || 0 }]; const obs = new IntersectionObserver((e) => { if (e[0].isIntersecting) { tg.forEach(t => { let cur = 0; const inc = t.val / 50; const el = document.getElementById(t.id); function u() { cur += inc; if (cur < t.val) { el.textContent = Math.floor(cur); requestAnimationFrame(u); } else el.textContent = t.id === 'growth-counter' ? t.val + '%' : t.val; } u(); }); obs.disconnect(); } }, { threshold: 0.5 }); const sec = document.querySelector('.stats-grid'); if (sec) obs.observe(sec); }
 
-    function applyDataToPage() {
-        const bio = document.getElementById('bioText'); if (bio && siteData.personalInfo.bio) bio.innerText = siteData.personalInfo.bio;
-        const footer = document.getElementById('footerText'); if (footer) footer.innerHTML = `© 2026 ${siteData.personalInfo.name || 'Qreative Content'} | ${siteData.personalInfo.title || 'SaaS Copywriter'}`;
-        const logo = document.getElementById('logoText'); if (logo) logo.innerHTML = `✍️ ${(siteData.personalInfo.name || 'Qreative').split(' ')[0]}`;
-        document.getElementById('years-counter').innerText = siteData.statistics.years || 0;
-        document.getElementById('projects-counter').innerText = siteData.statistics.projects || 0;
-        document.getElementById('clients-counter').innerText = siteData.statistics.clients || 0;
-        document.getElementById('growth-counter').innerHTML = (siteData.statistics.growth || 0) + '%';
-        renderTestimonials();
-        startTypingAnimation(siteData.heroPhrases);
-        startCounters();
-    }
+    function loadChatOptions() { const cs = JSON.parse(localStorage.getItem('chatSettings') || '{}'), pi = JSON.parse(localStorage.getItem('personalInfo') || '{}'); let phone = (cs.whatsappNumber || '254796623670').replace(/\D/g, ''); if (phone.startsWith('0')) phone = '254' + phone.substring(1); if (!phone.startsWith('254')) phone = '254' + phone; document.getElementById('whatsappOption').href = `https://wa.me/${phone}?text=${encodeURIComponent(cs.messageTemplate || 'Hi!')}`; document.getElementById('emailOption').href = `mailto:${cs.email || pi.email || 'hello@qreative.com'}?subject=${encodeURIComponent(cs.emailSubject || 'Inquiry')}`; document.getElementById('facebookOption').href = cs.facebookPage || '#'; }
 
-    function renderTestimonials() {
-        const c = document.getElementById('testimonialsGrid');
-        if (!siteData.testimonials.length) { c.innerHTML = '<div style="text-align:center;grid-column:1/-1;">No testimonials yet.</div>'; return; }
-        c.innerHTML = siteData.testimonials.map(t => `<div class="testimonial-card"><div class="rating">${'★'.repeat(t.rating)}${'☆'.repeat(5-t.rating)}</div><div class="testimonial-text">"${escapeHtml(t.testimonial)}"</div><div class="testimonial-author">${escapeHtml(t.name)}</div><div class="testimonial-company">${escapeHtml(t.company)} | ${escapeHtml(t.role)}</div></div>`).join('');
-    }
-
-    function startTypingAnimation(phrases) {
-        let pi = 0, ci = 0, del = false;
-        const el = document.getElementById('typed-text'); if (!el) return;
-        function type() {
-            const p = phrases[pi];
-            el.textContent = del ? p.substring(0, ci-1) : p.substring(0, ci+1);
-            ci += del ? -1 : 1;
-            if (!del && ci === p.length) { del = true; setTimeout(type, 2000); return; }
-            if (del && ci === 0) { del = false; pi = (pi+1) % phrases.length; setTimeout(type, 500); return; }
-            setTimeout(type, del ? 50 : 100);
-        }
-        type();
-    }
-
-    function startCounters() {
-        const targets = [
-            { id: 'years-counter', val: parseInt(document.getElementById('years-counter')?.innerText) || 0 },
-            { id: 'projects-counter', val: parseInt(document.getElementById('projects-counter')?.innerText) || 0 },
-            { id: 'clients-counter', val: parseInt(document.getElementById('clients-counter')?.innerText) || 0 },
-            { id: 'growth-counter', val: parseInt(document.getElementById('growth-counter')?.innerText) || 0 }
-        ];
-        const obs = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting) {
-                targets.forEach(t => {
-                    let cur = 0; const inc = t.val / 50;
-                    const el = document.getElementById(t.id);
-                    function upd() { cur += inc; if (cur < t.val) { el.textContent = Math.floor(cur); requestAnimationFrame(upd); } else el.textContent = t.id === 'growth-counter' ? t.val + '%' : t.val; }
-                    upd();
-                });
-                obs.disconnect();
-            }
-        }, { threshold: 0.5 });
-        const sec = document.querySelector('.stats-grid'); if (sec) obs.observe(sec);
-    }
-
-    function loadChatOptions() {
-        const cs = JSON.parse(localStorage.getItem('chatSettings') || '{}');
-        const pi = JSON.parse(localStorage.getItem('personalInfo') || '{}');
-        let phone = (cs.whatsappNumber || '254700000000').replace(/\D/g, '');
-        if (phone.startsWith('0')) phone = '254' + phone.substring(1);
-        if (!phone.startsWith('254')) phone = '254' + phone;
-        document.getElementById('whatsappOption').href = `https://wa.me/${phone}?text=${encodeURIComponent(cs.messageTemplate || 'Hi, I saw your portfolio.')}`;
-        document.getElementById('emailOption').href = `mailto:${cs.email || pi.email || 'hello@qreative.com'}?subject=${encodeURIComponent(cs.emailSubject || 'Inquiry')}`;
-        document.getElementById('facebookOption').href = cs.facebookPage || '#';
-    }
-
-    // Float toggle
     let isOpen = false;
-    document.getElementById('chatMainBtn').addEventListener('click', (e) => { e.stopPropagation(); isOpen = !isOpen; document.getElementById('chatOptions').classList.toggle('active', isOpen); Analytics.trackClick('Float Button', 'Bottom Right'); });
+    document.getElementById('chatMainBtn').addEventListener('click', (e) => { e.stopPropagation(); isOpen = !isOpen; document.getElementById('chatOptions').classList.toggle('active', isOpen); Analytics.trackClick('Float', 'Bottom Right'); });
     document.getElementById('chatCloseBtn').addEventListener('click', () => { isOpen = false; document.getElementById('chatOptions').classList.remove('active'); });
     document.addEventListener('click', (e) => { if (!e.target.closest('.chat-float') && isOpen) { isOpen = false; document.getElementById('chatOptions').classList.remove('active'); } });
 
-    // Dark mode
-    const themeToggle = document.getElementById('themeToggle'), body = document.body;
-    if (localStorage.getItem('darkMode') === 'enabled') { body.classList.add('dark'); themeToggle.textContent = 'Light mode'; }
-    else themeToggle.textContent = 'Dark mode';
-    themeToggle.addEventListener('click', () => { body.classList.toggle('dark'); const d = body.classList.contains('dark'); localStorage.setItem('darkMode', d ? 'enabled' : 'disabled'); themeToggle.textContent = d ? 'Light mode' : 'Dark mode'; Analytics.trackClick('Dark Mode', d ? 'Dark' : 'Light'); });
-
-    // Exit intent popup
     let exitShown = false;
-    function showExitPopup() { if (exitShown) return; exitShown = true; document.getElementById('exitPopup').classList.add('active'); Analytics.trackClick('Exit Popup Shown', 'Home'); }
+    function showExitPopup() { if (exitShown) return; exitShown = true; document.getElementById('exitPopup').classList.add('active'); Analytics.trackClick('Exit Popup', 'Home'); }
     function closeExitPopup() { document.getElementById('exitPopup').classList.remove('active'); }
-    async function submitExitRequest() {
-        const email = document.getElementById('exitEmail').value.trim();
-        if (!email || !email.includes('@')) return alert('Valid email required');
-        if (supabaseClient) await supabaseClient.from('contact_leads').insert([{ name: 'Exit Popup', email, message: 'Blueprint via exit popup', status: 'guide_download', created_at: new Date().toISOString() }]);
-        closeExitPopup(); document.getElementById('exitEmail').value = ''; alert('✓ Guide on its way!'); Analytics.trackClick('Exit Popup Submit', 'Home');
-    }
+    async function submitExitRequest() { const email = document.getElementById('exitEmail').value.trim(); if (!email || !email.includes('@')) return alert('Valid email required'); if (supabaseClient) await supabaseClient.from('contact_leads').insert([{ name: 'Exit Popup', email, message: 'Blueprint via exit popup', status: 'guide_download', created_at: new Date().toISOString() }]); closeExitPopup(); document.getElementById('exitEmail').value = ''; alert('✓ Guide on its way!'); Analytics.trackClick('Exit Submit', 'Home'); }
     document.addEventListener('mouseleave', (e) => { if (e.clientY <= 0) showExitPopup(); });
 
-    // ========== CHATBOT ==========
+    // ========== CORRECTED CHATBOT ==========
     const AGENT = "Sarah", AVATAR = "chat bot sarah.png";
-    document.getElementById('agentAvatarImage').src = AVATAR;
-    document.getElementById('headerAvatarImage').src = AVATAR;
+    document.getElementById('agentAvatarImage').src = AVATAR; document.getElementById('headerAvatarImage').src = AVATAR;
     const kb = [{ p: ["services","offer"], r: "I offer: 📝 Website Copy & Design, 📝 Email Marketing, 📝 SEO Blog Content, 📝 Landing Pages, 📝 SEO Content Strategy." },{ p: ["price","cost"], r: "Projects range $200-$3000. Landing pages from $200, full website copy $800-$3000." },{ p: ["how long","timeline"], r: "Landing pages: 3-5 days, Emails: 5-7 days, Full website: 7-14 days." },{ p: ["experience"], r: "4+ years in B2B SaaS, 50+ clients." },{ p: ["contact"], r: "Reach me via WhatsApp, Email, or Facebook buttons!" },{ p: ["hello","hi","hey"], r: "Hey! How can I help you today?" },{ p: ["thanks"], r: "You're welcome!" },{ p: ["bye"], r: "Take care!" }];
     let chatMsgs = [];
     function findMatch(msg) { const lm = msg.toLowerCase(); let b = null, s = 0; for (const i of kb) { let sc = 0; for (const p of i.p) { if (lm.includes(p)) sc += 10; } if (sc > s) { s = sc; b = i; } } return s > 2 ? b : null; }
     function addMsg(type, text) { chatMsgs.push({ type, text }); renderChat(); }
-    function renderChat() { const c = document.getElementById('chatMessages'); c.innerHTML = chatMsgs.map(m => `<div class="message ${m.type}"><div class="message-avatar">${m.type==='bot'?`<img src="${AVATAR}">`:'👤'}</div><div class="message-content">${m.text}</div></div>`).join(''); c.scrollTop = c.scrollHeight; }
-    function showTyping() { const d = document.createElement('div'); d.className = 'message bot'; d.id = 'typing'; d.innerHTML = `<div class="message-avatar"><img src="${AVATAR}"></div><div class="typing-indicator"><div class="typing-dots"><span></span><span></span><span></span></div></div>`; document.getElementById('chatMessages').appendChild(d); }
+    function renderChat() { const c = document.getElementById('chatMessages'); c.innerHTML = chatMsgs.map(m => `<div class="message ${m.type}"><div class="message-avatar">${m.type==='bot'?`<img src="${AVATAR}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`:'👤'}</div><div class="message-content">${m.text}</div></div>`).join(''); c.scrollTop = c.scrollHeight; }
+    function showTyping() { const d = document.createElement('div'); d.className = 'message bot'; d.id = 'typing'; d.innerHTML = `<div class="message-avatar"><img src="${AVATAR}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div><div class="typing-indicator"><div class="typing-dots"><span></span><span></span><span></span></div></div>`; document.getElementById('chatMessages').appendChild(d); }
     function hideTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
-    async function process(msg) { addMsg('user', msg); const m = findMatch(msg); showTyping(); await new Promise(r => setTimeout(r, 1500)); hideTyping(); if (m) addMsg('bot', m.r); else { addMsg('bot', 'Great question! Let\'s connect on WhatsApp. 💚'); const cs = JSON.parse(localStorage.getItem('chatSettings') || '{}'); let ph = (cs.whatsappNumber || '254700000000').replace(/\D/g, ''); if (ph.startsWith('0')) ph = '254' + ph.substring(1); const w = document.createElement('a'); w.href = `https://wa.me/${ph}`; w.className = 'whatsapp-btn'; w.textContent = '💚 Chat on WhatsApp'; w.target = '_blank'; document.getElementById('chatMessages').appendChild(w); } }
-    window.sendMessage = function() { const inp = document.getElementById('chatInput'); if (!inp.value.trim()) return; process(inp.value.trim()); inp.value = ''; Analytics.trackClick('Chatbot Message', 'Chatbot'); };
-    function initChatbot() { const tog = document.getElementById('chatAgentToggle'), win = document.getElementById('chatAgentWindow'); tog.addEventListener('click', (e) => { e.stopPropagation(); win.classList.toggle('active'); if (chatMsgs.length === 0) { showTyping(); setTimeout(() => { hideTyping(); addMsg('bot', `Hi! I'm ${AGENT}. How can I help you?`); }, 1200); } Analytics.trackClick('Chatbot Toggle', win.classList.contains('active')?'Open':'Close'); }); document.addEventListener('click', (e) => { if (!e.target.closest('.chat-agent') && win.classList.contains('active')) win.classList.remove('active'); }); }
+    
+    // FIXED: Horizontal 2-column quick replies
+    function addQuickReplies() {
+        const container = document.getElementById('chatMessages');
+        if (!container) return;
+        const div = document.createElement('div'); div.className = 'message bot';
+        div.innerHTML = `<div class="message-avatar"><img src="${AVATAR}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
+        <div class="quick-replies">
+            <button class="quick-reply-btn" data-topic="Services">📋 Services</button>
+            <button class="quick-reply-btn" data-topic="Pricing">💰 Pricing</button>
+            <button class="quick-reply-btn" data-topic="Timeline">⏱️ Timelines</button>
+            <button class="quick-reply-btn" data-topic="Experience">⭐ Experience</button>
+            <button class="quick-reply-btn" data-topic="Website">🌐 Websites</button>
+            <button class="quick-reply-btn" data-topic="Contact">📱 Contact</button>
+        </div>`;
+        div.querySelectorAll('.quick-reply-btn').forEach(btn => { btn.addEventListener('click', (e) => { e.stopPropagation(); process(btn.dataset.topic); }); });
+        container.appendChild(div); container.scrollTop = container.scrollHeight;
+    }
+
+    async function process(msg) { addMsg('user', msg); const m = findMatch(msg); showTyping(); await new Promise(r => setTimeout(r, 1500)); hideTyping(); if (m) { addMsg('bot', m.r); setTimeout(() => addQuickReplies(), 800); } else { addMsg('bot', 'Great question! Let\'s connect on WhatsApp. 💚'); const cs = JSON.parse(localStorage.getItem('chatSettings') || '{}'); let ph = (cs.whatsappNumber || '254796623670').replace(/\D/g, ''); if (ph.startsWith('0')) ph = '254' + ph.substring(1); const w = document.createElement('a'); w.href = `https://wa.me/${ph}`; w.className = 'whatsapp-btn'; w.textContent = '💚 Chat on WhatsApp'; w.target = '_blank'; document.getElementById('chatMessages').appendChild(w); } }
+    window.sendMessage = function() { const inp = document.getElementById('chatInput'); if (!inp.value.trim()) return; process(inp.value.trim()); inp.value = ''; Analytics.trackClick('Chatbot Msg', 'Chatbot'); };
+    function initChatbot() { const tog = document.getElementById('chatAgentToggle'), win = document.getElementById('chatAgentWindow'); tog.addEventListener('click', (e) => { e.stopPropagation(); win.classList.toggle('active'); if (chatMsgs.length === 0) { showTyping(); setTimeout(() => { hideTyping(); addMsg('bot', `Hi! I'm ${AGENT}. How can I help you today?`); setTimeout(() => addQuickReplies(), 800); }, 1200); } Analytics.trackClick('Chatbot', win.classList.contains('active')?'Open':'Close'); }); document.addEventListener('click', (e) => { if (!e.target.closest('.chat-agent') && win.classList.contains('active')) win.classList.remove('active'); }); }
+
+    const themeToggle = document.getElementById('themeToggle'), body = document.body;
+    if (localStorage.getItem('darkMode') === 'enabled') { body.classList.add('dark'); themeToggle.textContent = 'Light mode'; } else themeToggle.textContent = 'Dark mode';
+    themeToggle.addEventListener('click', () => { body.classList.toggle('dark'); const d = body.classList.contains('dark'); localStorage.setItem('darkMode', d ? 'enabled' : 'disabled'); themeToggle.textContent = d ? 'Light mode' : 'Dark mode'; });
 
     function escapeHtml(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
 
-    // Init
-    initSupabase();
-    initChatbot();
+    initSupabase(); initChatbot();
     console.log('📊 Home Page Analytics Active');
 </script>
 </body>
