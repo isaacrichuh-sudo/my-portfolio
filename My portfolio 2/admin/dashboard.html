@@ -6,492 +6,173 @@
     <title>Admin Dashboard | Portfolio CMS</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #0f172a;
             color: #f1f5f9;
         }
-
-        /* ========== SIDEBAR - FIXED POSITION ========== */
         .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 260px;
-            height: 100vh;
-            background: #1e293b;
-            padding: 30px 20px;
-            overflow-y: auto;
-            z-index: 100;
+            position: fixed; left: 0; top: 0; width: 260px; height: 100vh;
+            background: #1e293b; padding: 30px 20px; overflow-y: auto; z-index: 100;
         }
-
-        .sidebar h2 {
-            font-size: 20px;
-            margin-bottom: 30px;
-            color: #818cf8;
-        }
-
+        .sidebar h2 { font-size: 20px; margin-bottom: 30px; color: #818cf8; }
         .sidebar nav a {
-            display: block;
-            padding: 12px 16px;
-            color: #94a3b8;
-            text-decoration: none;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            transition: all 0.3s;
+            display: block; padding: 12px 16px; color: #94a3b8; text-decoration: none;
+            border-radius: 8px; margin-bottom: 8px; transition: all 0.3s;
         }
-
-        .sidebar nav a:hover {
-            background: #334155;
-            color: white;
-        }
-
-        .sidebar nav a.active {
-            background: #6366f1;
-            color: white;
-        }
-
-        /* ========== MAIN CONTENT - PROPERLY SPACED ========== */
+        .sidebar nav a:hover { background: #334155; color: white; }
+        .sidebar nav a.active { background: #6366f1; color: white; }
         .main-content {
-            margin-left: 260px;
-            padding: 30px;
-            min-height: 100vh;
-            width: calc(100% - 260px);
+            margin-left: 260px; padding: 30px; min-height: 100vh; width: calc(100% - 260px);
         }
-
-        /* ========== DASHBOARD HEADER ========== */
         .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #334155;
-            flex-wrap: wrap;
-            gap: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #334155;
+            flex-wrap: wrap; gap: 15px;
         }
-
-        .dashboard-header h1 {
-            font-size: 28px;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .user-info {
-            color: #94a3b8;
-            font-size: 14px;
-            margin-right: 5px;
-        }
-
+        .dashboard-header h1 { font-size: 28px; }
+        .header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .user-info { color: #94a3b8; font-size: 14px; }
         .preview-link {
-            background: #10b981;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s;
-            display: inline-block;
-            font-weight: 600;
+            background: #10b981; color: white; padding: 10px 20px; border-radius: 8px;
+            text-decoration: none; transition: all 0.3s; font-weight: 600;
         }
-
-        .preview-link:hover {
-            background: #059669;
-            transform: translateY(-2px);
-        }
-
+        .preview-link:hover { background: #059669; transform: translateY(-2px); }
         .logout-btn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s;
+            background: #ef4444; color: white; border: none; padding: 10px 18px;
+            border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.3s;
         }
+        .logout-btn:hover { background: #dc2626; transform: translateY(-2px); }
 
-        .logout-btn:hover {
-            background: #dc2626;
-            transform: translateY(-2px);
-        }
-
-        /* ========== WELCOME BANNER ========== */
-        .welcome-banner {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            border-radius: 12px;
-            padding: 25px 30px;
-            margin-bottom: 30px;
-            border: 1px solid #475569;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .welcome-icon {
-            font-size: 48px;
-        }
-
-        .welcome-text h2 {
-            font-size: 22px;
-            margin-bottom: 5px;
-        }
-
-        .welcome-text p {
-            color: #94a3b8;
-            font-size: 14px;
-        }
-
-        /* ========== STATS GRID ========== */
         .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px; margin-bottom: 30px;
         }
-
         .stat-card {
-            background: #1e293b;
-            padding: 25px;
-            border-radius: 12px;
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 1px solid transparent;
+            background: #1e293b; padding: 25px; border-radius: 12px; text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s; border: 1px solid #334155;
         }
+        .stat-card:hover { transform: translateY(-3px); border-color: #6366f1; box-shadow: 0 8px 25px rgba(99,102,241,0.15); }
+        .stat-icon { font-size: 32px; margin-bottom: 10px; }
+        .stat-number { font-size: 36px; font-weight: 700; color: #818cf8; }
+        .stat-label { font-size: 14px; color: #94a3b8; margin-top: 8px; }
+        .stat-trend { font-size: 12px; margin-top: 5px; }
+        .stat-trend.up { color: #10b981; }
+        .stat-trend.down { color: #ef4444; }
 
-        .stat-card:hover {
-            transform: translateY(-3px);
-            border-color: #6366f1;
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
-        }
-
-        .stat-icon {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-
-        .stat-number {
-            font-size: 42px;
-            font-weight: 700;
-            color: #818cf8;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: #94a3b8;
-            margin-top: 8px;
-        }
-
-        /* ========== SETTINGS CARDS ========== */
         .settings-card {
-            background: #1e293b;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
-            border: 1px solid #334155;
+            background: #1e293b; border-radius: 12px; padding: 25px;
+            margin-bottom: 30px; border: 1px solid #334155;
         }
+        .settings-card h3 { margin-bottom: 20px; color: #f1f5f9; font-size: 20px; display: flex; align-items: center; gap: 10px; }
+        .settings-card h4 { margin: 20px 0 15px; color: #cbd5e1; font-size: 16px; }
 
-        .settings-card h3 {
-            margin-bottom: 20px;
-            color: #f1f5f9;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .settings-card h4 {
-            margin: 20px 0 15px;
-            color: #cbd5e1;
-            font-size: 16px;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: 8px;
-        }
-
-        .badge-success {
-            background: rgba(16, 185, 129, 0.2);
-            color: #6ee7b7;
-        }
-
-        .badge-info {
-            background: rgba(99, 102, 241, 0.2);
-            color: #a5b4fc;
-        }
-
-        /* ========== QUICK ACTIONS ========== */
         .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-            margin-top: 10px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px; margin-top: 10px;
         }
-
         .action-card {
-            background: #0f172a;
-            padding: 20px;
-            border-radius: 12px;
-            text-decoration: none;
-            color: white;
-            transition: all 0.3s;
-            display: block;
-            border: 1px solid #334155;
+            background: #0f172a; padding: 20px; border-radius: 12px; text-decoration: none;
+            color: white; transition: all 0.3s; display: block; border: 1px solid #334155;
         }
+        .action-card:hover { transform: translateY(-3px); background: #1e293b; border-color: #6366f1; }
+        .action-icon { font-size: 36px; margin-bottom: 12px; }
+        .action-title { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
+        .action-desc { font-size: 12px; color: #94a3b8; }
 
-        .action-card:hover {
-            transform: translateY(-3px);
-            background: #1e293b;
-            border-color: #6366f1;
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
+        .analytics-row {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px;
         }
-
-        .action-icon {
-            font-size: 36px;
-            margin-bottom: 12px;
+        .analytics-card {
+            background: #0f172a; border-radius: 12px; padding: 20px; border: 1px solid #334155;
         }
-
-        .action-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 5px;
+        .analytics-card h4 { color: #818cf8; margin-bottom: 15px; font-size: 16px; }
+        .metric-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 0; border-bottom: 1px solid #1e293b;
         }
-
-        .action-desc {
-            font-size: 12px;
-            color: #94a3b8;
+        .metric-row:last-child { border-bottom: none; }
+        .metric-name { color: #94a3b8; font-size: 13px; }
+        .metric-value { color: #f1f5f9; font-weight: 600; font-size: 14px; }
+        .metric-bar {
+            height: 6px; background: #334155; border-radius: 3px; margin-top: 5px; overflow: hidden;
         }
+        .metric-fill { height: 100%; background: #818cf8; border-radius: 3px; transition: width 1s ease; }
 
-        /* ========== TESTIMONIAL ITEMS ========== */
-        .testimonial-item {
-            background: #0f172a;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            border: 1px solid #334155;
+        .funnel-visual {
+            display: flex; flex-direction: column; gap: 8px; margin-top: 15px;
         }
-
-        .testimonial-info {
-            flex: 1;
+        .funnel-step {
+            background: #818cf8; color: white; padding: 12px 20px; border-radius: 8px;
+            text-align: center; font-weight: 600; font-size: 14px; transition: all 0.3s;
         }
+        .funnel-step:nth-child(1) { width: 100%; opacity: 1; }
+        .funnel-step:nth-child(2) { width: 70%; margin: 0 auto; opacity: 0.85; }
+        .funnel-step:nth-child(3) { width: 45%; margin: 0 auto; opacity: 0.7; }
+        .funnel-step:nth-child(4) { width: 25%; margin: 0 auto; opacity: 0.55; }
 
-        .testimonial-name {
-            font-weight: 600;
-            color: #818cf8;
-        }
-
-        .testimonial-text {
-            font-size: 13px;
-            color: #94a3b8;
-            margin-top: 5px;
-        }
-
-        /* ========== UNRECOGNIZED QUESTIONS LIST ========== */
-        .unrecognized-item {
-            background: #0f172a;
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #334155;
-        }
-
-        .unrecognized-question {
-            font-weight: 500;
-            margin-bottom: 5px;
-        }
-
-        .unrecognized-date {
-            font-size: 11px;
-            color: #64748b;
-        }
-
-        /* ========== STATS TABLE ROW ========== */
-        .stats-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #0f172a;
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            border: 1px solid #334155;
-        }
-
-        .stats-row-name {
-            font-weight: 500;
-        }
-
-        .stats-row-value {
-            color: #818cf8;
-            font-weight: 600;
-        }
-
-        /* ========== BUTTON STYLES ========== */
         .export-btn {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
+            background: #10b981; color: white; border: none; padding: 10px 18px;
+            border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s;
         }
-
-        .export-btn:hover {
-            background: #059669;
-            transform: translateY(-1px);
-        }
-
+        .export-btn:hover { background: #059669; transform: translateY(-1px); }
         .danger-btn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
+            background: #ef4444; color: white; border: none; padding: 10px 18px;
+            border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s;
         }
-
-        .danger-btn:hover {
-            background: #dc2626;
-            transform: translateY(-1px);
+        .danger-btn:hover { background: #dc2626; transform: translateY(-1px); }
+        .refresh-btn {
+            background: #6366f1; color: white; border: none; padding: 10px 18px;
+            border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s;
         }
-
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            display: none;
-        }
-
-        .loading-spinner {
-            background: #1e293b;
-            padding: 20px 40px;
-            border-radius: 12px;
-            text-align: center;
-        }
+        .refresh-btn:hover { background: #4f46e5; transform: translateY(-1px); }
 
         .success-msg {
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid #10b981;
-            color: #6ee7b7;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
+            background: rgba(16,185,129,0.15); border: 1px solid #10b981;
+            color: #6ee7b7; padding: 12px 16px; border-radius: 8px;
+            margin-bottom: 20px; display: none;
+        }
+        .badge {
+            display: inline-block; padding: 3px 10px; border-radius: 12px;
+            font-size: 11px; font-weight: 600; margin-left: 8px;
+        }
+        .badge-success { background: rgba(16,185,129,0.2); color: #6ee7b7; }
+        .badge-warning { background: rgba(245,158,11,0.2); color: #fcd34d; }
+        .badge-info { background: rgba(99,102,241,0.2); color: #a5b4fc; }
+        .badge-danger { background: rgba(239,68,68,0.2); color: #fca5a5; }
+
+        .empty-state { text-align: center; color: #94a3b8; padding: 30px; }
+        .loading-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8); display: flex; align-items: center;
+            justify-content: center; z-index: 1000; display: none;
+        }
+        .loading-spinner {
+            background: #1e293b; padding: 20px 40px; border-radius: 12px; text-align: center;
         }
 
-        .error-badge {
-            color: #ef4444;
-            font-size: 12px;
-            margin-left: 8px;
-        }
-
-        .empty-state {
-            text-align: center;
-            color: #94a3b8;
-            padding: 30px;
-        }
-
-        .refresh-btn {
-            background: #6366f1;
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            transition: all 0.3s;
-        }
-
-        .refresh-btn:hover {
-            background: #4f46e5;
-            transform: translateY(-1px);
-        }
-
-        /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
-            .sidebar {
-                position: relative;
-                width: 100%;
-                height: auto;
-                margin-bottom: 20px;
-            }
-            .main-content {
-                margin-left: 0;
-                width: 100%;
-                padding: 20px;
-            }
-            .dashboard-header {
-                flex-direction: column;
-                text-align: center;
-            }
-            .header-right {
-                justify-content: center;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .quick-actions {
-                grid-template-columns: 1fr;
-            }
-            .welcome-banner {
-                flex-direction: column;
-                text-align: center;
-            }
+            .sidebar { position: relative; width: 100%; height: auto; }
+            .main-content { margin-left: 0; width: 100%; padding: 20px; }
+            .analytics-row { grid-template-columns: 1fr; }
+            .dashboard-header { flex-direction: column; text-align: center; }
+            .header-right { justify-content: center; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
         }
-
         @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            .header-right {
-                flex-direction: column;
-                gap: 8px;
-            }
+            .stats-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <!-- ========== LOADING OVERLAY ========== -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner">
-            <div style="font-size: 40px; margin-bottom: 10px;">⏳</div>
+            <div style="font-size:40px; margin-bottom:10px;">⏳</div>
             <div>Loading dashboard data...</div>
         </div>
     </div>
 
-    <!-- ========== SIDEBAR ========== -->
     <div class="sidebar">
         <h2>🎛️ Portfolio CMS</h2>
         <nav>
@@ -503,50 +184,132 @@
         </nav>
     </div>
 
-    <!-- ========== MAIN CONTENT ========== -->
     <div class="main-content">
-        <!-- Success Message -->
-        <div class="success-msg" id="successMsg">✓ Operation completed successfully!</div>
-
-        <!-- Dashboard Header -->
         <div class="dashboard-header">
             <h1>📊 Admin Dashboard</h1>
             <div class="header-right">
                 <span class="user-info" id="userEmailDisplay"></span>
                 <a href="../index.html" class="preview-link" target="_blank">🔍 View Website</a>
+                <button class="refresh-btn" onclick="refreshDashboard()">🔄 Refresh</button>
                 <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
             </div>
         </div>
 
-        <!-- Welcome Banner -->
-        <div class="welcome-banner">
-                <div class="welcome-text">
-                <h2>Welcome back<span id="welcomeName">!</span></h2>
-                <p>Here's what's happening with your portfolio today.</p>
+        <div class="success-msg" id="successMsg">✓ Dashboard data refreshed!</div>
+
+        <!-- ========== QUICK STATS ========== -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-number" id="uniqueVisitors">0</div>
+                <div class="stat-label">Unique Visitors</div>
+                <div class="stat-trend up" id="returnRate">0% return rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📄</div>
+                <div class="stat-number" id="totalPageViews">0</div>
+                <div class="stat-label">Total Page Views</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-number" id="bounceRate">0%</div>
+                <div class="stat-label">Bounce Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-number" id="avgTimeOnSite">0s</div>
+                <div class="stat-label">Avg Time on Site</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📑</div>
+                <div class="stat-number" id="pagesPerSession">0</div>
+                <div class="stat-label">Pages Per Session</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-number" id="conversionRate">0%</div>
+                <div class="stat-label">Conversion Rate</div>
             </div>
         </div>
 
-        <!-- ========== STATS CARDS (from Supabase) ========== -->
-        <div class="stats-grid" id="statsGrid">
-            <div class="stat-card">
-                <div class="stat-icon">📂</div>
-                <div class="stat-number" id="projectCount">-</div>
-                <div class="stat-label">Total Projects</div>
+        <!-- ========== ENGAGEMENT FUNNEL ========== -->
+        <div class="settings-card">
+            <h3>📈 Engagement Funnel</h3>
+            <p style="color:#94a3b8; font-size:13px; margin-bottom:15px;">How visitors move through your website</p>
+            <div class="funnel-visual" id="funnelVisual">
+                <div class="funnel-step">Home: 0 views</div>
+                <div class="funnel-step">Work: 0 views</div>
+                <div class="funnel-step">Skills: 0 views</div>
+                <div class="funnel-step">Contact: 0 views</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon">⭐</div>
-                <div class="stat-number" id="testimonialCount">-</div>
-                <div class="stat-label">Testimonials</div>
+        </div>
+
+        <!-- ========== DETAILED ANALYTICS ROW ========== -->
+        <div class="analytics-row">
+            <!-- Most Engaging Pages -->
+            <div class="analytics-card">
+                <h4>🔥 Most Engaging Pages</h4>
+                <div id="engagingPages"><div class="empty-state">No data yet</div></div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon">📧</div>
-                <div class="stat-number" id="leadsCount">-</div>
-                <div class="stat-label">Contact Leads</div>
+
+            <!-- Exit Pages -->
+            <div class="analytics-card">
+                <h4>⚠️ Exit Destinations</h4>
+                <div id="exitDestinations"><div class="empty-state">No data yet</div></div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon">❓</div>
-                <div class="stat-number" id="faqCount">-</div>
-                <div class="stat-label">FAQs</div>
+
+            <!-- Device Breakdown -->
+            <div class="analytics-card">
+                <h4>📱 Device Breakdown</h4>
+                <div id="deviceBreakdown"><div class="empty-state">No data yet</div></div>
+            </div>
+
+            <!-- Top Services -->
+            <div class="analytics-card">
+                <h4>🔝 Most Viewed Services</h4>
+                <div id="topServices"><div class="empty-state">No data yet</div></div>
+            </div>
+
+            <!-- Lead Generation -->
+            <div class="analytics-card">
+                <h4>📥 Lead Generation</h4>
+                <div id="leadGeneration"><div class="empty-state">No data yet</div></div>
+            </div>
+
+            <!-- Peak Hours -->
+            <div class="analytics-card">
+                <h4>🕐 Peak Visit Hours</h4>
+                <div id="peakHours"><div class="empty-state">No data yet</div></div>
+            </div>
+        </div>
+
+        <!-- ========== CHATBOT ANALYTICS ========== -->
+        <div class="settings-card">
+            <h3>💬 Chatbot Analytics <span class="badge badge-info">Live</span></h3>
+            <div class="stats-grid" style="margin-bottom:20px;">
+                <div class="stat-card">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-number" id="totalSessions">0</div>
+                    <div class="stat-label">Chat Sessions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💚</div>
+                    <div class="stat-number" id="whatsappClicks">0</div>
+                    <div class="stat-label">WhatsApp Clicks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">❓</div>
+                    <div class="stat-number" id="unrecognizedCount">0</div>
+                    <div class="stat-label">Unanswered Questions</div>
+                </div>
+            </div>
+            <h4>📋 Most Clicked Quick Replies</h4>
+            <div id="quickReplyStats" style="margin-bottom:20px;"></div>
+            <h4>❓ Unanswered Questions</h4>
+            <div id="unrecognizedList" style="max-height:300px; overflow-y:auto;"></div>
+            <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="export-btn" onclick="exportAllAnalytics()">📥 Export All Analytics</button>
+                <button class="danger-btn" onclick="clearAllAnalytics()">🗑️ Clear All Analytics</button>
             </div>
         </div>
 
@@ -576,542 +339,464 @@
                 </a>
             </div>
         </div>
-
-        <!-- ========== RECENT PROJECTS (from Supabase) ========== -->
-        <div class="settings-card">
-            <h3>📂 Recent Projects <span class="badge badge-info" id="recentProjectCount">0</span></h3>
-            <div id="recentProjectsList">
-                <div class="empty-state">Loading recent projects...</div>
-            </div>
-        </div>
-
-        <!-- ========== CHATBOT ANALYTICS ========== -->
-        <div class="settings-card">
-            <h3>💬 Chatbot Analytics <span class="badge badge-success">Live</span></h3>
-            <div class="stats-grid" style="margin-bottom: 20px;">
-                <div class="stat-card">
-                    <div class="stat-icon">💬</div>
-                    <div class="stat-number" id="totalSessions">0</div>
-                    <div class="stat-label">Chat Sessions</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">💚</div>
-                    <div class="stat-number" id="whatsappClicks">0</div>
-                    <div class="stat-label">WhatsApp Clicks</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">❓</div>
-                    <div class="stat-number" id="unrecognizedCount">0</div>
-                    <div class="stat-label">Unanswered Questions</div>
-                </div>
-            </div>
-
-            <h4>📋 Most Clicked Quick Replies</h4>
-            <div id="quickReplyStats" style="margin-bottom: 20px;">
-                <div class="empty-state">No quick reply clicks yet.</div>
-            </div>
-
-            <h4>❓ Unanswered Questions (Needs Your Attention)</h4>
-            <div id="unrecognizedList" style="max-height: 400px; overflow-y: auto;">
-                <div class="empty-state">No unrecognized questions! 🎉</div>
-            </div>
-
-            <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-                <button onclick="exportChatAnalytics()" class="export-btn">📥 Export Analytics</button>
-                <button onclick="clearChatAnalytics()" class="danger-btn">🗑️ Clear Analytics</button>
-            </div>
-        </div>
-
-        <!-- ========== WEBSITE ANALYTICS ========== -->
-        <div class="settings-card">
-            <h3>📈 Website Analytics <span class="badge badge-info">Live</span></h3>
-            <div class="stats-grid" style="margin-bottom: 20px;">
-                <div class="stat-card">
-                    <div class="stat-icon">👥</div>
-                    <div class="stat-number" id="uniqueVisitors">0</div>
-                    <div class="stat-label">Unique Visitors</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">👁️</div>
-                    <div class="stat-number" id="totalPageViews">0</div>
-                    <div class="stat-label">Total Page Views</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🔘</div>
-                    <div class="stat-number" id="totalButtonClicks">0</div>
-                    <div class="stat-label">Button Clicks</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">📏</div>
-                    <div class="stat-number" id="avgScrollDepth">0%</div>
-                    <div class="stat-label">Avg Scroll Depth</div>
-                </div>
-            </div>
-
-            <h4>🔘 Most Clicked Buttons</h4>
-            <div id="topButtons" style="margin-bottom: 20px;">
-                <div class="empty-state">No button clicks recorded yet.</div>
-            </div>
-
-            <h4>📄 Page Views by Page</h4>
-            <div id="pageViewsByPage">
-                <div class="empty-state">No page views recorded yet.</div>
-            </div>
-
-            <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-                <button onclick="exportWebsiteAnalytics()" class="export-btn">📥 Export Website Analytics</button>
-                <button onclick="clearWebsiteAnalytics()" class="danger-btn">🗑️ Clear Website Analytics</button>
-                <button onclick="refreshDashboard()" class="refresh-btn">🔄 Refresh All Data</button>
-            </div>
-        </div>
     </div>
 
     <script>
-        // ========== SUPABASE CONFIGURATION ==========
+        // ========== SUPABASE CONFIG ==========
         const SUPABASE_URL = 'https://ooarghgxjbxqgnmjwpdj.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9vYXJnaGd4amJ4cWdubWp3cGRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NzM1MzQsImV4cCI6MjA5NDU0OTUzNH0.7zkOuh4F8lkSIaDnMEm9-R8v3sepjxnz0P4BKOI-HaM';
-        
         let supabaseClient;
 
-        // ========== AUTHENTICATION CHECK (CONSISTENT WITH SETTINGS/PROJECTS) ==========
+        // ========== AUTH ==========
         async function checkAuth() {
             const token = localStorage.getItem('supabase_token');
             const refreshToken = localStorage.getItem('supabase_refresh_token');
-            
-            if (!token) {
-                console.log('No auth token found, redirecting to login...');
-                window.location.href = 'login.html';
-                return false;
-            }
-            
-            // Initialize Supabase client with auth configuration
+            if (!token) { window.location.href = 'login.html'; return false; }
             supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-                auth: {
-                    autoRefreshToken: true,
-                    persistSession: true,
-                    detectSessionInUrl: false
-                }
+                auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: false }
             });
-            
-            // Set the session using stored tokens (critical for RLS)
-            const { data, error } = await supabaseClient.auth.setSession({
-                access_token: token,
-                refresh_token: refreshToken || ''
-            });
-            
-            if (error) {
-                console.error('Error setting session:', error);
-                localStorage.removeItem('supabase_token');
-                localStorage.removeItem('supabase_refresh_token');
-                window.location.href = 'login.html';
-                return false;
-            }
-            
-            console.log('Dashboard: Supabase session established');
+            const { error } = await supabaseClient.auth.setSession({ access_token: token, refresh_token: refreshToken || '' });
+            if (error) { localStorage.removeItem('supabase_token'); localStorage.removeItem('supabase_refresh_token'); window.location.href = 'login.html'; return false; }
             return true;
         }
 
-        // Display user email in header and welcome message
-        function displayUserInfo() {
-            if (supabaseClient) {
-                supabaseClient.auth.getUser().then(({ data }) => {
-                    if (data?.user?.email) {
-                        // Display in header
-                        const emailDisplay = document.getElementById('userEmailDisplay');
-                        if (emailDisplay) {
-                            emailDisplay.textContent = '👤 ' + data.user.email;
-                        }
-                        // Display in welcome banner
-                        const welcomeName = document.getElementById('welcomeName');
-                        if (welcomeName) {
-                            const name = data.user.email.split('@')[0];
-                            welcomeName.textContent = ', ' + name.charAt(0).toUpperCase() + name.slice(1) + '!';
-                        }
-                    }
-                }).catch(() => {
-                    const emailDisplay = document.getElementById('userEmailDisplay');
-                    if (emailDisplay) emailDisplay.textContent = '👤 Logged in';
-                });
-            }
-        }
-
-        // ========== LOGOUT FUNCTION ==========
         async function logout() {
-            console.log('Logging out...');
-            
-            if (supabaseClient) {
-                await supabaseClient.auth.signOut().catch(console.error);
-            }
-            
-            // Clear all stored auth data
-            localStorage.removeItem('supabase_token');
-            localStorage.removeItem('supabase_refresh_token');
-            
-            // Redirect to login page
+            if (supabaseClient) await supabaseClient.auth.signOut().catch(console.error);
+            localStorage.removeItem('supabase_token'); localStorage.removeItem('supabase_refresh_token');
             window.location.href = 'login.html';
         }
 
-        // ========== LOAD STATS FROM SUPABASE ==========
-        async function loadAllStats() {
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            loadingOverlay.style.display = 'flex';
-            
+        function displayUserInfo() {
+            const el = document.getElementById('userEmailDisplay');
+            if (el && supabaseClient) {
+                supabaseClient.auth.getUser().then(({ data }) => {
+                    el.textContent = '👤 ' + (data?.user?.email || 'Logged in');
+                }).catch(() => el.textContent = '👤 Logged in');
+            }
+        }
+
+        // ========== ANALYTICS ENGINE ==========
+        const Analytics = {
+            getViews() { return JSON.parse(localStorage.getItem('pageViews') || '[]'); },
+            getClicks() { return JSON.parse(localStorage.getItem('buttonClicks') || '[]'); },
+            getScroll() { return JSON.parse(localStorage.getItem('scrollDepth') || '[]'); },
+            getTimeOnPage() { return JSON.parse(localStorage.getItem('timeOnPage') || '[]'); },
+            getSessions() { return JSON.parse(localStorage.getItem('completedSessions') || '[]'); },
+            getExits() { return JSON.parse(localStorage.getItem('exitClicks') || '[]'); },
+            getVisitorInfo() { return JSON.parse(localStorage.getItem('visitorInfo') || '{}'); },
+            getServiceInteractions() { return JSON.parse(localStorage.getItem('serviceInteractions') || '[]'); },
+            getSkillEngagement() { return JSON.parse(localStorage.getItem('skillEngagement') || '[]'); },
+            getChatAnalytics() { return JSON.parse(localStorage.getItem('chatAnalytics') || '{"sessions":[],"clickData":{"whatsappClicks":0,"quickReplyClicks":{}}}'); },
+            getUnrecognized() { return JSON.parse(localStorage.getItem('unrecognizedQuestions') || '[]'); },
+
+            getBounceRate() {
+                const sessions = this.getSessions();
+                if (!sessions.length) return 0;
+                return Math.round((sessions.filter(s => s.bounced).length / sessions.length) * 100);
+            },
+
+            getAvgTimeOnSite() {
+                const times = this.getTimeOnPage();
+                if (!times.length) return 0;
+                return Math.round(times.reduce((s, t) => s + t.seconds, 0) / times.length);
+            },
+
+            getPagesPerSession() {
+                const sessions = this.getSessions();
+                if (!sessions.length) return 0;
+                return (sessions.reduce((s, sess) => s + sess.pages, 0) / sessions.length).toFixed(1);
+            },
+
+            getConversionRate() {
+                const views = this.getViews();
+                const exits = this.getExits();
+                const conversions = exits.filter(e => e.type === 'whatsapp' || e.type === 'email' || e.text?.includes('Discuss'));
+                return views.length ? Math.round((conversions.length / views.length) * 100) : 0;
+            },
+
+            getReturnRate() {
+                const info = this.getVisitorInfo();
+                if (!info.totalVisits || info.totalVisits <= 1) return 0;
+                return Math.round((info.returnVisits / info.totalVisits) * 100);
+            },
+
+            getPageStats() {
+                const views = this.getViews();
+                const times = this.getTimeOnPage();
+                const pages = {};
+                
+                // Count views per page
+                views.forEach(v => {
+                    const page = this.normalizePage(v.page);
+                    if (!pages[page]) pages[page] = { views: 0, totalTime: 0, count: 0 };
+                    pages[page].views++;
+                });
+
+                // Average time per page
+                times.forEach(t => {
+                    const page = this.normalizePage(t.page);
+                    if (pages[page]) {
+                        pages[page].totalTime += t.seconds;
+                        pages[page].count++;
+                    }
+                });
+
+                // Calculate averages
+                Object.keys(pages).forEach(p => {
+                    pages[p].avgTime = pages[p].count ? Math.round(pages[p].totalTime / pages[p].count) : 0;
+                });
+
+                return pages;
+            },
+
+            getExitStats() {
+                const exits = this.getExits();
+                const stats = {};
+                exits.forEach(e => {
+                    const key = e.type === 'whatsapp' ? 'WhatsApp' :
+                               e.type === 'email' ? 'Email' :
+                               e.type === 'facebook' ? 'Facebook' :
+                               e.type === 'internal' ? 'Internal Pages' : 'External Links';
+                    stats[key] = (stats[key] || 0) + 1;
+                });
+                return stats;
+            },
+
+            getDeviceBreakdown() {
+                const info = this.getVisitorInfo();
+                return info.deviceTypes || {};
+            },
+
+            getPeakHours() {
+                const views = this.getViews();
+                const hours = {};
+                for (let i = 0; i < 24; i++) hours[i] = 0;
+                views.forEach(v => {
+                    const hour = new Date(v.timestamp).getHours();
+                    hours[hour] = (hours[hour] || 0) + 1;
+                });
+                return hours;
+            },
+
+            getLeadStats() {
+                const exits = this.getExits();
+                const guideDownloads = exits.filter(e => e.text?.includes('Guide') || e.to?.includes('guide'));
+                const contactClicks = exits.filter(e => e.type === 'whatsapp' || e.type === 'email');
+                const formStarts = JSON.parse(localStorage.getItem('contactForms') || '[]');
+                return {
+                    guideDownloads: guideDownloads.length,
+                    contactClicks: contactClicks.length,
+                    formSubmissions: formStarts.length
+                };
+            },
+
+            normalizePage(page) {
+                if (page === '/' || page.includes('index')) return 'Home';
+                if (page.includes('work')) return 'Work';
+                if (page.includes('skills')) return 'Skills';
+                if (page.includes('contact')) return 'Contact';
+                return page.replace('.html', '').replace('/', '');
+            }
+        };
+
+        // ========== SUPABASE STATS ==========
+        async function loadSupabaseStats() {
             try {
-                await Promise.all([
-                    loadProjectCount(),
-                    loadTestimonialCount(),
-                    loadLeadsCount(),
-                    loadFaqCount(),
-                    loadRecentProjects()
+                const [projects, testimonials, leads, faqs] = await Promise.all([
+                    supabaseClient.from('projects').select('*', { count: 'exact', head: true }),
+                    supabaseClient.from('testimonials').select('*', { count: 'exact', head: true }),
+                    supabaseClient.from('contact_leads').select('*', { count: 'exact', head: true }),
+                    supabaseClient.from('faqs').select('*', { count: 'exact', head: true })
                 ]);
-            } catch (err) {
-                console.error('Error loading stats:', err);
-            }
+                document.getElementById('projectCount') && (document.getElementById('projectCount').textContent = projects.count || 0);
+                document.getElementById('testimonialCount') && (document.getElementById('testimonialCount').textContent = testimonials.count || 0);
+                document.getElementById('leadsCount') && (document.getElementById('leadsCount').textContent = leads.count || 0);
+                document.getElementById('faqCount') && (document.getElementById('faqCount').textContent = faqs.count || 0);
+            } catch (e) { console.error('Error loading Supabase stats:', e); }
+        }
+
+        // ========== RENDER FUNCTIONS ==========
+        function renderMarketingStats() {
+            const views = Analytics.getViews();
+            const info = Analytics.getVisitorInfo();
+
+            document.getElementById('uniqueVisitors').textContent = info.pagesVisited?.length || 0;
+            document.getElementById('totalPageViews').textContent = views.length;
+            document.getElementById('bounceRate').textContent = Analytics.getBounceRate() + '%';
+            document.getElementById('avgTimeOnSite').textContent = Analytics.getAvgTimeOnSite() + 's';
+            document.getElementById('pagesPerSession').textContent = Analytics.getPagesPerSession();
+            document.getElementById('conversionRate').textContent = Analytics.getConversionRate() + '%';
             
-            loadingOverlay.style.display = 'none';
+            const returnRate = document.getElementById('returnRate');
+            if (returnRate) returnRate.textContent = Analytics.getReturnRate() + '% return rate';
         }
 
-        async function loadProjectCount() {
-            try {
-                const { count, error } = await supabaseClient
-                    .from('projects')
-                    .select('*', { count: 'exact', head: true });
-                
-                const el = document.getElementById('projectCount');
-                if (error) {
-                    console.error('Error loading projects count:', error);
-                    el.innerHTML = '0 <span class="error-badge">⚠️</span>';
-                    return;
-                }
-                el.textContent = count || 0;
-            } catch (err) {
-                console.error('Failed to load projects:', err);
-                document.getElementById('projectCount').innerHTML = '0 <span class="error-badge">⚠️</span>';
-            }
-        }
-
-        async function loadTestimonialCount() {
-            try {
-                const { count, error } = await supabaseClient
-                    .from('testimonials')
-                    .select('*', { count: 'exact', head: true });
-                
-                const el = document.getElementById('testimonialCount');
-                if (error) {
-                    console.error('Error loading testimonials count:', error);
-                    el.innerHTML = '0 <span class="error-badge">⚠️</span>';
-                    return;
-                }
-                el.textContent = count || 0;
-            } catch (err) {
-                console.error('Failed to load testimonials:', err);
-                document.getElementById('testimonialCount').innerHTML = '0 <span class="error-badge">⚠️</span>';
-            }
-        }
-
-        async function loadLeadsCount() {
-            try {
-                const { count, error } = await supabaseClient
-                    .from('contact_leads')
-                    .select('*', { count: 'exact', head: true });
-                
-                const el = document.getElementById('leadsCount');
-                if (error) {
-                    console.error('Error loading leads count:', error);
-                    el.innerHTML = '0 <span class="error-badge">⚠️</span>';
-                    return;
-                }
-                el.textContent = count || 0;
-            } catch (err) {
-                console.error('Failed to load leads:', err);
-                document.getElementById('leadsCount').innerHTML = '0 <span class="error-badge">⚠️</span>';
-            }
-        }
-
-        async function loadFaqCount() {
-            try {
-                const { count, error } = await supabaseClient
-                    .from('faqs')
-                    .select('*', { count: 'exact', head: true });
-                
-                const el = document.getElementById('faqCount');
-                if (error) {
-                    console.error('Error loading FAQs count:', error);
-                    el.innerHTML = '0 <span class="error-badge">⚠️</span>';
-                    return;
-                }
-                el.textContent = count || 0;
-            } catch (err) {
-                console.error('Failed to load FAQs:', err);
-                document.getElementById('faqCount').innerHTML = '0 <span class="error-badge">⚠️</span>';
-            }
-        }
-
-        // Load recent projects for the dashboard
-        async function loadRecentProjects() {
-            const container = document.getElementById('recentProjectsList');
-            const countBadge = document.getElementById('recentProjectCount');
+        function renderFunnel() {
+            const pages = Analytics.getPageStats();
+            const funnel = document.getElementById('funnelVisual');
+            const order = ['Home', 'Work', 'Skills', 'Contact'];
             
-            try {
-                const { data, error } = await supabaseClient
-                    .from('projects')
-                    .select('*')
-                    .order('created_at', { ascending: false })
-                    .limit(5);
-                
-                if (error) {
-                    console.error('Error loading recent projects:', error);
-                    container.innerHTML = '<div class="empty-state" style="color: #ef4444;">Error loading projects</div>';
-                    return;
-                }
-                
-                if (!data || data.length === 0) {
-                    container.innerHTML = '<div class="empty-state">No projects yet. <a href="projects.html" style="color: #818cf8;">Add your first project</a></div>';
-                    if (countBadge) countBadge.textContent = '0';
-                    return;
-                }
-                
-                if (countBadge) countBadge.textContent = data.length;
-                
-                container.innerHTML = data.map(project => `
-                    <div class="testimonial-item">
-                        <div class="testimonial-info">
-                            <div class="testimonial-name">${escapeHtml(project.title)}</div>
-                            <div class="testimonial-text">${escapeHtml(project.description.substring(0, 120))}${project.description.length > 120 ? '...' : ''}</div>
-                            <div style="font-size: 11px; color: #64748b; margin-top: 5px;">
-                                ${project.category || 'Uncategorized'} | ${project.client || 'No client'} | ${project.date || 'No date'}
-                            </div>
-                        </div>
-                        <a href="projects.html" style="color: #818cf8; text-decoration: none; font-size: 13px;">View →</a>
-                    </div>
-                `).join('');
-            } catch (err) {
-                console.error('Failed to load recent projects:', err);
-                container.innerHTML = '<div class="empty-state" style="color: #ef4444;">Failed to load projects</div>';
-            }
+            funnel.innerHTML = order.map((page, i) => {
+                const stats = pages[page] || { views: 0 };
+                const width = 100 - (i * 25);
+                const opacity = 1 - (i * 0.15);
+                return `<div class="funnel-step" style="width:${width}%; opacity:${opacity};">
+                    ${page}: ${stats.views} views ${stats.avgTime ? '· ' + stats.avgTime + 's avg' : ''}
+                </div>`;
+            }).join('');
         }
 
-        // ========== CHATBOT ANALYTICS ==========
-        function loadChatAnalytics() {
-            const analytics = JSON.parse(localStorage.getItem('chatAnalytics') || '{"sessions":[],"clickData":{"whatsappClicks":0,"quickReplyClicks":{}},"unrecognizedQuestions":[]}');
-            const unrecognized = JSON.parse(localStorage.getItem('unrecognizedQuestions') || '[]');
+        function renderEngagingPages() {
+            const pages = Analytics.getPageStats();
+            const sorted = Object.entries(pages).sort((a, b) => b[1].avgTime - a[1].avgTime);
+            const container = document.getElementById('engagingPages');
+            
+            if (!sorted.length) { container.innerHTML = '<div class="empty-state">No data yet</div>'; return; }
+            
+            container.innerHTML = sorted.map(([page, stats]) => `
+                <div class="metric-row">
+                    <span class="metric-name">${page}</span>
+                    <span class="metric-value">${stats.avgTime}s avg · ${stats.views} views</span>
+                </div>
+                <div class="metric-bar"><div class="metric-fill" style="width:${Math.min(stats.avgTime / 3, 100)}%"></div></div>
+            `).join('');
+        }
+
+        function renderExitDestinations() {
+            const stats = Analytics.getExitStats();
+            const total = Object.values(stats).reduce((s, v) => s + v, 0) || 1;
+            const container = document.getElementById('exitDestinations');
+            
+            if (!Object.keys(stats).length) { container.innerHTML = '<div class="empty-state">No exit data yet</div>'; return; }
+            
+            const sorted = Object.entries(stats).sort((a, b) => b[1] - a[1]);
+            container.innerHTML = sorted.map(([name, count]) => `
+                <div class="metric-row">
+                    <span class="metric-name">${name}</span>
+                    <span class="metric-value">${count} (${Math.round(count/total*100)}%)</span>
+                </div>
+                <div class="metric-bar"><div class="metric-fill" style="width:${Math.round(count/total*100)}%"></div></div>
+            `).join('');
+        }
+
+        function renderDeviceBreakdown() {
+            const devices = Analytics.getDeviceBreakdown();
+            const total = Object.values(devices).reduce((s, v) => s + v, 0) || 1;
+            const container = document.getElementById('deviceBreakdown');
+            const icons = { desktop: '🖥️', mobile: '📱', tablet: '📋' };
+            
+            if (!Object.keys(devices).length) { container.innerHTML = '<div class="empty-state">No data yet</div>'; return; }
+            
+            container.innerHTML = Object.entries(devices).map(([device, count]) => `
+                <div class="metric-row">
+                    <span class="metric-name">${icons[device] || '📱'} ${device.charAt(0).toUpperCase() + device.slice(1)}</span>
+                    <span class="metric-value">${count} (${Math.round(count/total*100)}%)</span>
+                </div>
+                <div class="metric-bar"><div class="metric-fill" style="width:${Math.round(count/total*100)}%"></div></div>
+            `).join('');
+        }
+
+        function renderTopServices() {
+            const interactions = Analytics.getServiceInteractions();
+            const counts = {};
+            interactions.forEach(i => { counts[i.service] = (counts[i.service] || 0) + 1; });
+            const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            const total = sorted.reduce((s, [, c]) => s + c, 0) || 1;
+            const container = document.getElementById('topServices');
+            
+            if (!sorted.length) { container.innerHTML = '<div class="empty-state">No interaction data yet</div>'; return; }
+            
+            container.innerHTML = sorted.map(([service, count]) => `
+                <div class="metric-row">
+                    <span class="metric-name">${service}</span>
+                    <span class="metric-value">${count} clicks (${Math.round(count/total*100)}%)</span>
+                </div>
+                <div class="metric-bar"><div class="metric-fill" style="width:${Math.round(count/total*100)}%"></div></div>
+            `).join('');
+        }
+
+        function renderLeadGeneration() {
+            const leads = Analytics.getLeadStats();
+            const container = document.getElementById('leadGeneration');
+            
+            container.innerHTML = `
+                <div class="metric-row">
+                    <span class="metric-name">📚 Guide Downloads</span>
+                    <span class="metric-value">${leads.guideDownloads}</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-name">💬 Contact Clicks</span>
+                    <span class="metric-value">${leads.contactClicks}</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-name">📝 Form Submissions</span>
+                    <span class="metric-value">${leads.formSubmissions}</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-name">🎯 Conversion Rate</span>
+                    <span class="metric-value">${Analytics.getConversionRate()}%</span>
+                </div>
+            `;
+        }
+
+        function renderPeakHours() {
+            const hours = Analytics.getPeakHours();
+            const max = Math.max(...Object.values(hours)) || 1;
+            const container = document.getElementById('peakHours');
+            const labels = ['12am','1am','2am','3am','4am','5am','6am','7am','8am','9am','10am','11am',
+                           '12pm','1pm','2pm','3pm','4pm','5pm','6pm','7pm','8pm','9pm','10pm','11pm'];
+            
+            let html = '<div style="display:flex; align-items:flex-end; gap:2px; height:80px; margin-top:10px;">';
+            for (let i = 0; i < 24; i++) {
+                const height = Math.max((hours[i] / max) * 100, 2);
+                const isPeak = height > 50;
+                html += `<div title="${labels[i]}: ${hours[i]} visits" style="flex:1; background:${isPeak?'#818cf8':'#334155'}; height:${height}%; border-radius:2px 2px 0 0; min-width:6px;"></div>`;
+            }
+            html += '</div><div style="display:flex; justify-content:space-between; font-size:9px; color:#64748b; margin-top:4px;">';
+            html += '<span>12am</span><span>6am</span><span>12pm</span><span>6pm</span><span>11pm</span></div>';
+            
+            container.innerHTML = html;
+        }
+
+        function renderChatbotAnalytics() {
+            const analytics = Analytics.getChatAnalytics();
+            const unrecognized = Analytics.getUnrecognized();
             
             document.getElementById('totalSessions').textContent = (analytics.sessions || []).length;
-            document.getElementById('whatsappClicks').textContent = (analytics.clickData?.whatsappClicks) || 0;
+            document.getElementById('whatsappClicks').textContent = analytics.clickData?.whatsappClicks || 0;
             document.getElementById('unrecognizedCount').textContent = unrecognized.length;
-            
-            // Quick reply stats
-            const quickReplies = analytics.clickData?.quickReplyClicks || {};
-            const quickReplyDiv = document.getElementById('quickReplyStats');
-            if (Object.keys(quickReplies).length === 0) {
-                quickReplyDiv.innerHTML = '<div class="empty-state">No quick reply clicks yet.</div>';
+
+            // Quick replies
+            const qr = analytics.clickData?.quickReplyClicks || {};
+            const qrDiv = document.getElementById('quickReplyStats');
+            if (!Object.keys(qr).length) {
+                qrDiv.innerHTML = '<div class="empty-state">No quick reply clicks yet.</div>';
             } else {
-                let html = '';
-                for (const [topic, count] of Object.entries(quickReplies)) {
-                    html += `
-                        <div class="stats-row">
-                            <span class="stats-row-name">📌 ${escapeHtml(topic)}</span>
-                            <span class="stats-row-value">${count} clicks</span>
-                        </div>
-                    `;
-                }
-                quickReplyDiv.innerHTML = html;
+                qrDiv.innerHTML = Object.entries(qr).sort((a,b) => b[1]-a[1]).map(([topic, count]) => `
+                    <div class="metric-row">
+                        <span class="metric-name">📌 ${escapeHtml(topic)}</span>
+                        <span class="metric-value">${count} clicks</span>
+                    </div>
+                `).join('');
             }
-            
+
             // Unrecognized questions
-            const unrecognizedDiv = document.getElementById('unrecognizedList');
-            if (unrecognized.length === 0) {
-                unrecognizedDiv.innerHTML = '<div class="empty-state">🎉 No unrecognized questions! The chatbot is learning well.</div>';
+            const unDiv = document.getElementById('unrecognizedList');
+            if (!unrecognized.length) {
+                unDiv.innerHTML = '<div class="empty-state">🎉 No unrecognized questions!</div>';
             } else {
-                let html = '';
-                unrecognized.slice().reverse().slice(0, 20).forEach(q => {
-                    html += `
-                        <div class="unrecognized-item">
-                            <div class="unrecognized-question">❓ "${escapeHtml(q.question)}"</div>
-                            <div class="unrecognized-date">${new Date(q.timestamp).toLocaleString()}</div>
-                        </div>
-                    `;
-                });
-                if (unrecognized.length > 20) {
-                    html += `<div class="empty-state">... and ${unrecognized.length - 20} more questions</div>`;
-                }
-                unrecognizedDiv.innerHTML = html;
+                unDiv.innerHTML = unrecognized.slice().reverse().slice(0, 20).map(q => `
+                    <div style="background:#0f172a; padding:12px; border-radius:8px; margin-bottom:8px; border:1px solid #334155;">
+                        <div style="font-weight:500; margin-bottom:5px;">❓ "${escapeHtml(q.question)}"</div>
+                        <div style="font-size:11px; color:#64748b;">${new Date(q.timestamp).toLocaleString()}</div>
+                    </div>
+                `).join('');
             }
         }
 
-        function exportChatAnalytics() {
+        // ========== EXPORT ==========
+        function exportAllAnalytics() {
             const data = {
-                chatAnalytics: JSON.parse(localStorage.getItem('chatAnalytics') || '{}'),
-                unrecognizedQuestions: JSON.parse(localStorage.getItem('unrecognizedQuestions') || '[]'),
+                pageViews: Analytics.getViews(),
+                buttonClicks: Analytics.getClicks(),
+                scrollDepth: Analytics.getScroll(),
+                timeOnPage: Analytics.getTimeOnPage(),
+                sessions: Analytics.getSessions(),
+                exitClicks: Analytics.getExits(),
+                visitorInfo: Analytics.getVisitorInfo(),
+                serviceInteractions: Analytics.getServiceInteractions(),
+                skillEngagement: Analytics.getSkillEngagement(),
+                chatAnalytics: Analytics.getChatAnalytics(),
+                unrecognizedQuestions: Analytics.getUnrecognized(),
+                summary: {
+                    bounceRate: Analytics.getBounceRate(),
+                    avgTimeOnSite: Analytics.getAvgTimeOnSite(),
+                    pagesPerSession: Analytics.getPagesPerSession(),
+                    conversionRate: Analytics.getConversionRate(),
+                    returnRate: Analytics.getReturnRate()
+                },
                 exportDate: new Date().toISOString()
             };
-            downloadJSON(data, `chat_analytics_${new Date().toISOString().split('T')[0]}.json`);
-            showSuccess('Chat analytics exported!');
-        }
-
-        function clearChatAnalytics() {
-            if (confirm('⚠️ Delete ALL chat analytics? This cannot be undone.')) {
-                localStorage.removeItem('chatAnalytics');
-                localStorage.removeItem('unrecognizedQuestions');
-                loadChatAnalytics();
-                showSuccess('Chat analytics cleared');
-            }
-        }
-
-        // ========== WEBSITE ANALYTICS ==========
-        function loadWebsiteAnalytics() {
-            // Unique visitors
-            const visitorInfo = JSON.parse(localStorage.getItem('visitorInfo') || '{}');
-            document.getElementById('uniqueVisitors').textContent = visitorInfo.totalVisits || 0;
             
-            // Page views
-            const pageViews = JSON.parse(localStorage.getItem('pageViews') || '[]');
-            document.getElementById('totalPageViews').textContent = pageViews.length;
-            
-            // Button clicks
-            const buttonClicks = JSON.parse(localStorage.getItem('buttonClicks') || '[]');
-            document.getElementById('totalButtonClicks').textContent = buttonClicks.length;
-            
-            // Scroll depth
-            const scrollData = JSON.parse(localStorage.getItem('scrollDepth') || '[]');
-            const avgScroll = scrollData.length > 0 
-                ? Math.round(scrollData.reduce((a, b) => a + b.depth, 0) / scrollData.length) 
-                : 0;
-            document.getElementById('avgScrollDepth').textContent = avgScroll + '%';
-            
-            // Most clicked buttons
-            const buttonCounts = {};
-            buttonClicks.forEach(click => {
-                const name = click.buttonName || click.buttonText || 'Unknown Button';
-                buttonCounts[name] = (buttonCounts[name] || 0) + 1;
-            });
-            const topButtons = Object.entries(buttonCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
-            const topButtonsDiv = document.getElementById('topButtons');
-            if (topButtons.length === 0) {
-                topButtonsDiv.innerHTML = '<div class="empty-state">No button clicks recorded yet.</div>';
-            } else {
-                let html = '';
-                topButtons.forEach(([name, count]) => {
-                    html += `
-                        <div class="stats-row">
-                            <span class="stats-row-name">🔘 ${escapeHtml(name)}</span>
-                            <span class="stats-row-value">${count} clicks</span>
-                        </div>
-                    `;
-                });
-                topButtonsDiv.innerHTML = html;
-            }
-            
-            // Page views by page
-            const pageCounts = {};
-            pageViews.forEach(view => {
-                let pageName = view.page === '/' || view.page === '/index.html' ? 'Home' : view.page.replace('.html', '').replace('/', '');
-                pageName = pageName.charAt(0).toUpperCase() + pageName.slice(1) || 'Home';
-                pageCounts[pageName] = (pageCounts[pageName] || 0) + 1;
-            });
-            const pageViewsDiv = document.getElementById('pageViewsByPage');
-            if (Object.keys(pageCounts).length === 0) {
-                pageViewsDiv.innerHTML = '<div class="empty-state">No page views recorded yet.</div>';
-            } else {
-                let html = '';
-                const sortedPages = Object.entries(pageCounts).sort((a, b) => b[1] - a[1]);
-                for (const [page, count] of sortedPages) {
-                    html += `
-                        <div class="stats-row">
-                            <span class="stats-row-name">📄 ${escapeHtml(page)}</span>
-                            <span class="stats-row-value">${count} views</span>
-                        </div>
-                    `;
-                }
-                pageViewsDiv.innerHTML = html;
-            }
-        }
-
-        function exportWebsiteAnalytics() {
-            const data = {
-                visitorInfo: JSON.parse(localStorage.getItem('visitorInfo') || '{}'),
-                pageViews: JSON.parse(localStorage.getItem('pageViews') || '[]'),
-                buttonClicks: JSON.parse(localStorage.getItem('buttonClicks') || '[]'),
-                scrollDepth: JSON.parse(localStorage.getItem('scrollDepth') || '[]'),
-                exportDate: new Date().toISOString()
-            };
-            downloadJSON(data, `website_analytics_${new Date().toISOString().split('T')[0]}.json`);
-            showSuccess('Website analytics exported!');
-        }
-
-        function clearWebsiteAnalytics() {
-            if (confirm('⚠️ Delete ALL website analytics? This cannot be undone.')) {
-                localStorage.removeItem('visitorInfo');
-                localStorage.removeItem('pageViews');
-                localStorage.removeItem('buttonClicks');
-                localStorage.removeItem('scrollDepth');
-                loadWebsiteAnalytics();
-                showSuccess('Website analytics cleared');
-            }
-        }
-
-        function refreshDashboard() {
-            loadAllStats();
-            loadChatAnalytics();
-            loadWebsiteAnalytics();
-            showSuccess('Dashboard data refreshed!');
-        }
-
-        // ========== HELPER FUNCTIONS ==========
-        function showSuccess(message) {
-            const msg = document.getElementById('successMsg');
-            if (msg) {
-                msg.textContent = '✓ ' + message;
-                msg.style.display = 'block';
-                setTimeout(() => {
-                    msg.style.display = 'none';
-                }, 3000);
-            }
-        }
-
-        function downloadJSON(data, filename) {
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = filename;
+            a.download = `analytics_export_${new Date().toISOString().split('T')[0]}.json`;
             a.click();
             URL.revokeObjectURL(url);
+            showSuccess('All analytics exported!');
         }
 
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        function clearAllAnalytics() {
+            if (!confirm('⚠️ Delete ALL analytics data? This includes all visitor tracking, chat history, and engagement metrics. This cannot be undone.')) return;
+            
+            const keysToKeep = ['visitorId', 'supabase_token', 'supabase_refresh_token', 'darkMode', 
+                               'designSettings', 'personalInfo', 'statistics', 'testimonials', 
+                               'chatSettings', 'faqs', 'portfolioProjects', 'contactLeads'];
+            
+            const allKeys = Object.keys(localStorage);
+            allKeys.forEach(key => {
+                if (!keysToKeep.includes(key)) localStorage.removeItem(key);
+            });
+            
+            sessionStorage.clear();
+            showSuccess('All analytics cleared. Refresh to see empty dashboard.');
+            setTimeout(refreshDashboard, 1500);
         }
 
-        // ========== INITIALIZE ==========
+        function refreshDashboard() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            setTimeout(() => {
+                renderMarketingStats();
+                renderFunnel();
+                renderEngagingPages();
+                renderExitDestinations();
+                renderDeviceBreakdown();
+                renderTopServices();
+                renderLeadGeneration();
+                renderPeakHours();
+                renderChatbotAnalytics();
+                document.getElementById('loadingOverlay').style.display = 'none';
+                showSuccess('Dashboard refreshed!');
+            }, 500);
+        }
+
+        function showSuccess(msg) {
+            const el = document.getElementById('successMsg');
+            el.textContent = '✓ ' + msg;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 3000);
+        }
+
+        function escapeHtml(t) {
+            if (!t) return '';
+            const d = document.createElement('div');
+            d.textContent = t;
+            return d.innerHTML;
+        }
+
+        // ========== INIT ==========
         async function initialize() {
-            console.log('Dashboard initializing...');
-            
-            // Check authentication (this will redirect if not authenticated)
-            const isAuthenticated = await checkAuth();
-            if (!isAuthenticated) return;
-            
-            // Display user info
+            if (!(await checkAuth())) return;
             displayUserInfo();
+            document.getElementById('logoutBtn').onclick = logout;
             
-            // Setup logout button
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) {
-                logoutBtn.onclick = logout;
-            }
+            await loadSupabaseStats();
+            renderMarketingStats();
+            renderFunnel();
+            renderEngagingPages();
+            renderExitDestinations();
+            renderDeviceBreakdown();
+            renderTopServices();
+            renderLeadGeneration();
+            renderPeakHours();
+            renderChatbotAnalytics();
             
-            // Load all data
-            await loadAllStats();
-            loadChatAnalytics();
-            loadWebsiteAnalytics();
-            
-            console.log('Dashboard fully loaded');
+            document.getElementById('loadingOverlay').style.display = 'none';
+            console.log('📊 Admin Dashboard Ready');
         }
-        
-        // Start the app
+
         initialize();
     </script>
 </body>
