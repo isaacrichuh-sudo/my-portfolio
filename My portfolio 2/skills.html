@@ -283,8 +283,8 @@
     <div class="exit-content">
         <button class="exit-close" onclick="closeExitPopup()">&times;</button>
         <div style="font-size:48px; margin-bottom:10px;">📚</div>
-        <h2 class="exit-title">Wait... Before you go..</h2>
-        <p class="exit-subtitle"><strong>"Have you grabbed your PDF guide gift? This will guide you to be great at what you professionally do"</strong>  It's absolutely FREE! Input your Email and will send it to you. No strings attached.</p>
+        <h2 class="exit-title">Wait! Before You Go...</h2>
+        <p class="exit-subtitle">Get our <strong>"SaaS Content Strategy Blueprint"</strong> FREE. Discover the framework that helped SaaS founders scale their revenue through strategic content.</p>
         <input type="email" class="exit-input" id="exitEmail" placeholder="Your email address">
         <button class="btn-exit-submit" onclick="submitExitRequest()">Send My Free Guide →</button>
         <p style="font-size:11px; margin-top:10px; opacity:0.7;">No spam. Unsubscribe anytime.</p>
@@ -661,11 +661,11 @@
     function loadChatOptions() {
         const cs = JSON.parse(localStorage.getItem('chatSettings') || '{}');
         const pi = JSON.parse(localStorage.getItem('personalInfo') || '{}');
-        let phone = (cs.whatsappNumber || '254796623670').replace(/\D/g, '');
+        let phone = (cs.whatsappNumber || '254700000000').replace(/\D/g, '');
         if (phone.startsWith('0')) phone = '254' + phone.substring(1);
         if (!phone.startsWith('254')) phone = '254' + phone;
-        document.getElementById('whatsappOption').href = `https://wa.me/${phone}?text=${encodeURIComponent(cs.messageTemplate || 'Hi, I saw your website and there's something in particular I'd like we discuss about.')}`;
-        document.getElementById('emailOption').href = `mailto:${cs.email || pi.email || 'isaacrichuh@gmail.com'}?subject=${encodeURIComponent(cs.emailSubject || 'Inquiry')}`;
+        document.getElementById('whatsappOption').href = `https://wa.me/${phone}?text=${encodeURIComponent(cs.messageTemplate || 'Hi, I saw your portfolio.')}`;
+        document.getElementById('emailOption').href = `mailto:${cs.email || pi.email || 'hello@qreative.com'}?subject=${encodeURIComponent(cs.emailSubject || 'Inquiry')}`;
         document.getElementById('facebookOption').href = cs.facebookPage || '#';
     }
 
@@ -714,7 +714,7 @@
         if (supabaseClient) {
             await supabaseClient.from('contact_leads').insert([{ 
                 name: 'Exit Popup', email, 
-                message: 'Requested PDF guide via exit popup', 
+                message: 'Requested SaaS Content Strategy Blueprint via exit popup', 
                 status: 'guide_download', 
                 created_at: new Date().toISOString() 
             }]);
@@ -736,14 +736,14 @@
     document.getElementById('agentAvatarImage').src = AGENT_AVATAR;
     document.getElementById('headerAvatarImage').src = AGENT_AVATAR;
     const kb = [
-        { p: ["services","offer"], r: "I offer: 📝 Website copy & design that is search engine optimized for real results, a comprehensive and optimized web development, Client conversion email marketing, SEO Blog Content, optimized and user experience focus landing pages and SEO content strategy. Would you like we discuss something in particular?" },
-        { p: ["price","cost","pricing","charge"], r: "Projects range between $200-$3000 depending on the scope. Landing pages range from $200, full website copy and web development range from $800-$3000 depending on the complexity and preferences. Anything in particular you would like us we discuss about?" },
-        { p: ["how long","timeline"], r: "Typically Landing pages takes 3-5 days, Email campaigns: 5-7 days, Full website: 7-21 days. I always take my time to give you the very best that you deserve. Anything in particular that you have in mind?" },
-        { p: ["experience"], r: "I have over 4 years in B2B marketing and content strategy, Over the years i have gained over 50 repeat clients and over 60 complex projects." },
-        { p: ["contact","reach"], r: "You can reach me via WhatsApp - +254796623670, or Email to isaacrichuh@gmail.com. I'd be glad to put your ideas from your mind to reality that generates real income" },
-        { p: ["hello","hi","hey"], r: "Hey! How are you? How can I help you today?" },
-        { p: ["thanks"], r: "You're welcome! I hope I have been of help to you. Also dont forget to check on my free PDF guides that will help you be great in what you profesionally do" },
-        { p: ["bye"], r: "Take care! It's been awesome chatting with you. Don't forget to grab your PDF free gift on the 'my work' page. It's absolutely free!" }
+        { p: ["services","offer"], r: "I offer: 📝 Website Copy & Design, 📝 Email Marketing, 📝 SEO Blog Content, 📝 Landing Pages, 📝 SEO Content Strategy." },
+        { p: ["price","cost"], r: "Projects range $200-$3000. Landing pages from $200, full website copy $800-$3000." },
+        { p: ["how long","timeline"], r: "Landing pages: 3-5 days, Emails: 5-7 days, Full website: 7-14 days." },
+        { p: ["experience"], r: "4+ years in B2B SaaS, 50+ clients across fintech, logistics, healthcare, e-commerce." },
+        { p: ["contact","reach"], r: "Reach me via WhatsApp, Email, or Facebook buttons on this page!" },
+        { p: ["hello","hi","hey"], r: "Hey! How can I help you today?" },
+        { p: ["thanks"], r: "You're welcome! Anything else?" },
+        { p: ["bye"], r: "Take care! Come back anytime." }
     ];
     let chatMessages = [];
     function findMatch(msg) {
@@ -787,9 +787,9 @@
         showTyping(); await new Promise(r => setTimeout(r, 1500)); hideTyping();
         if (match) { addMsg('bot', match.r); setTimeout(() => addQuickReplies(), 800); }
         else { 
-            addMsg('bot', 'Great question! Inorder to give you a detailed response, let\'s have a quick chat on WhatsApp. 💚');
+            addMsg('bot', 'Great question! Let\'s connect on WhatsApp. 💚');
             const cs = JSON.parse(localStorage.getItem('chatSettings') || '{}');
-            let phone = (cs.whatsappNumber || '254796623670').replace(/\D/g, '');
+            let phone = (cs.whatsappNumber || '254700000000').replace(/\D/g, '');
             if (phone.startsWith('0')) phone = '254' + phone.substring(1);
             const w = document.createElement('a'); w.href = `https://wa.me/${phone}`; w.className = 'whatsapp-btn'; w.textContent = '💚 Chat on WhatsApp'; w.target = '_blank';
             document.getElementById('chatMessages').appendChild(w);
