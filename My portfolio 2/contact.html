@@ -96,35 +96,52 @@
         .exit-close { position: absolute; top: 10px; right: 15px; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 22px; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .exit-close:hover { background: rgba(255,255,255,0.3); }
 
-        /* Chatbot & Float */
+        /* ========== CORRECTED CHATBOT STYLES ========== */
         .chat-agent { position: fixed; bottom: 110px; right: 30px; z-index: 1001; }
-        .chat-agent-toggle { width: 70px; height: 70px; background: linear-gradient(135deg, #818cf8, #6366f1); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); cursor: pointer; animation: agentPulse 2s infinite; border: 3px solid white; transition: transform 0.3s; }
+        .chat-agent-toggle { width: 65px; height: 65px; background: linear-gradient(135deg, #818cf8, #6366f1); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); cursor: pointer; animation: agentPulse 2s infinite; border: 3px solid white; transition: transform 0.3s; overflow: hidden; }
         .chat-agent-toggle:hover { transform: scale(1.1); }
-        .agent-avatar { width: 100%; height: 100%; object-fit: cover; }
+        .agent-avatar { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
         @keyframes agentPulse { 0% { box-shadow: 0 0 0 0 rgba(99,102,241,0.4); } 70% { box-shadow: 0 0 0 15px rgba(99,102,241,0); } 100% { box-shadow: 0 0 0 0 rgba(99,102,241,0); } }
-        .agent-status { position: absolute; bottom: 5px; right: 5px; width: 16px; height: 16px; background: #10b981; border-radius: 50%; border: 2px solid white; }
-        .chat-agent-window { position: absolute; bottom: 85px; right: 0; width: 400px; height: 600px; background: var(--bg-card); border-radius: 24px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; overflow: hidden; opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.3s; border: 1px solid var(--border); }
-        .chat-agent-window.active { opacity: 1; visibility: visible; transform: translateY(0); }
-        .chat-header { background: linear-gradient(135deg, #818cf8, #6366f1); padding: 16px 20px; color: white; display: flex; align-items: center; gap: 12px; }
-        .chat-header-avatar { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; border: 2px solid white; }
-        .chat-header-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .chat-header-info h4 { font-size: 16px; margin-bottom: 2px; }
-        .online-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; animation: onlinePulse 1.5s infinite; }
+        .agent-status { position: absolute; bottom: 3px; right: 3px; width: 14px; height: 14px; background: #10b981; border-radius: 50%; border: 2px solid white; }
+        .chat-agent-window { position: absolute; bottom: 80px; right: 0; width: 380px; height: 520px; background: var(--bg-card); border-radius: 20px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; overflow: hidden; opacity: 0; visibility: hidden; transform: translateY(20px) scale(0.95); transition: all 0.3s ease; border: 1px solid var(--border); }
+        .chat-agent-window.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+        .chat-header { background: linear-gradient(135deg, #818cf8, #6366f1); padding: 14px 18px; color: white; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+        .chat-header-avatar { width: 42px; height: 42px; border-radius: 50%; overflow: hidden; border: 2px solid white; flex-shrink: 0; background: white; }
+        .chat-header-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .chat-header-info h4 { font-size: 15px; margin-bottom: 2px; font-weight: 600; }
+        .chat-header-info p { font-size: 11px; opacity: 0.9; display: flex; align-items: center; gap: 5px; }
+        .online-dot { width: 7px; height: 7px; background: #10b981; border-radius: 50%; display: inline-block; animation: onlinePulse 1.5s infinite; }
         @keyframes onlinePulse { 0%,100%{opacity:1} 50%{opacity:.5} }
-        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; background: var(--bg-primary); }
-        .message { display: flex; gap: 10px; max-width: 85%; }
-        .message.bot { align-self: flex-start; } .message.user { align-self: flex-end; flex-direction: row-reverse; }
-        .message-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #818cf8, #6366f1); display: flex; align-items: center; justify-content: center; }
-        .message-content { padding: 12px 16px; border-radius: 18px; font-size: 14px; background: var(--bg-card); color: var(--text-primary); }
-        .message.user .message-content { background: var(--accent); color: white; }
-        .quick-replies { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-        .quick-reply-btn { background: var(--bg-alt); border: 1px solid var(--border); padding: 8px 16px; border-radius: 30px; font-size: 12px; cursor: pointer; color: var(--text-primary); }
-        .quick-reply-btn:hover { background: var(--accent); color: white; }
-        .chat-input-area { padding: 15px; border-top: 1px solid var(--border); display: flex; gap: 10px; background: var(--bg-card); }
-        .chat-input { flex: 1; padding: 12px 16px; border: 1px solid var(--border); border-radius: 30px; background: var(--bg-primary); color: var(--text-primary); }
-        .chat-send-btn { width: 44px; height: 44px; background: var(--accent); border: none; border-radius: 50%; cursor: pointer; }
-        .chat-send-icon { font-size: 18px; color: white; }
-        .whatsapp-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 30px; background: #25D366; color: white; text-decoration: none; margin-top: 10px; }
+        .chat-messages { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: var(--bg-primary); max-height: 320px; }
+        .message { display: flex; gap: 8px; max-width: 88%; }
+        .message.bot { align-self: flex-start; }
+        .message.user { align-self: flex-end; flex-direction: row-reverse; }
+        .message-avatar { width: 30px; height: 30px; border-radius: 50%; overflow: hidden; flex-shrink: 0; background: linear-gradient(135deg, #818cf8, #6366f1); display: flex; align-items: center; justify-content: center; }
+        .message-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+        .message.user .message-avatar { background: var(--accent-gold, #fbbf24); }
+        .message-content { padding: 10px 14px; border-radius: 16px; font-size: 13px; line-height: 1.5; background: var(--bg-card); color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .message.bot .message-content { border-bottom-left-radius: 4px; }
+        .message.user .message-content { background: var(--accent); color: white; border-bottom-right-radius: 4px; }
+        .typing-indicator { display: flex; align-items: center; gap: 5px; padding: 10px 16px; background: var(--bg-card); border-radius: 16px; width: fit-content; }
+        .typing-dots { display: flex; gap: 3px; }
+        .typing-dots span { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; animation: typingBounce 1.4s infinite ease-in-out; }
+        .typing-dots span:nth-child(1) { animation-delay: 0s; }
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingBounce { 0%,60%,100%{transform:translateY(0);opacity:0.4} 30%{transform:translateY(-6px);opacity:1} }
+        .quick-replies { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px; }
+        .quick-reply-btn { background: var(--bg-alt, #f1f5f9); border: 1px solid var(--border, #e2e8f0); padding: 8px 10px; border-radius: 20px; font-size: 11px; cursor: pointer; transition: all 0.2s; color: var(--text-primary); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .quick-reply-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+        .chat-input-area { padding: 12px; border-top: 1px solid var(--border); display: flex; gap: 8px; background: var(--bg-card); flex-shrink: 0; }
+        .chat-input { flex: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: 25px; font-family: inherit; font-size: 13px; background: var(--bg-primary); color: var(--text-primary); }
+        .chat-input:focus { outline: none; border-color: var(--accent); }
+        .chat-send-btn { width: 38px; height: 38px; background: var(--accent); border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
+        .chat-send-btn:hover { background: var(--accent-hover); transform: scale(1.05); }
+        .chat-send-icon { font-size: 16px; color: white; }
+        .whatsapp-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 25px; text-decoration: none; font-size: 12px; font-weight: 500; margin-top: 8px; background: #25D366; color: white; transition: all 0.2s; }
+        .whatsapp-btn:hover { background: #128C7E; transform: scale(1.02); }
+
+        /* ========== MULTI-FLOAT BUTTON ========== */
         .chat-float { position: fixed; bottom: 30px; right: 30px; z-index: 1000; }
         .chat-main-btn { width: 65px; height: 65px; background: linear-gradient(135deg, #25D366, #128C7E); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); cursor: pointer; animation: chatPulse 1.5s infinite; }
         .chat-main-icon { font-size: 36px; color: white; }
@@ -146,7 +163,8 @@
             .welcome-title { font-size: 28px; }
             .faq-header h2 { font-size: 28px; }
             .chat-main-btn, .chat-agent-toggle { width: 55px; height: 55px; }
-            .chat-agent-window { width: calc(100vw - 40px); right: -10px; height: 500px; }
+            .chat-agent-window { width: calc(100vw - 30px); right: 0; height: 460px; bottom: 75px; }
+            .chat-messages { max-height: 260px; }
             .form-info { padding: 30px; }
         }
     </style>
@@ -230,15 +248,14 @@
     <div class="exit-content">
         <button class="exit-close" onclick="closeExitPopup()">&times;</button>
         <div style="font-size:48px;">📚</div>
-        <h2 class="exit-title">Wait! Before You Go...</h2>
-        <p class="exit-subtitle">Get our <strong>"SaaS Content Strategy Blueprint"</strong> FREE. Discover the framework that helped SaaS founders scale their revenue.</p>
+        <h2 class="exit-title">Wait... Before you go..</h2><p class="exit-subtitle"><strong>"Have you grabbed your PDF guide gift? This will guide you to be great at what you professionally do"</strong> It's absolutely FREE! Input your Email and will send it to you. No strings attached.</p>
         <input type="email" class="exit-input" id="exitEmail" placeholder="Your email address">
         <button class="btn-exit-submit" onclick="submitExitRequest()">Send My Free Guide →</button>
         <p style="font-size:11px;margin-top:10px;opacity:0.7;">No spam. Unsubscribe anytime.</p>
     </div>
 </div>
 
-<!-- Float & Chatbot -->
+<!-- Float & Corrected Chatbot -->
 <div class="chat-float">
     <div class="chat-main-btn" id="chatMainBtn"><span class="chat-main-icon">💬</span></div>
     <div class="chat-options" id="chatOptions">
@@ -423,9 +440,9 @@
 
     function loadChatOptions() {
         const cs = JSON.parse(localStorage.getItem('chatSettings') || '{}'), pi = JSON.parse(localStorage.getItem('personalInfo') || '{}');
-        let phone = (cs.whatsappNumber || '254700000000').replace(/\D/g, ''); if (phone.startsWith('0')) phone = '254' + phone.substring(1); if (!phone.startsWith('254')) phone = '254' + phone;
+        let phone = (cs.whatsappNumber || '254796623670').replace(/\D/g, ''); if (phone.startsWith('0')) phone = '254' + phone.substring(1); if (!phone.startsWith('254')) phone = '254' + phone;
         document.getElementById('whatsappOption').href = `https://wa.me/${phone}?text=${encodeURIComponent(cs.messageTemplate || 'Hi!')}`;
-        document.getElementById('emailOption').href = `mailto:${cs.email || pi.email || 'hello@qreative.com'}?subject=${encodeURIComponent(cs.emailSubject || 'Inquiry')}`;
+        document.getElementById('emailOption').href = `mailto:${cs.email || pi.email || 'isaacrichuh@gmail.com'}?subject=${encodeURIComponent(cs.emailSubject || 'Inquiry')}`;
         document.getElementById('facebookOption').href = cs.facebookPage || '#';
     }
 
@@ -446,19 +463,20 @@
     }
     document.addEventListener('mouseleave', (e) => { if (e.clientY <= 0) showExitPopup(); });
 
-    // Chatbot
+    // ========== CORRECTED CHATBOT ==========
     const AGENT = "Sarah", AVATAR = "chat bot sarah.png";
     document.getElementById('agentAvatarImage').src = AVATAR; document.getElementById('headerAvatarImage').src = AVATAR;
-    const kb = [{ p: ["services","offer"], r: "I offer: 📝 Website Copy & Design, 📝 Email Marketing, 📝 SEO Blog Content, 📝 Landing Pages, 📝 SEO Content Strategy." },{ p: ["price","cost"], r: "Projects range $200-$3000. Landing pages from $200, full website copy $800-$3000." },{ p: ["how long","timeline"], r: "Landing pages: 3-5 days, Emails: 5-7 days, Full website: 7-14 days." },{ p: ["experience"], r: "4+ years in B2B SaaS, 50+ clients." },{ p: ["contact"], r: "Reach me via WhatsApp, Email, or Facebook buttons!" },{ p: ["hello","hi","hey"], r: "Hey! How can I help you?" },{ p: ["thanks"], r: "You're welcome!" },{ p: ["bye"], r: "Take care!" }];
+    const kb = [{ p: ["services","offer"], r: "I offer:📝 Website copy & design that is search engine optimized for real results; a comprehensive and optimized web development; Client conversion email marketing; SEO Blog Content; optimized and user experience focus landing pages and SEO content strategy. Would you like we discuss something in particular?"},{p:["price","cost","pricing","charge"],r:"Projects range between $200-$3000 depending on the scope. Landing pages range from $200, full website copy and web development range from $800-$3000 depending on the complexity and preferences.Anything in particular you would like us we discuss about?."},{p:["how long","timeline","duration"],r:"Typically Landing pages takes 3-5 days, Email campaigns: 5-7 days, Full website: 7-21 days. I always take my time to give you the very best that you deserve. Anything in particular that you have in mind?"},{p:["experience"],r:"I have over 4 years in B2B marketing and content strategy, Over the years i have gained over 50 repeat clients and over 60 complex projects."},{p:["contact"],r:"You can reach me via WhatsApp - +254796623670, or Email to isaacrichuh@gmail.com. I'd be glad to put your ideas from your mind to reality that generates real income."},{p:["hello","hi","hey"],r:"Hey! How are you? How can I help you?"},{p:["thanks"],r:"You're welcome! I hope I have been of help to you. Also don't forget to check on my free PDF guides that will help you be great in what you professionally do. Check it out on the 'my work' page"},{p:["bye"],r:"Take care! It's been awesome chatting with you. Don't forget to grab your free PDF gift on the 'my work' page. It's absolutely free!"}];
     let chatMsgs = [];
     function findMatch(msg) { const lm = msg.toLowerCase(); let b = null, s = 0; for (const i of kb) { let sc = 0; for (const p of i.p) { if (lm.includes(p)) sc += 10; } if (sc > s) { s = sc; b = i; } } return s > 2 ? b : null; }
     function addMsg(type, text) { chatMsgs.push({ type, text }); renderChat(); }
-    function renderChat() { const c = document.getElementById('chatMessages'); c.innerHTML = chatMsgs.map(m => `<div class="message ${m.type}"><div class="message-avatar">${m.type==='bot'?`<img src="${AVATAR}">`:'👤'}</div><div class="message-content">${m.text}</div></div>`).join(''); c.scrollTop = c.scrollHeight; }
-    function showTyping() { const d = document.createElement('div'); d.className = 'message bot'; d.id = 'typing'; d.innerHTML = `<div class="message-avatar"><img src="${AVATAR}"></div><div class="typing-indicator"><div class="typing-dots"><span></span><span></span><span></span></div></div>`; document.getElementById('chatMessages').appendChild(d); }
+    function renderChat() { const c = document.getElementById('chatMessages'); c.innerHTML = chatMsgs.map(m => `<div class="message ${m.type}"><div class="message-avatar">${m.type==='bot'?`<img src="${AVATAR}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`:'👤'}</div><div class="message-content">${m.text}</div></div>`).join(''); c.scrollTop = c.scrollHeight; }
+    function showTyping() { const d = document.createElement('div'); d.className = 'message bot'; d.id = 'typing'; d.innerHTML = `<div class="message-avatar"><img src="${AVATAR}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div><div class="typing-indicator"><div class="typing-dots"><span></span><span></span><span></span></div></div>`; document.getElementById('chatMessages').appendChild(d); }
     function hideTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
-    async function process(msg) { addMsg('user', msg); const m = findMatch(msg); showTyping(); await new Promise(r => setTimeout(r, 1500)); hideTyping(); if (m) addMsg('bot', m.r); else { addMsg('bot', 'Great question! Let\'s connect on WhatsApp. 💚'); const cs = JSON.parse(localStorage.getItem('chatSettings') || '{}'); let ph = (cs.whatsappNumber || '254700000000').replace(/\D/g, ''); if (ph.startsWith('0')) ph = '254' + ph.substring(1); const w = document.createElement('a'); w.href = `https://wa.me/${ph}`; w.className = 'whatsapp-btn'; w.textContent = '💚 Chat on WhatsApp'; w.target = '_blank'; document.getElementById('chatMessages').appendChild(w); } }
+    function addQuickReplies() { const c = document.getElementById('chatMessages'); if (!c) return; const d = document.createElement('div'); d.className = 'message bot'; d.innerHTML = `<div class="message-avatar"><img src="${AVATAR}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div><div class="quick-replies"><button class="quick-reply-btn" data-topic="Services">📋 Services</button><button class="quick-reply-btn" data-topic="Pricing">💰 Pricing</button><button class="quick-reply-btn" data-topic="Timeline">⏱️ Timelines</button><button class="quick-reply-btn" data-topic="Experience">⭐ Experience</button><button class="quick-reply-btn" data-topic="Website">🌐 Websites</button><button class="quick-reply-btn" data-topic="Contact">📱 Contact</button></div>`; d.querySelectorAll('.quick-reply-btn').forEach(b => { b.addEventListener('click', (e) => { e.stopPropagation(); process(b.dataset.topic); }); }); c.appendChild(d); c.scrollTop = c.scrollHeight; }
+    async function process(msg) { addMsg('user', msg); const m = findMatch(msg); showTyping(); await new Promise(r => setTimeout(r, 1500)); hideTyping(); if (m) { addMsg('bot', m.r); setTimeout(() => addQuickReplies(), 800); } else { addMsg('bot', 'Great question! Let\'s connect on WhatsApp. 💚'); const cs = JSON.parse(localStorage.getItem('chatSettings') || '{}'); let ph = (cs.whatsappNumber || '254796623670').replace(/\D/g, ''); if (ph.startsWith('0')) ph = '254' + ph.substring(1); const w = document.createElement('a'); w.href = `https://wa.me/${ph}`; w.className = 'whatsapp-btn'; w.textContent = '💚 Chat on WhatsApp'; w.target = '_blank'; document.getElementById('chatMessages').appendChild(w); } }
     window.sendMessage = function() { const inp = document.getElementById('chatInput'); if (!inp.value.trim()) return; process(inp.value.trim()); inp.value = ''; Analytics.trackClick('Chatbot Message', 'Chatbot'); };
-    function initChatbot() { const tog = document.getElementById('chatAgentToggle'), win = document.getElementById('chatAgentWindow'); tog.addEventListener('click', (e) => { e.stopPropagation(); win.classList.toggle('active'); if (chatMsgs.length === 0) { showTyping(); setTimeout(() => { hideTyping(); addMsg('bot', `Hi! I'm ${AGENT}. How can I help you?`); }, 1200); } Analytics.trackClick('Chatbot Toggle', win.classList.contains('active')?'Open':'Close'); }); document.addEventListener('click', (e) => { if (!e.target.closest('.chat-agent') && win.classList.contains('active')) win.classList.remove('active'); }); }
+    function initChatbot() { const tog = document.getElementById('chatAgentToggle'), win = document.getElementById('chatAgentWindow'); tog.addEventListener('click', (e) => { e.stopPropagation(); win.classList.toggle('active'); if (chatMsgs.length === 0) { showTyping(); setTimeout(() => { hideTyping(); addMsg('bot', `Hi! I'm ${AGENT}. How can I help you today?`); setTimeout(() => addQuickReplies(), 800); }, 1200); } Analytics.trackClick('Chatbot Toggle', win.classList.contains('active')?'Open':'Close'); }); document.addEventListener('click', (e) => { if (!e.target.closest('.chat-agent') && win.classList.contains('active')) win.classList.remove('active'); }); }
 
     // Dark mode
     const themeToggle = document.getElementById('themeToggle'), body = document.body;
